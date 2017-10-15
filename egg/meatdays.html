@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>고기가 먹고 싶은 날들</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- jQuery -->
+    <script src= "../static/js/jquery.js"></script>
+    <script src="../static/js/angular.min.js"></script>
+    <script src="../static/js/ng-infinite-scroll.js"></script>
+    
+</head>
+<body>
+<div class="container" ng-app='meat_load' ng-controller='MeatC' style="margin-top: 75px;">
+	<div class="row">
+		<div class="[ col-xs-12 col-sm-offset-2 col-sm-8 ]" infinite-scroll='loadMore()' infinite-scroll-distance='2'>
+			<ul class="event-list">
+				<li ng-repeat="item in articles">
+					<p>{{item}}</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<script>
+var meat_load = angular.module('meat_load', ['infinite-scroll']);
+meat_load.controller('MeatC', function($scope) {
+$scope.articles = [];
+var count = 0;
+var busy = false;
+var today = new Date(); // today
+function formatDate(date) {
+  var day = date.getDate();
+  var monthIndex = date.getMonth();
+  var year = date.getFullYear();
+  return year + '년 ' + (monthIndex + 1) + '월 ' + day + '일';
+}
+function insertOneHundredDates(){
+  busy = true;
+  for(var i = 0; i < 100; i++){
+    var newdate = new Date();
+    newdate.setTime(today.getTime()+1000*60*60*24*(count+1));
+    $scope.articles.push(formatDate(newdate));
+    count++;
+  }
+  busy = false;
+}
+$scope.loadMore = function() {
+	if (busy) return;
+	insertOneHundredDates();
+};
+});
+</script>
+</body>
+
+</html>
