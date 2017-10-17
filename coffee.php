@@ -35,8 +35,6 @@ $average = round($db->avgCoffee(), 3);
 
     <!-- Bootstrap Core JavaScript -->
     <script src="./static/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
-    <script src="./static/js/ng-infinite-scroll.js"></script>
     <!-- button lil script-->
     <script src="https://use.typekit.net/aty5yfo.js"></script>
     <script>try{Typekit.load({ async: true });}catch(e){}</script>
@@ -75,9 +73,9 @@ $average = round($db->avgCoffee(), 3);
         <!-- /.container -->
     </nav>
 
-<div class="container" style="margin-top:20px;" ng-app='coffee_infinite_load' ng-controller='CoffeeController'>
+<div class="container" style="margin-top:20px;">
 <p><span style="font-size: 1.3em; margin-right: 20px;">커피 일기</span><span style="font-size: 1em; float: right; border-style: solid; padding: 2px;"><img src="./static/pics/gov_three.gif" style="width: 20%; display: inline-block;"/>정보공개</span></p>
-<div id="coffee_table" infinite-scroll='loadMore()' infinite-scroll-distance='1'>
+<div id="coffee_table">
 <?php echo "<p><span>".$db->coffeeMax()."</span>일 간 총 <span style='color:blue;'>".$total."</span>잔의 아이스 그란데 아메리카노를 마셨다</p>";
 echo "<p>평균 <span style='color:blue;'>".$average."</span>잔</p>"; ?>
 <table class="table table-striped">
@@ -87,28 +85,23 @@ echo "<p>평균 <span style='color:blue;'>".$average."</span>잔</p>"; ?>
             <th><img src="./static/pics/icedamericano.jpg" width="100"/></th>
         </tr>
     </thead>
-    <tbody>
-    	<tr ng-repeat="item in articles">
-            <td>{{item.date}}</td>
-            <td>{{item.iced_americano}}</td>
-        </tr>
-    </tbody>
+    <tbody id="coffee_body"></tbody>
 </table>
 </div>
 <h4 id="loading_state">로딩중</h4>
 </div>
 <script>
-var coffee_infinite_load = angular.module('coffee_infinite_load', ['infinite-scroll']);
-coffee_infinite_load.controller('CoffeeController', function($scope) {
-$scope.articles = <?php echo json_encode($db->getCoffee(0));?>;
-var count = 20;
+var count = 0;
 const max = <?php echo $db->coffeeMax();?>;
 var busy = false;
-$scope.loadMore = function() {
+var init_signal = false;
+var loading_state_text = document.getElementById('loading_state');
+var coffee_body = $('#coffee_body');
+var loadMore = function() {
     if (busy) return;
     busy = true;
     if (count >= max) {
-        document.getElementById('loading_state').innerHTML = '로딩 끝';
+        loading_state_text.innerHTML = '로딩 끝';
         return;
     }
     var xhttp = new XMLHttpRequest();
@@ -119,15 +112,25 @@ $scope.loadMore = function() {
         if (this.readyState == 4 && this.status == 200) {
             var resp = (JSON && JSON.parse(this.responseText) || $.parseJSON(this.responseText));
             resp.forEach(function(item, index){
-                $scope.articles.push(item);
+                coffee_body.append($("<tr id='coffee_row_" + (index + 1) + "'><td>" + item.date + "</td><td>" + item.iced_americano + "</td></tr>"));
             });
             busy = false;
         }
     };
     count += 20;
     xhttp.send(params);
-
 };
+$(window).scroll(function() {
+    if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+        loadMore();
+    }
+ });
+$(document).ready(function() {
+    var index = 0
+    var loadInitialInterval = setInterval(function(){
+        loadMore();
+        if ($(window).height() <= loading_state_text.getBoundingClientRect().bottom) clearInterval(loadInitialInterval);
+    }, 50);
 });
 
 </script>
