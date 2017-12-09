@@ -139,6 +139,17 @@ var regularCollisionCheck = setInterval(function(){
     }
 }, 1000);
 
+var duckFlipCheck = setInterval(function(){
+    for(var i = 0; i < active_ducks; i++){
+        if (duck_directions[i]){
+            all_ducks[i].src = "./static/pics/duck" + (i + 1) + ".png";
+        }
+        else {
+            all_ducks[i].src = "./static/pics/duck" + (i + 1) + "_flip.png";
+        }
+    }
+}, 1000);
+
 addOneDuck();
 
 function addOneDuck(){
@@ -147,6 +158,16 @@ function addOneDuck(){
     duckVerticalMove(all_ducks[active_ducks], active_ducks);
     duckHorizontalMove(all_ducks[active_ducks], active_ducks);
     active_ducks++;
+}
+
+function changeDuckDirection(duck_index, direction){
+    if (!duck_directions[duck_index]){
+        all_ducks[duck_index].src = "./static/pics/duck" + (duck_index + 1) + ".png";
+    }
+    else {
+        all_ducks[duck_index].src = "./static/pics/duck" + (duck_index + 1) + "_flip.png";
+    }
+    duck_directions[duck_index] = direction;
 }
 
 var addDucks = setInterval(function(){
@@ -188,18 +209,15 @@ function duckHorizontalMove(duck, index){
         x_limit = de.right - de.left;
         if(duck_directions[index]){
             x_pos += speed;
-            duck.src = './static/pics/duck' + (index + 1) + '.png';
         }
         else{
             x_pos -= speed;
-            duck.src = './static/pics/duck' + (index + 1) + '_flip.png';
         }
         if(x_pos > x_limit){
-            duck_directions[index] = false;
-            
+            changeDuckDirection(index, false);
         }
         else if (x_pos < de.left){
-            duck_directions[index] = true;
+            changeDuckDirection(index, true);
         }
         duck.style.left = x_pos + 'px';
     },30);
@@ -210,14 +228,14 @@ function duckCollisionCheck(duck1_i, duck2_i){
     if(all_ducks[duck1_i].offsetLeft < all_ducks[duck2_i].width + all_ducks[duck2_i].offsetLeft && all_ducks[duck2_i].offsetLeft < all_ducks[duck1_i].width + all_ducks[duck1_i].offsetLeft){ // collision
         if(all_ducks[duck1_i].offsetLeft < all_ducks[duck2_i].offsetLeft) {
             if(duck_directions[duck1_i] || !duck_directions[duck2_i]){
-                duck_directions[duck1_i] = !duck_directions[duck1_i];
-                duck_directions[duck2_i] = !duck_directions[duck1_i];
+                changeDuckDirection(duck1_i, !duck_directions[duck1_i]);
+                changeDuckDirection(duck2_i, !duck_directions[duck1_i]);
             }
         } // duck 1 is left to duck 2
         else {
             if(duck_directions[duck2_i] || !duck_directions[duck1_i]){
-                duck_directions[duck1_i] = !duck_directions[duck1_i];
-                duck_directions[duck2_i] = !duck_directions[duck1_i];
+                changeDuckDirection(duck1_i, !duck_directions[duck1_i]);
+                changeDuckDirection(duck2_i, !duck_directions[duck1_i]);
             }
         }
     }
