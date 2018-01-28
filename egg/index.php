@@ -22,7 +22,7 @@ $prev_month = $current_month == 1 ? 12 : $current_month - 1;
 $prev_year = $current_month == 1 ? $current_year - 1 : $current_year;
 $next_month = $current_month == 12 ? 1 : $current_month + 1;
 $next_year = $current_month == 12 ? $current_year + 1 : $current_year;
-$is_danger_zone = ($now_month < $current_month && $now_year == $current_year) || ($now_year < $current_year) || (4 > $current_month && 2017 == $current_year) || (2017 > $current_year);
+$is_danger_zone = ($now_month < $current_month && $now_year == $current_year) || ($now_year < $current_year) || (4 > $current_month && 2017 == $current_year) || (2017 > $current_year) || ($current_month > 12 || $current_month < 1);
 ?>
 <!DOCTYPE html>
 <html lang="en">
