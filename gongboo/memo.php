@@ -19,11 +19,12 @@ $memo = $db->memoOfArticle($id);
 
 	<title><?php echo $memo['title'];?></title>
 	<link href="../static/css/bootstrap.min.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inconsolata" />
 	<script src="../static/js/jquery.js"></script>
 	<script src="../static/js/bootstrap.min.js"></script>
 </head>
 
-<body style="margin-top: 75px;">
+<body style="margin-top: 75px; font-family: Inconsolata; font-size: 18px;">
 	<!-- Body -->
 	<div class="container">
 		<div class="row">
