@@ -22,6 +22,11 @@ $memo = $db->memoOfArticle($id);
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Inconsolata" />
 	<script src="../static/js/jquery.js"></script>
 	<script src="../static/js/bootstrap.min.js"></script>
+	<?php
+	if ($memo['include_tex'] == 1){
+		echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>";
+	}
+	?>
 </head>
 
 <body style="margin-top: 75px; font-family: Inconsolata; font-size: 18px;">
