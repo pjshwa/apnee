@@ -1,6 +1,6 @@
 <?php
 require('db.php');
-$category_set = $db->limitAllMemosByCategory(3);
+$category_set = $db->limitAllMemosByCategory(5);
 ?>
 <!DOCTYPE html>
 <html lang="en">
