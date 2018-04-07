@@ -179,7 +179,7 @@ function setbackground()
     
 }
 
-// var bgm = new Audio('./m/sandcanyon.ogg');
+var bgm = new Audio('./m/sandcanyon.ogg');
 
 function apeachClick(){
 	clicks++;
@@ -187,9 +187,9 @@ function apeachClick(){
     move_toggle = !move_toggle;
     if(!move_toggle){
     	$("body").css("background", "#FFFFFF");
-    	// bgm.pause();
+    	bgm.pause();
     }
-    // else bgm.play();
+    else bgm.play();
 }
 
 function moveApeach() {
