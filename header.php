@@ -12,7 +12,7 @@
     <title></title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="./static/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 
     <!-- Custom CSS -->
     <link href="./static/css/half-slider.css" rel="stylesheet" />
@@ -25,10 +25,14 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!-- jQuery -->
-    <script src= "./static/js/jquery.js"></script>
+    <script
+      src="http://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous">
+    </script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="./static/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <!-- button lil script-->
     <script src="https://use.typekit.net/aty5yfo.js"></script>
     <script>try{Typekit.load({ async: true });}catch(e){}</script>
