@@ -6,7 +6,6 @@ include("credentials.php");
 
 $greenish = "['rgb(21,201,161)', 'rgb(21,201,161)', 'rgb(1,92,76)', 'rgb(17,117,99)', 'rgb(14,142,113)', 'rgb(23,175,148)', 'rgb(21,201,161)', 'rgb(21,201,161)']";
 
-$input_station = '<h1>기다리세요</h1><form id="form" method="post"><input type="hidden" id="station_1" name="station_name"/></form><script>var station = prompt("역명을 입력해 보시죠", "애오개");document.getElementById("station_1").value = station;document.forms["form"].submit();</script>';
 $subwayid = array("1001"=> "1호선", "1002"=> "2호선", "1003"=> "3호선", "1004"=> "4호선", "1005"=> "5호선", "1006"=> "6호선", "1007"=> "7호선", "1008"=> "8호선", "1009"=> "9호선", "1063"=> "경의중앙선", "1065"=> "공항철도", "1067"=> "경춘선", "1071"=> "수인선", "1075"=> "분당선", "1077"=> "신분당선");
 
 $conn = new mysqli($credentials["host"], $credentials["user"], $credentials["pass"], $credentials["database"]);
@@ -17,7 +16,36 @@ $conn->set_charset("utf8"); // 인코딩 박살 방지
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    echo $input_station;
+    ?>
+		<div class="modal fade" id="stationSearchModal" tabindex="-1" role="dialog" aria-labelledby="stationSearchModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="stationSearchModalLabel">애오개 짱</h5>
+					</div>
+					<form method="post">
+						<div class="modal-body">
+							<div class="form-group">
+								<label for="station-name" class="col-form-label">역명을 입력해 보세요</label>
+								<input type="text" class="form-control" id="station-name" name="station_name" required="required" value="애오개">
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">바로 검색어들을 감상할래요</button>
+								<button type="submit" class="btn btn-primary">검색</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script>
+			var search_modal = $('#stationSearchModal')
+			search_modal.modal('show');
+			search_modal.on('hidden.bs.modal', function (e) {
+				window.location.href = './aeogae_queries.php';
+			});
+		</script>
+		<?php
 }
 elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
 	$station = $_POST["station_name"];
