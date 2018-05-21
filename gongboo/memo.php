@@ -23,7 +23,10 @@ $memo = $db->memoOfArticle($id);
 	<script src="../static/js/jquery.js"></script>
 	<script src="../static/js/bootstrap.min.js"></script>
 	<?php
-	if ($memo['include_tex'] == 1){
+	if ($memo['include_highlighter'] == 1){
+		echo "<link rel='stylesheet' href='../static/css/prism.css'>";
+		echo "<script src= '../static/js/prism.js'></script>"; // with erlang, elixir
+		echo "<script>hljs.initHighlightingOnLoad();</script>";
 		echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>";
 	}
 	?>

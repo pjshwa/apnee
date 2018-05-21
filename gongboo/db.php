@@ -77,7 +77,7 @@ class DB {
     }
 
     public function memoOfArticle($article_id) {
-        $query = "SELECT title, content, include_tex, created_at from gongboo where id = ?";
+        $query = "SELECT title, content, include_highlighter, created_at from gongboo where id = ?";
         // Step 2. Prepare the mysqli_stmt object (stmt)
         if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
@@ -86,12 +86,12 @@ class DB {
         if(!$stmt->execute()) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
-        $stmt->bind_result($title, $content, $include_tex, $date);
+        $stmt->bind_result($title, $content, $include_highlighter, $date);
         while($stmt->fetch()) {
             $item = array(
                             'title'=>$title,
                             'content'=>$content,
-                            'include_tex'=>$include_tex,
+                            'include_highlighter'=>$include_highlighter,
                             'date'=>$date,
                             );
         }
