@@ -12,6 +12,47 @@ class DB {
             throw new Exception('Connect Error: '.$this->mysqli->connect_errno);
         }
     }
+    public function titlesOfEvents() {
+        $query = "SELECT id, title, created_at from events order by created_at desc limit 5";
+        if(!($stmt = $this->mysqli->prepare($query))) {
+            throw new Exception('DB Error: '.$this->mysqli->error);
+        }
+        if(!$stmt->execute()) {
+            throw new Exception('DB Error: '.$this->mysqli->error);
+        }
+        $stmt->bind_result($id, $title, $date);
+        $items = array();
+        while($stmt->fetch()) {
+            $items[] = array(
+                            'id'=>$id,
+                            'title'=>$title,
+                            'date'=>$date,
+                            );
+        }
+        $stmt->close();
+        return $items;
+    }
+
+    public function getEventById($event_id) {
+        $query = "SELECT title, content, created_at from events where id = ?";
+        if(!($stmt = $this->mysqli->prepare($query))) {
+            throw new Exception('DB Error: '.$this->mysqli->error);
+        }
+        $stmt->bind_param('s', $event_id);
+        if(!$stmt->execute()) {
+            throw new Exception('DB Error: '.$this->mysqli->error);
+        }
+        $stmt->bind_result($title, $content, $date);
+        while($stmt->fetch()) {
+            $item = array(
+                'title'=>$title,
+                'content'=>$content,
+                'date'=>$date,
+            );
+        }
+        $stmt->close();
+        return $item;
+    }
     public function newHTMLText($content) {
         // Step 1. Prepare the SQL query 
         $query = "insert into poll_20170424(response) values (?)";
