@@ -1,12 +1,14 @@
 <?php
 require('db.php');
+$loaded = false;
 if (isSet($_GET['id'])){
 	$id = (int)$_GET['id'];
+	$memo = $db->memoOfArticle($id);
+	if ($memo != false) $loaded = true;
 }
-else {
-	header('Location: gongboo/index.php');
+if (!$loaded) {
+	header('Location: ./index.php');
 }
-$memo = $db->memoOfArticle($id);
 ?>
 <!DOCTYPE html>
 <html lang="en">

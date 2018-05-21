@@ -87,7 +87,9 @@ class DB {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
         $stmt->bind_result($title, $content, $include_highlighter, $date);
+        $results_present = false;
         while($stmt->fetch()) {
+            $results_present = true;
             $item = array(
                             'title'=>$title,
                             'content'=>$content,
@@ -96,6 +98,7 @@ class DB {
                             );
         }
         $stmt->close();
+        if (!$results_present) return false;
         return $item;
     }
 
