@@ -23,14 +23,6 @@ session_destroy();
     </div>
     <div class="row" style="margin-top: 20px;">
         <div class="col-sm-12">
-            <p>(당구장) 공지</p>
-            <p>Internet Explorer 11에서 ogg 파일이 제대로 재생되지 않는다는 사실을 발견 했습니다</p>
-            <p>눈 빼고는 소리로는 다 ogg 파일을 사용하였기 때문에 웹사이트 경험에 차질이 있었을 것으로 사료가 됩니다</p>
-            <p>별다른 조치를 취하지는 않고 있으며 크롬 설치를 권장합니다 ...</p>
-        </div>
-    </div>
-    <div class="row" style="margin-top: 20px;">
-        <div class="col-sm-12">
             <div class="container">
                 <div class="panel panel-warning">
                     <div class="panel-heading">
@@ -52,6 +44,14 @@ session_destroy();
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-sm-12">
+            <p>(당구장) 공지</p>
+            <p>Internet Explorer 11에서 ogg 파일이 제대로 재생되지 않는다는 사실을 발견 했습니다</p>
+            <p>눈 빼고는 소리로는 다 ogg 파일을 사용하였기 때문에 웹사이트 경험에 차질이 있었을 것으로 사료가 됩니다</p>
+            <p>별다른 조치를 취하지는 않고 있으며 크롬 설치를 권장합니다 ...</p>
         </div>
     </div>
 </div>
