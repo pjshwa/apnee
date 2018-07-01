@@ -25,12 +25,22 @@ if (!$loaded) {
 	<script src="../static/js/jquery.js"></script>
 	<script src="../static/js/bootstrap.min.js"></script>
 	<?php
-	if ($memo['include_highlighter'] == 1){
-		echo "<link rel='stylesheet' href='../static/css/prism.css'>";
-		echo "<script src= '../static/js/prism.js'></script>"; // with erlang, elixir
-		echo "<script>hljs.initHighlightingOnLoad();</script>";
-		echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>";
-	}
+		if ($memo['include_highlighter'] == 1){
+	?>
+		<link rel='stylesheet' href='../static/css/prism.css'>
+		<script src= '../static/js/prism.js'></script> <!--  with erlang, elixir -->
+		<script>hljs.initHighlightingOnLoad();</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+		<script>
+			MathJax.Hub.Config({
+				tex2jax: {
+					inlineMath: [['$','$'], ['\\(','\\)']],
+					processEscapes: true
+				}
+			});
+		</script>
+	<?php
+		}
 	?>
 </head>
 
