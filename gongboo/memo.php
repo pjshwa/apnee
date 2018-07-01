@@ -29,7 +29,6 @@ if (!$loaded) {
 	?>
 		<link rel='stylesheet' href='../static/css/prism.css'>
 		<script src= '../static/js/prism.js'></script> <!--  with erlang, elixir -->
-		<script>hljs.initHighlightingOnLoad();</script>
 		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 		<script>
 			MathJax.Hub.Config({
