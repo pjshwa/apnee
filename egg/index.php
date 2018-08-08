@@ -52,7 +52,12 @@ else {
 			<div class="col-md-12">
 				<?php
 				if (count($articles) === 0){
-					echo '<article><h4>'.$current_month.'월에는 아직 글이 없어요</h4></article>';
+					if ($current_month == $now_month && $current_year == $now_year){
+						echo '<article><h4>'.$current_month.'월에는 아직 글이 없어요</h4></article>';
+					}
+					else {
+						echo '<article><h4>'.$current_month.'월에는 글이 없어요</h4></article>';
+					}
 				}
 				else {
 				foreach($articles as $article){
