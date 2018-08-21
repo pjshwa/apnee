@@ -9,6 +9,7 @@ if (isSet($_GET['id'])){
 if (!$loaded) {
 	header('Location: ./index.php');
 }
+$include_markdown = $memo['include_markdown'] == 1;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,6 +42,21 @@ if (!$loaded) {
 	<?php
 		}
 	?>
+	<?php
+		if ($include_markdown){
+	?>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.min.js'></script>
+		<script>
+			var converter = new showdown.Converter();
+			var md = <?php echo json_encode($memo['content']); ?>;
+			var html = converter.makeHtml(md);
+			$(document).ready(function() {
+				$('#markdown_content').html(html);
+			});
+		</script>
+	<?php
+		}
+	?>
 </head>
 
 <body style="margin-top: 75px; font-family: Inconsolata; font-size: 18px;">
@@ -52,8 +68,14 @@ if (!$loaded) {
           <?php
 					echo '<h2>'.$memo['title'].'</h2>';
 					echo '<h4>'.date('Y년 n월 j일', strtotime($memo['date'])).'</h4>';
-					echo '<br/><p class="lead" style="white-space: pre-wrap;">';
-					echo $memo['content'];
+					echo '<br/>';
+					if (!$include_markdown) {
+						echo '<p class="lead" style="white-space: pre-wrap;">';
+						echo $memo['content'];
+					}
+					else {
+						echo '<p id="markdown_content" class="lead">';
+					}
           echo '</p>';
           ?>
 					<hr/>
