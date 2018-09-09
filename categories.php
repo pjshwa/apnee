@@ -55,7 +55,7 @@ include("header.php");?>
 	    <a href = "./idea.php">아이디어?</a>
 	</li>
 	<li>
-	    <a href = "./egg"><img src="./static/pics/egg.png" style="width: 10%;"/></a>
+	    <a href = "./eggs"><img src="./static/pics/egg.png" style="width: 10%;"/></a>
 	</li>
 </ul>
 

@@ -2,14 +2,16 @@
 require('db.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $comment_id = $_POST["comment_id"];
+    $author = $_POST["author"];
+    $comment = $_POST["comment"];
     $password = $_POST["password"];
 
     if($password === ''){
         echo "<script>alert('비밀번호를 입력해 주세요');</script>";
     }
     else {
-        if($db->deleteComment($comment_id, $password)){
-            echo "<script>alert('삭제됨');</script>";
+        if($db->updateComment($comment_id, $author, $comment, $password)){
+            echo "<script>alert('수정됨');</script>";
         }
         else {
             echo "<script>alert('비밀번호가 틀립니다');</script>";
@@ -17,6 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     }
 }
 
-header("Location: egg/index.php");
+header("Location: eggs/index.php");
 
 ?>
