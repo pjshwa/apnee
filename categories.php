@@ -150,25 +150,27 @@ function setbackground()
 	var ColorValue = '';
     var x = setInterval(function(){
     	if(move_toggle){
-    		var index = Math.round(Math.random() * 8);
+    		var index = Math.round(Math.random() * 9);
 
-		    ColorValue = "CCCCCC"; // default color - white (index = 0)
+		    ColorValue = "BCDFFF";
 		    if(index == 1)
-		        ColorValue = "66FF33"; 
+		        ColorValue = "C0EAFF";
 		    if(index == 2)
-		        ColorValue = "FF0000"; 
+		        ColorValue = "C6D8FF";
 		    if(index == 3)
-		        ColorValue = "FF00FF"; 
+		        ColorValue = "DDE0FF"; 
 		    if(index == 4)
-		        ColorValue = "0000FF"; 
+		        ColorValue = "FFD2FB";
 		    if(index == 5)
-		        ColorValue = "00FFFF"; 
+		        ColorValue = "CAFDE0";
 		    if(index == 6)
-		        ColorValue = "FFFF00"; 
+		        ColorValue = "FFEDB4";
 		    if(index == 7)
-		       ColorValue = "CC66FF"; 
+		       	ColorValue = "FFB8EA";
 		    if(index == 8)
-		        ColorValue = "3366FF";
+		        ColorValue = "B9CEFB";
+			if(index == 9)
+		        ColorValue = "DFAEFF";
 		    $("body").css("background", "#"+ColorValue);
     	}
     }, 600); //  milliseconds delay
