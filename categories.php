@@ -3,62 +3,62 @@ include("header.php");?>
 <!-- <script>NekoType="colourful"</script>
 <h1 id=nl><script src="http://webneko.net/n200504.js"></script></h1> -->
 <img id="apeach" src="./static/pics/apeachdance.gif" style="" onclick="apeachClick();" />
-<div class="container" style="margin-top:20px;"><h3>분류</h3>
-
+<div class="container" style="margin-top:20px;">
+<h3>분류</h3>
 <div id="front_row" class="row" style="margin-top:40px;">
-
 <div class="col-md-4">
-<h5>완성 또는 더 고칠 생각이 없음</h5>
-<ul>
-	<li>
-	    <a href = "./aeogae.php">애오개</a>
-	</li>
-	<li>
-	    <a href = "./snow.php">눈</a>
-	</li>
-	<li>
-	    <a href = "./chat.php">채팅방</a>
-	</li>
-	<li>
-	    <a href = "./preg.php">정규식 테스터</a>
-	</li>
-	<li>
-	    <a href = "./cow.php">얼룩소</a>
-	</li>
-</ul></div>
+	<h5>완성 또는 더 고칠 생각이 없음</h5>
+	<ul>
+		<li>
+			<a href = "./aeogae.php">애오개</a>
+		</li>
+		<li>
+			<a href = "./snow.php">눈</a>
+		</li>
+		<li>
+			<a href = "./chat.php">채팅방</a>
+		</li>
+		<li>
+			<a href = "./preg.php">정규식 테스터</a>
+		</li>
+		<li>
+			<a href = "./cow.php">얼룩소</a>
+		</li>
+	</ul>
+</div>
 <div class="col-md-4">
-<h5>미완성</h5>
-<ul>
-	<li>
-	    <a href = "./foretooth">앞니저지</a>
-	</li>
-	<li>
-	    <a href = "./philosophy.php">철학자 채팅</a>
-	</li>
-	<li>
-	    <a href = "./pika.php">피카추 잡기(베타)</a>
-	</li>
-	<li>
-	    <a href = "./aeogae2.php">애오개 2</a>
-	</li>
-</ul></div>
+	<h5>미완성</h5>
+	<ul>
+		<li>
+			<a href = "./foretooth">앞니저지</a>
+		</li>
+		<li>
+			<a href = "./philosophy.php">철학자 채팅</a>
+		</li>
+		<li>
+			<a href = "./pika.php">피카추 잡기(베타)</a>
+		</li>
+		<li>
+			<a href = "./aeogae2.php">애오개 2</a>
+		</li>
+	</ul>
+</div>
 <div class="col-md-4">
-<h5>기타</h5>
-<ul>
-	<li>
-	    <a href = "./coffee.php">커피 일기</a>
-	</li>
-	<li>
-	    <a href = "./collections.php">수집 목록</a>
-	</li>
-	<li>
-	    <a href = "./idea.php">아이디어?</a>
-	</li>
-	<li>
-	    <a href = "./eggs"><img src="./static/pics/egg.png" style="width: 10%;"/></a>
-	</li>
-</ul>
-
+	<h5>기타</h5>
+	<ul>
+		<li>
+			<a href = "./coffee.php">커피 일기</a>
+		</li>
+		<li>
+			<a href = "./collections.php">수집 목록</a>
+		</li>
+		<li>
+			<a href = "./idea.php">아이디어?</a>
+		</li>
+		<li>
+			<a href = "./eggs"><img src="./static/pics/egg.png" style="width: 10%;"/></a>
+		</li>
+	</ul>
 </div>
 </div>
 <div id="front_row" class="row" style="margin-top:10px;">
@@ -174,8 +174,6 @@ function setbackground()
 		    $("body").css("background", "#"+ColorValue);
     	}
     }, 600); //  milliseconds delay
-
-    
 }
 
 var bgm = new Audio('./m/sandcanyon.ogg');
