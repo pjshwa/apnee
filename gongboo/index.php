@@ -28,15 +28,20 @@ $category_set = $db->limitAllMemosByCategory(5);
 				}
 				else {
 					foreach($category_set as $category_data){
-						echo '<div class="col-md-4">';
-						echo '<h5>'.$category_data['title'].'</h5>';
-						echo '<ul>';
-						foreach($category_data['articles'] as $article){
-							echo '<li><a href=./memo.php?id='.$article['id'].'>'.$article['title'].'</a></li>';
-						}
-						echo '</ul>';
-						echo '<a href="list.php?category_id='.$category_data['id'].'"><h6>'.$category_data['title'].'에 대한 글 모두 보기</h6></a>';
-						echo '</div>';
+							echo '<div class="col-md-4">';
+							echo '<h5>'.$category_data['title'].'</h5>';
+							echo '<ul>';
+							foreach($category_data['articles'] as $article){
+								if ($article['raw_link'] == 1) {
+									echo '<li><a href="'.$category_data['id'].'/'.$article['title'].'.html">'.$article['title'].'</a></li>';
+								}
+								else {
+									echo '<li><a href=./memo.php?id='.$article['id'].'>'.$article['title'].'</a></li>';
+								}
+							}
+							echo '</ul>';
+							echo '<a href="list.php?category_id='.$category_data['id'].'"><h6>'.$category_data['title'].'에 대한 글 모두 보기</h6></a>';
+							echo '</div>';
 					}
 				}
 				?>

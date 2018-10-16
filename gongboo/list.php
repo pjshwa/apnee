@@ -37,7 +37,12 @@ $articles = $result[1];
 				}
 				else {
 					foreach($articles as $article){
-						echo '<li><a href=./memo.php?id='.$article['id'].'>'.$article['title'].'</a> ('.date('Y년 n월 j일', strtotime($article['date'])).')</li>';
+						if ($article['raw_link'] == 1) {
+							echo '<li><a href="'.$category_id.'/'.$article['title'].'.html">'.$article['title'].'</a> ('.date('Y년 n월 j일', strtotime($article['date'])).')</li>';
+						}
+						else {
+							echo '<li><a href=./memo.php?id='.$article['id'].'>'.$article['title'].'</a> ('.date('Y년 n월 j일', strtotime($article['date'])).')</li>';
+						}
 					}
 				}?>
 				</ul>

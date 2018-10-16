@@ -13,11 +13,11 @@ class DB {
     }
 
     public function limitAllMemosByCategory($limit){
-        $rank_query = 'SELECT id, category_id, title, created_at,
+        $rank_query = 'SELECT id, category_id, title, raw_link, created_at,
                        @rank := IF(@current_category_id = category_id, @rank + 1, 1) AS rank,
                        @current_category_id := category_id 
                        FROM gongboo ORDER BY category_id, created_at DESC';
-        $query = 'SELECT id, category_id, title, created_at FROM ('.$rank_query.') gongboo_with_rank, (SELECT @rank := 1) r, (SELECT @current_category_id := 0) c WHERE rank <= ? ORDER BY created_at DESC;';
+        $query = 'SELECT id, category_id, title, raw_link, created_at FROM ('.$rank_query.') gongboo_with_rank, (SELECT @rank := 1) r, (SELECT @current_category_id := 0) c WHERE rank <= ? ORDER BY created_at DESC;';
         $category_set = $this->titlesOfCategory();
         if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception($query.'DB Error: '.$this->mysqli->error);
@@ -26,14 +26,15 @@ class DB {
         if(!$stmt->execute()) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
-        $stmt->bind_result($id, $category_id, $title, $date);
+        $stmt->bind_result($id, $category_id, $title, $raw_link, $date);
         $items = array();
         while($stmt->fetch()) {
             $category_set[$category_id]['articles'][] = array(
-                                                        'id'=>$id,
-                                                        'title'=>$title,
-                                                        'date'=>$date,
-                                                        );
+                'id'=>$id,
+                'title'=>$title,
+                'raw_link'=>$raw_link,
+                'date'=>$date,
+            );
         }
         $stmt->close();
         return $category_set;
@@ -47,7 +48,7 @@ class DB {
             $category_id = 0;
         }
         if ($category_id != 0){
-            $query = "SELECT id, title, created_at from gongboo where category_id = ? order by created_at desc";
+            $query = "SELECT id, title, raw_link, created_at from gongboo where category_id = ? order by created_at desc";
             if(!($stmt = $this->mysqli->prepare($query))) {
                 throw new Exception('DB Error: '.$this->mysqli->error);
             }
@@ -55,7 +56,7 @@ class DB {
         }
         else {
             $category_title = '모든 카테고리';
-            $query = "SELECT id, title, created_at from gongboo order by created_at desc";
+            $query = "SELECT id, title, raw_link, created_at from gongboo order by created_at desc";
             if(!($stmt = $this->mysqli->prepare($query))) {
                 throw new Exception('DB Error: '.$this->mysqli->error);
             }
@@ -63,14 +64,15 @@ class DB {
         if(!$stmt->execute()) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
-        $stmt->bind_result($id, $title, $date);
+        $stmt->bind_result($id, $title, $raw_link, $date);
         $items = array();
         while($stmt->fetch()) {
             $items[] = array(
-                            'id'=>$id,
-                            'title'=>$title,
-                            'date'=>$date,
-                            );
+                'id'=>$id,
+                'title'=>$title,
+                'raw_link'=>$raw_link,
+                'date'=>$date,
+            );
         }
         $stmt->close();
         return [$category_title, $items];
@@ -91,12 +93,12 @@ class DB {
         while($stmt->fetch()) {
             $results_present = true;
             $item = array(
-                            'title'=>$title,
-                            'content'=>$content,
-                            'include_highlighter'=>$include_highlighter,
-                            'include_markdown'=>$include_markdown,
-                            'date'=>$date,
-                            );
+                'title'=>$title,
+                'content'=>$content,
+                'include_highlighter'=>$include_highlighter,
+                'include_markdown'=>$include_markdown,
+                'date'=>$date,
+            );
         }
         $stmt->close();
         if (!$results_present) return false;
