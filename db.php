@@ -265,7 +265,7 @@ class DB {
             $query = "update coffee set iced_americano = 0 where reg_date = current_date"; 
         }
         else {
-            $query = "insert into coffee (iced_americano) values ('0')"; 
+            $query = "insert into coffee (iced_americano, reg_date) values ('0', current_date)"; 
         }
           if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
