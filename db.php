@@ -153,21 +153,7 @@ class DB {
         // Step 5. Close the connection
         $stmt->close();
     }
-    public function newFish($user_id, $title, $content) {
-        // Step 1. Prepare the SQL query 
-        $query = "insert into fish(user_id, title, content) values (?, ?, ?)";
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt->bind_param('sss', $user_id, $title,  $content);
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        // Step 5. Close the connection
-        $stmt->close();
-    }
+
     public function getRandomPhi($i) { // for p_real.php
         // Step 1. Prepare the SQL query 
         $query = "SELECT PI.img_src, PI.desc
@@ -393,49 +379,8 @@ class DB {
         // Step 5. Close the connection
         $stmt->close();
         return $item;
-    
     }
-    public function getLogs($start) {
-        // Step 1. Prepare the SQL query 
-        $query = "SELECT id,title, content,user_id, date(reg_date) from fish order by reg_date desc limit ?,10";
 
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-        $stmt->bind_param('s', $start);
-
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-        // Step 4. Retrieve the result and put them in the $items array
-
-        $stmt->bind_result($id, $title, $content, $user_id, $d);
-        $items = array();
-        $months = array("01"=> "Jan", "02"=> "Feb", "03"=> "Mar", "04"=> "Apr", "05"=> "May", "06"=> "Jun", "07"=> "Jul", "08"=> "Aug", "09"=> "Sep", "10"=> "Oct", "11"=> "Nov", "12"=> "Dec");
-        while($stmt->fetch()) {
-            list($year, $month, $day) = preg_split("/-/", $d);
-            $items[] = array('article_id'=>$id,
-                            'title'=>$title, 
-                            'content'=>$content, 
-                            'user_id'=>$user_id,
-                            'day'=>$day,
-                            'month'=>$months[$month],
-                            'year'=>$year,
-                            'date'=>$d);
-        }
-
-        // Step 5. Close the connection
-        $stmt->close();
-
-        // Step 6. Return the selected $items to the function caller
-       return $items;
-    
-    }
     public function getCoffee($start) {
         // Step 1. Prepare the SQL query 
         $query = "SELECT iced_americano, reg_date from coffee order by reg_date desc limit ?, 20";
@@ -452,7 +397,6 @@ class DB {
         if(!$stmt->execute()) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
-
 
         // Step 4. Retrieve the result and put them in the $items array
 
@@ -737,24 +681,6 @@ class DB {
 
         // Step 6. Return the selected $items to the function caller
        return $item;
-    
-    }
-    
-    /* Check login information */
-    public function checkLogin($password) {
-        if(!($stmt = $this->mysqli->prepare('select user_id, nickname, password_h from fishbowl_users'))) {
-           throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-        $stmt->bind_result($i, $nick, $ph);
-        while($stmt->fetch()) {
-           if(password_verify($password, $ph)) return array('user_id'=>$i, 'nickname'=>$nick);
-        }
-        return false;
     }
 };
 

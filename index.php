@@ -16,7 +16,6 @@ session_destroy();
         </div>
         <div class="col-sm-4">
             <br/><br/>
-            <a href="./door.php"><img src="./static/pics/door.png" width="100px"/></a>
             <a href="./duck.html"><img src="./static/pics/ducky_flip_v.png" width="90px"/></a>
             <a href="javascript:var audio2 = new Audio('./static/pics/Dramatic-chipmunk.mp3');audio2.play();"><img src="./static/pics/slide.png" id="myImg" width="100px"/></a>
         </div>

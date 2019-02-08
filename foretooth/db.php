@@ -158,31 +158,6 @@ class DB {
        return $item;
     
     }
-    
- //    /* Check login information */
- //    public function checkLogin($login, $password) {
-	// if(!($stmt = $this->mysqli->prepare('SELECT user_id, user_pw '.
- //                                    'FROM users '.
- //                                    'WHERE user_id=? AND user_pw=?'))) {
- //           throw new Exception('DB Error: '.$this->mysqli->error);
- //        }
-
- //        $stmt->bind_param('ss', $login, $password);
- //        if(!$stmt->execute()) {
- //            throw new Exception('DB Error: '.$this->mysqli->error);
- //        }
-
- //        $stmt->bind_result($id, $name);
- //        if($stmt->fetch()) {
- //            $stmt->close();
- //           return true;
- //        } else {
- //            $stmt->close();
- //           return false;
- //        }
-
-	
- //    }
 };
 
 // Create a DB object $db. We will use $db to connect to database in catalog.php
