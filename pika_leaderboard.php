@@ -46,7 +46,7 @@ $items = $db->getPika();
 <body>
 
     <!-- Navigation -->
-    <nav class="navbar" role="navigation" style="background-color:#85d0d3; border-color:#85d0d3;">
+    <nav class="navbar" role="navigation" style="background-image: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);">
         <div class="container banner_padding" >
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
