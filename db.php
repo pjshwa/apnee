@@ -403,8 +403,11 @@ class DB {
         $stmt->bind_result($iced_americano, $d);
         $items = array();
         while($stmt->fetch()) {
-           $items[] = array('iced_americano'=>$iced_americano, 
-                            'date'=>$d);
+            $items[] = array(
+                'iced_americano' => $iced_americano, 
+                'date' => $d,
+                'time_of_week' => date('N', strtotime($d))
+            );
         }
 
         // Step 5. Close the connection

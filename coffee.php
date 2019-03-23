@@ -42,6 +42,12 @@ $average = round($db->avgCoffee(), 3);
     body {
         font-family: myriad-pro;
     }
+    .weekday_6 {
+        color: blue;
+    }
+    .weekday_7 {
+        color: red;
+    }
     </style>
 
 </head>
@@ -112,7 +118,9 @@ var loadMore = function() {
         if (this.readyState == 4 && this.status == 200) {
             var resp = (JSON && JSON.parse(this.responseText) || $.parseJSON(this.responseText));
             resp.forEach(function(item, index){
-                coffee_body.append($("<tr id='coffee_row_" + (index + 1) + "'><td>" + item.date + "</td><td>" + item.iced_americano + "</td></tr>"));
+                coffee_body.append(
+                    $("<tr id='coffee_row_" + (index + 1) + "' class='weekday_" + item.time_of_week + "'><td>" + item.date + "</td><td>" + item.iced_americano + "</td></tr>")
+                );
             });
             busy = false;
         }
