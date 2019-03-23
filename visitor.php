@@ -26,7 +26,7 @@ else {
     <title>방명록</title>
 
 <style type="text/css">
-@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400);
+@import url(https://fonts.googleapis.com/css?family=Lato:100,300,400);
 *{
   margin:0;
   padding:0;
