@@ -1,7 +1,10 @@
 <?php
 include("header.php");
 include("credentials.php");
-?><div class="container" style="margin-top:20px;"><h1>지금까지의 검색어</h1><?php
+?>
+<div class="container" style="margin-top:20px;">
+	<h1>지금까지의 검색어</h1>
+	<?php
 
 	$conn = new mysqli($credentials["host"], $credentials["user"], $credentials["pass"], $credentials["database"]);
 	// Check connection
@@ -18,18 +21,16 @@ include("credentials.php");
 		    // output data of each row
 
 		    while($row = $r->fetch_assoc()) {
-		        echo "<li>".$row["a_query"]." (".$row["reg_date"].")</li>";
+				$reg_date = DateTime::createFromFormat('Y-m-d H:i:s', $row["reg_date"], new DateTimeZone('UTC'));
+				$reg_date->setTimezone(new DateTimeZone('Asia/Seoul'));
+				echo "<li>".$row["a_query"]." (".$reg_date->format('Y-m-d H:i:s').")</li>";
 		    }
 		} else {
 		    echo "검색 결과가 없다";
 		}
 		echo "</ul>";
+		
 	}
-	// elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
-	// 	$sql = "truncate table queries"; // limit 30 : recent 30 acts
-	// 	$r = $conn->query($sql);
-	// 	echo "<script>window.alert('다 지웠다');var loc = window.location;window.location = loc.protocol + '//' + loc.host + loc.pathname + loc.search;</script>";
-	// }
 
 	$conn->close();
 

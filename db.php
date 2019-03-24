@@ -281,13 +281,13 @@ class DB {
         $stmt->close();
     }
     public function addCoffee() {
-        // Step 1. Prepare the SQL query 
+        // Step 1. Prepare the SQL query
         $query = "update coffee set iced_americano = iced_americano + 1 where reg_date = current_date";
         // Step 2. Prepare the mysqli_stmt object (stmt)           
           if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
-        // Step 3. Execute the statement      
+        // Step 3. Execute the statement
         if(!$stmt->execute()) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
@@ -589,9 +589,8 @@ class DB {
         if ($correct) $query = "update questions set tries = tries+1,corrects = corrects+1 where question_key=?";
         else $query = "update questions set tries = tries + 1 where question_key=?";
 
-
         // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
+        if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
 
