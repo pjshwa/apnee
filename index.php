@@ -47,10 +47,8 @@ session_destroy();
     </div>
     <div class="row" style="margin-top: 20px;">
         <div class="col-sm-12">
-            <p>(당구장) 공지</p>
-            <p>알고 계셨나요..?</p>
-            <p>달걀 페이지에 등장하는 <code>year</code>와 <code>month</code> 파라미터에</p>
-            <p>이상한 값을 입력해 보세요</p>
+            <p>서버 이전 공사 중입니다</p>
+            <p>페이지 몇 개가 고장나서 잘 안 보일 수도 있으니 양해 부탁 드려요</p>
         </div>
     </div>
 </div>
