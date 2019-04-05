@@ -234,7 +234,7 @@ class DB {
     
     }
     public function initCoffee() {
-        $query = "SELECT count(*) from coffee where reg_date = date(adddate(now(), interval 9 hour))";         
+        $query = "SELECT count(*) from coffee where reg_date = current_date";         
             if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }     
@@ -248,10 +248,10 @@ class DB {
         }
         $stmt->close();
         if ((int)$item >= 1) {
-            $query = "update coffee set iced_americano = 0 where reg_date = date(adddate(now(), interval 9 hour))"; 
+            $query = "update coffee set iced_americano = 0 where reg_date = current_date"; 
         }
         else {
-            $query = "insert into coffee (iced_americano, reg_date) values ('0', date(adddate(now(), interval 9 hour)))"; 
+            $query = "insert into coffee (iced_americano, reg_date) values ('0', current_date)"; 
         }
           if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
@@ -282,7 +282,7 @@ class DB {
     }
     public function addCoffee() {
         // Step 1. Prepare the SQL query
-        $query = "update coffee set iced_americano = iced_americano + 1 where reg_date = date(adddate(now(), interval 9 hour))";
+        $query = "update coffee set iced_americano = iced_americano + 1 where reg_date = current_date";
         // Step 2. Prepare the mysqli_stmt object (stmt)           
           if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
