@@ -91,15 +91,20 @@ include("header.php");?>
 	position: absolute;
 	left:0;top:0;
 }
+
 @media only screen and (min-width: 320px) { 
-    #apeach {
-        width: 30%;
-    } 
+	#apeach {
+		width: 30%;
+	} 
 } 
 @media only screen and (min-width: 769px) { 
-    #apeach {
-        width: 10%;
-    } 
+	#apeach {
+		width: 10%;
+	} 
+
+	body {
+		overflow: hidden;
+	}
 } 
 </style>
 <script>
