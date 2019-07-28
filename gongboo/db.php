@@ -14,10 +14,10 @@ class DB {
 
     public function limitAllMemosByCategory($limit){
         $rank_query = 'SELECT id, category_id, title, raw_link, created_at,
-                       @rank := IF(@current_category_id = category_id, @rank + 1, 1) AS rank,
+                       @rank := IF(@current_category_id = category_id, @rank + 1, 1) AS field_rank,
                        @current_category_id := category_id 
                        FROM gongboo ORDER BY category_id, created_at DESC';
-        $query = 'SELECT id, category_id, title, raw_link, created_at FROM ('.$rank_query.') gongboo_with_rank, (SELECT @rank := 1) r, (SELECT @current_category_id := 0) c WHERE rank <= ? ORDER BY created_at DESC;';
+        $query = 'SELECT id, category_id, title, raw_link, created_at FROM ('.$rank_query.') gongboo_with_rank WHERE field_rank <= ? ORDER BY created_at DESC;';
         $category_set = $this->titlesOfCategory();
         if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception($query.'DB Error: '.$this->mysqli->error);
