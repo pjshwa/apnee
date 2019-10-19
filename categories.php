@@ -47,9 +47,6 @@ include("header.php");?>
 	<h5>기타</h5>
 	<ul>
 		<li>
-			<a href = "./coffee.php">커피 일기</a>
-		</li>
-		<li>
 			<a href = "./collections.php">수집 목록</a>
 		</li>
 		<li>

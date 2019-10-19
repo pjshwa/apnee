@@ -233,34 +233,6 @@ class DB {
        return $items;
     
     }
-    public function initCoffee() {
-        $query = "SELECT count(*) from coffee where reg_date = current_date";         
-            if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }     
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt->bind_result($ans);
-        $item = '';
-        while($stmt->fetch()) {
-            $item = $ans;
-        }
-        $stmt->close();
-        if ((int)$item >= 1) {
-            $query = "update coffee set iced_americano = 0 where reg_date = current_date"; 
-        }
-        else {
-            $query = "insert into coffee (iced_americano, reg_date) values ('0', current_date)"; 
-        }
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }    
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt->close();
-    }
     public function insertVisitorLog($t, $c) {
         // Step 1. Prepare the SQL query 
         $query = "insert into visitor_log (title, content) values (?, ?)";
@@ -274,20 +246,6 @@ class DB {
 
 
         // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        // Step 5. Close the connection
-        $stmt->close();
-    }
-    public function addCoffee() {
-        // Step 1. Prepare the SQL query
-        $query = "update coffee set iced_americano = iced_americano + 1 where reg_date = current_date";
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        // Step 3. Execute the statement
         if(!$stmt->execute()) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
@@ -329,31 +287,6 @@ class DB {
        return $items;
     
     }
-    public function coffeeMax() {
-        // Step 1. Prepare the SQL query 
-        $query = "SELECT count(*) from coffee";
-
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }     
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        // Step 4. Retrieve the result and put them in the $items array
-
-        $stmt->bind_result($ans);
-        $item = '';
-        while($stmt->fetch()) {
-            $item = $ans;
-        }
-
-        // Step 5. Close the connection
-        $stmt->close();
-        return $item;
-    
-    }
     public function fishMax() {
         // Step 1. Prepare the SQL query 
         $query = "SELECT count(*) from fish";
@@ -381,168 +314,6 @@ class DB {
         return $item;
     }
 
-    public function getCoffee($start) {
-        // Step 1. Prepare the SQL query 
-        $query = "SELECT iced_americano, reg_date from coffee order by reg_date desc limit ?, 20";
-
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-        $stmt->bind_param('s', $start);
-
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-        // Step 4. Retrieve the result and put them in the $items array
-
-        $stmt->bind_result($iced_americano, $d);
-        $items = array();
-        while($stmt->fetch()) {
-            $items[] = array(
-                'iced_americano' => $iced_americano, 
-                'date' => $d,
-                'time_of_week' => date('N', strtotime($d))
-            );
-        }
-
-        // Step 5. Close the connection
-        $stmt->close();
-
-        // Step 6. Return the selected $items to the function caller
-        return $items;
-    
-    }
-    public function getChicken() {
-        // Step 1. Prepare the SQL query 
-        $query = "SELECT sum(chicken), year(created_at), week(created_at) from chicken_counts group by week(created_at) desc";
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-        // Step 4. Retrieve the result and put them in the $items array
-
-        $stmt->bind_result($chicken_sum_of_week, $year_of_week, $week);
-        $items = array();
-        while($stmt->fetch()) {
-           $items[] = array('chicken_sum_of_week'=>$chicken_sum_of_week, 
-                            'year_of_week'=>$year_of_week,
-                            'week'=>$week);
-        }
-        // Step 5. Close the connection
-        $stmt->close();
-        // Step 6. Return the selected $items to the function caller
-        return $items;
-    
-    }
-    public function totalCoffee() {
-        $query = "SELECT sum(iced_americano) from coffee";
-
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-        // Step 4. Retrieve the result and put them in the $items array
-
-        $stmt->bind_result($ans);
-        $item = '';
-        while($stmt->fetch()) {
-           $item = $ans;
-        }
-
-        // Step 5. Close the connection
-        $stmt->close();
-
-        // Step 6. Return the selected $items to the function caller
-       return (int)$item;
-    
-    }
-    public function totalChicken() {
-        $query = "SELECT sum(chicken) from chicken_counts";
-
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-        // Step 4. Retrieve the result and put them in the $items array
-
-        $stmt->bind_result($ans);
-        $item = '';
-        while($stmt->fetch()) {
-           $item = $ans;
-        }
-
-        // Step 5. Close the connection
-        $stmt->close();
-
-        // Step 6. Return the selected $items to the function caller
-       return (int)$item;
-    
-    }
-    public function avgCoffee() {
-        $query = "SELECT avg(iced_americano) from coffee";
-
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-        // Step 4. Retrieve the result and put them in the $items array
-
-        $stmt->bind_result($ans);
-        $item = '';
-        while($stmt->fetch()) {
-           $item = $ans;
-        }
-
-        // Step 5. Close the connection
-        $stmt->close();
-
-        // Step 6. Return the selected $items to the function caller
-       return $item;
-    
-    }
     /* Get items from database */
     public function getItems($page='1') {
 		// Step 1. Prepare the SQL query 
