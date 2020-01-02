@@ -45,12 +45,6 @@ session_destroy();
             </div>
         </div>
     </div>
-    <div class="row" style="margin-top: 20px;">
-        <div class="col-sm-12">
-            <p>서버 이전 공사 중입니다</p>
-            <p>페이지 몇 개가 고장나서 잘 안 보일 수도 있으니 양해 부탁 드려요</p>
-        </div>
-    </div>
 </div>
 
 <footer class="footer-footer" style="margin-bottom:0;">
