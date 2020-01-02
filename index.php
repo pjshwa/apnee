@@ -2,10 +2,6 @@
 <?php
 include("header.php");
 require('db.php');
-session_start();
-unset($_SESSION['login']);
-session_destroy();
-// destroy login info
 
 ?>
 <div class="container">
