@@ -12,10 +12,6 @@ class DB {
         }
     }
 
-    public function mapId($elements){
-        return $elements['id'];
-    }
-
     public function articlesOfMonth($year, $month) {
         // Step 1. Prepare the SQL query
         $query = "SELECT id, title, content, created_at from eggs where YEAR(created_at) = ? AND MONTH(created_at) = ? order by created_at desc";
