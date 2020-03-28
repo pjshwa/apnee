@@ -10,10 +10,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     }
     $conn->set_charset("utf8"); // 인코딩 박살 방지
 
-    $score = $_POST["score"];
+    $score = (int)$_POST["score"];
+    if ($score > 50 || $score < 0) {
+        $score = -1;
+    }
 
     $conn->query("insert into cowgame_score (score) values ('".$score."')");
     $conn->close();
+
+    if ($score == -1) {
+        echo "<script>alert('사기꾼! 당신의 점수는 -1점이 되었다.');</script>";
+    }
     echo "<script>var loc = window.location;window.location = loc.protocol + '//' + loc.host + loc.pathname + loc.search;</script>"; //force get
 }
 

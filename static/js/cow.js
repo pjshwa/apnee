@@ -35,20 +35,21 @@ $("#startClock").click( function(){
     document.getElementById("sound_box").style.visibility = "hidden";
     document.getElementById("ig").style.visibility = "visible";
     refreshCows();
-   setInterval(function() {
-     counter--;
+    
+    var counterInterval = setInterval(function() {
+      counter--;
       if (counter >= 0) {
-         count_span.innerHTML = counter;
+        count_span.innerHTML = counter;
       }
       if (counter === 0) {
-         gameOver();
-         clearInterval(counter);
-       }
-       if (counter > 15 || score > 30) {
-         cheat();
-         clearInterval(counter);
-       }
-     }, 1000);
+        gameOver();
+        clearInterval(counterInterval);
+      }
+      if (counter > 15) {
+        cheat();
+        clearInterval(counterInterval);
+      }
+    }, 1000);
 });
 
 const yes_prompts = ["얼룩소를 고르세요", "얼룩소를 찾으세요", "얼룩소가 아닌 소를 고르지 마세요", "얼룩 무늬가 있는 소를 고르세요"];
@@ -65,7 +66,7 @@ for(var i = 0; i < 4; i++){
 
 function randomIntFromInterval(min,max)
 {
-    return Math.floor(Math.random()*(max-min+1)+min); // rand number generator
+  return Math.floor(Math.random()*(max-min+1)+min); // rand number generator
 }
 
 function refreshCows(){
@@ -124,7 +125,6 @@ function gameOver() {
     document.getElementById("sc").value = document.getElementById("score").innerHTML;
     document.forms["score"].submit();
 }
-
 
 function cheat() {
     window.alert("사기꾼");
