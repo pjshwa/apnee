@@ -1,0 +1,422 @@
+/*!
+ * Start Bootstrap - Half Slider HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+html,
+body {
+    height: 100%;
+}
+
+/* You can change the height of the carousel by changing the height in the class below. It is set to 50% by default, but can be any height! */
+.table-hover > tbody > tr:hover {
+    background-color: #f5f5f5;
+    transition: .3s;
+  }
+.carousel {
+    height: 50%;
+}
+.btn-default
+{
+    background-color:#85d0d3;
+    border-color:white;
+    color:white;
+    transition: all 0.5s;
+}
+.btn-default:focus,
+.btn-default:hover
+{
+    background-color:white;
+    border-color:#85d0d3;
+    color:#85d0d3;
+    transition: all 0.5s;
+}
+.btn-default:active,
+.btn-default:active:hover,
+.btn-default:active:focus
+{
+    background-color:#369396;
+    color:white;
+}
+.btn-success
+{
+    background-color:#5cb85c;
+    border-color:white;
+    color:white;
+    transition: all 0.5s;
+}
+.btn-success:focus,
+.btn-success:hover
+{
+    background-color:white;
+    border-color:#5cb85c;
+    color:#5cb85c;
+    transition: all 0.5s;
+}
+.item,
+.active,
+.carousel-inner {
+    height: 100%;
+}
+
+/* Background images are set within the HTML using inline CSS, not here */
+
+.fill {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+.basecolor {
+    background-color: #e6e6e6;
+}
+footer {
+    margin: 50px 0;
+}
+#loginbase {
+    font-size:13px;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-right:11px;
+    padding-left:11px;
+    color: black;
+}
+#loginbase:focus,
+#loginbase:hover {
+    color: blue;
+    background-color: white;
+    transition: background-color .5s, color .5s;
+}
+#loginbase_user {
+    font-size:13px;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-right:11px;
+    padding-left:11px;
+    color: #85d0d3;
+}
+#loginbase_superuser {
+    font-size:13px;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-right:11px;
+    padding-left:11px;
+    color: green;
+}
+#loginbase_user:focus,
+#loginbase_user:hover,
+#loginbase_superuser:focus,
+#loginbase_superuser:hover{
+    background-color: white;
+    color: blue;
+    transition: background-color .5s, color .5s;
+}
+
+.banner_padding{
+    padding-left: 50px;
+    padding-right: 50px;
+}
+#banner_inpadding{
+    font-weight: bold;
+    font-size: 20px;
+    color:rgb(244, 244, 244);
+    padding-top:20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+#banner_inpadding:focus,
+#banner_inpadding:hover{
+    font-weight: bold;
+    font-size: 20px;
+    color:black;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: white;
+    transition: background-color .5s, color .5s;
+}
+
+#color1{
+    background-color: #FF8694;
+    border-color: #77A8B2;
+    color: white;
+}
+#color2{
+    background-color: #DEF9FF;
+}
+#color3{
+    background-color: #B27A48;
+}
+#color4{
+    background-color: #FFBE84;
+}
+#color5{
+    background-color: #FFE2C8;
+}
+
+#owl-demo .item img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+.navbar-toggle
+{
+    border-color: #ddd;
+    background-color: #e6e6e6;
+}
+.navbar-toggle:focus,
+.navbar-toggle:hover
+{
+    border-color: #ddd;
+    background-color: #b3b3b3;
+}
+.navbar-toggle .icon-bar {
+    background-color: #888;
+}
+/*index.html styles from now on*/
+.thumbnails
+{
+    display:block;
+    margin:auto;
+    position:relative;
+    border:0px;
+    width:200px;
+    height:250px;
+}
+.thumbnails img
+{
+    display: block;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    width:200px;
+    height:200px;
+}
+.thumbnails .description
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color:rgba(255,255,255,0.4);
+    position: absolute;
+    font-weight: bold;
+    text-align:center;
+    top:204px;
+    width:200px;
+    height:0px;
+    color: #000;
+    opacity: 1;
+    transition: all .3s;
+}
+.thumbnails .description2
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    font-weight: bold;
+    text-align:center;
+    top:204px;
+    width:200px;
+    height:0px;
+    color: #000;
+    opacity: 0;
+    transition: all .3s;
+}
+a:hover .thumbnails .description
+{
+    top:0px;
+    padding-top:50px;
+    color: #60c;
+    opacity:1;
+    height:200px;
+}
+a:hover .thumbnails .description2
+{
+    top:0px;
+    padding-top:100px;
+    opacity:1;
+    height:200px;
+}
+
+
+#myImg {
+    /*border-radius: 5px;*/
+    cursor: pointer;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+/* Caption of Modal Image */
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+/* Add Animation */
+.modal-content, #caption {
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {transform:scale(0)}
+    to {transform:scale(1)}
+}
+
+@keyframes zoom {
+    from {transform:scale(0)}
+    to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+}
+.textmodal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.textmodal-header {
+    padding: 2px 16px;
+    background-color: #85d0d3;
+    color: white;
+}
+.textmodal-body {
+    padding: 40px 16px 40px 16px;
+}
+/* Modal Content */
+.textmodal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding:0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+/* The Close Button */
+.txtclose {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.txtclose:hover,
+.txtclose:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+ul.notice, ul.freeboard {
+    list-style: none; /* Remove list bullets */
+    padding: 0;
+    margin: 0;
+
+}
+
+ul.notice li, ul.freeboard li {
+    padding-left: 16px;
+}
+ul.notice li a,
+ul.freeboard li a {
+    text-decoration: none;
+    color:black;
+    transition:.3s;
+}
+ul.notice li a:hover,
+ul.freeboard li a:hover,
+ul.notice li a:focus,
+ul.freeboard li a:focus {
+    background-color:#85d0d3;
+    color:white;
+}
+ul.notice li:before {
+    content: "★";
+    padding-right: 8px;
+    color: #85d0d3; /* Or a color you prefer */
+}
+ul.freeboard li:before {
+    content: "■";
+    padding-right: 8px;
+    color: blue; /* Or a color you prefer */
+}
