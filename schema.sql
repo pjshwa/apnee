@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jan 04, 2020 at 12:23 PM
+-- Generation Time: Apr 18, 2020 at 02:19 AM
 -- Server version: 8.0.15
 -- PHP Version: 7.3.3
 
@@ -141,6 +141,18 @@ CREATE TABLE `eggs` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
+--
+-- Triggers `eggs`
+--
+DELIMITER $$
+CREATE TRIGGER `eggs_before_insert` BEFORE INSERT ON `eggs` FOR EACH ROW BEGIN
+IF NEW.title IS NULL OR NEW.title = '' THEN
+	SET NEW.title = DATE_FORMAT(CURRENT_DATE, '%Y%m%d');
+END IF;
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -244,6 +256,20 @@ CREATE TABLE `important` (
   `comment` text NOT NULL,
   `review` text NOT NULL,
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=MyISAM DEFAULT CHARSET=euckr;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `music_logs`
+--
+
+CREATE TABLE `music_logs` (
+  `id` int(6) UNSIGNED NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `content` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -479,6 +505,12 @@ ALTER TABLE `important`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `music_logs`
+--
+ALTER TABLE `music_logs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `phi_chats`
 --
 ALTER TABLE `phi_chats`
@@ -637,6 +669,12 @@ ALTER TABLE `gongboo_categories`
 -- AUTO_INCREMENT for table `important`
 --
 ALTER TABLE `important`
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `music_logs`
+--
+ALTER TABLE `music_logs`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
