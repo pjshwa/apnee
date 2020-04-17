@@ -49,7 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
 	$station = $_POST["station_name"];
-	$conn->query("insert into queries (a_query) values ('".$station."')");
+	$stmt = $conn->prepare("insert into queries (a_query) values (?)");
+	$stmt->bind_param('s', $station);
+	$stmt->execute();
+	$stmt->close();
 	$conn->close();
 	$idx = 0;
 	$contents = [];

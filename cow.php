@@ -15,7 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $score = -1;
     }
 
-    $conn->query("insert into cowgame_score (score) values ('".$score."')");
+    $stmt = $conn->prepare("insert into cowgame_score (score) values (?)");
+    $stmt->bind_param('s', $score);
+    $stmt->execute();
+    $stmt->close();
     $conn->close();
 
     if ($score == -1) {
