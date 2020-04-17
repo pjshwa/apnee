@@ -2,7 +2,6 @@
 include("header.php");
 include("credentials.php");
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-
     $conn = new mysqli($credentials["host"], $credentials["user"], $credentials["pass"], $credentials["database"]);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
@@ -15,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $stmt->execute();
     $stmt->close();
     $conn->close();
+
+    header("Location: " . $_SERVER['REQUEST_URI']);
 }
 
 ?>
