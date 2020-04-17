@@ -2,7 +2,7 @@
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     require('db.php');
     $db->newPika($_POST['player_nickname'], $_POST['success'], $_POST['remain_time_score'], $_POST['total_hits_score']);
-    echo "<script>var loc = window.location;window.location = loc.protocol + '//' + loc.host + loc.pathname + loc.search;</script>"; //force get
+    header("Location: " . $_SERVER['REQUEST_URI']);
 }
 
 ?>

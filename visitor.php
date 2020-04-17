@@ -5,7 +5,7 @@ require('db.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
 	$db->insertVisitorLog($_POST['title'], $_POST['content']);
-	echo "<script>var loc = window.location;window.location = loc.protocol + '//' + loc.host + loc.pathname + loc.search;</script>"; // force get
+  header("Location: " . $_SERVER['REQUEST_URI']);
 }
 
 else {
