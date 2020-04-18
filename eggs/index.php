@@ -65,13 +65,13 @@ else {
 					echo '<h2>'.$article['title'].'</h2>';
 					echo '<h4>'.date('Y년 n월 j일', strtotime($article['date'])).'</h4>';
 					echo '<br/>';
-					echo '<p class="lead imojify" style="white-space: pre-wrap;">';
+					echo '<div class="lead imojify" style="white-space: pre-wrap;">';
 					echo $article['content'];
 					$new_comment = false;
 					foreach($article['comments'] as $comment){
 						if ($comment['commnew']) $new_comment = true;
 					}
-					echo '</p><div class="container"><div class="row"><h4>';
+					echo '</div><div class="container"><div class="row"><h4>';
 					if ($new_comment) echo "<div class='btn btn-primary' ";
 					else echo "<div class='btn btn-default' ";
 					echo 'onclick="toggleScriptVisibility('.$article['id'].')">댓글들 (<strong>'.count($article['comments']).'</strong>)</div></h4></div><div id="comments_for_article_'.$article['id'].'" style="display:none;"><ul>';
@@ -123,18 +123,35 @@ else {
 		</div>
 	</div>
 <style>
+.video-container {
+	position: relative;
+	width: 100%;
+	height: 0;
+	padding-bottom: 56.25%;
+}
+.video {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
 @media only screen and (min-width: 320px) { 
-    #comm_new_gif {
-        width: 10%;
-        display: inline-block;
-    } 
-} 
+	#comm_new_gif {
+		width: 10%;
+		display: inline-block;
+	}
+}
 @media only screen and (min-width: 769px) { 
-    #comm_new_gif {
-        width: 5%;
-        display: inline-block;
-    } 
-} 
+	#comm_new_gif {
+		width: 5%;
+		display: inline-block;
+	}
+	.video-container {
+		width: 768px;
+		padding-bottom: 432px;
+	}
+}
 </style>
 <script src="../static/js/imojify.js"></script>
 <!-- source: https://github.com/danielthepope/imojify -->
