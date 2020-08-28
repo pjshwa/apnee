@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 18, 2020 at 02:19 AM
+-- Generation Time: Aug 29, 2020 at 01:48 AM
 -- Server version: 8.0.15
 -- PHP Version: 7.3.3
 
@@ -165,8 +165,7 @@ CREATE TABLE `egg_comments` (
   `comment` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `author` varchar(30) DEFAULT NULL,
-  `h_password` varchar(255) DEFAULT NULL
+  `author` varchar(30) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------

@@ -83,15 +83,12 @@ else {
 						echo '</li>';
 					}
 					echo '</ul><hr/>';
-					echo '<form id="comment_post_'.$article['id'].'" name="comment_post_'.$article['id'].'" action="./comment_post.php" method="post">';
-					echo '<input type="hidden" id="cyear" name="cyear" value="'.$current_year.'"/>';
-					echo '<input type="hidden" id="cmonth" name="cmonth" value="'.$current_month.'"/>';
+					echo '<form id="comment_post_'.$article['id'].'" name="comment_post_'.$article['id'].'">';
 					echo '<input type="hidden" id="article_id" name="article_id" value="'.$article['id'].'"/>';
 				?>
 						<div class="row">
 							<strong>이름 <input type="text" id="comment_author" name="comment_author" maxlength="30" required/></strong>
-							<input type="hidden" id="comment_password" name="comment_password" value="뭘봐" maxlength="100"/>
-						<input type="submit" class="btn btn-link" value="댓글 등록하기"/>
+							<input type="submit" class="btn btn-link" value="댓글 등록하기"/>
 						</div>
 						<div class="row">
 							내용
@@ -166,6 +163,16 @@ function toggleScriptVisibility(article_id) {
 		comments_block.style.display = 'block';
 	}
 }
+
+$('form').on('submit', function(event) {
+  event.preventDefault();
+	$.ajax({
+		url: 'comment_post.php',
+		type: 'post',
+		data: $(this).serialize(),
+		success: function(r) {window.location.reload();}
+	});
+});
 
 imojify('.imojify', { ignore: '.ignore-emoji' });
 </script>

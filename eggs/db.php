@@ -42,7 +42,7 @@ class DB {
         else {
             $inClause = join(',', $idsOfArticles);
         }
-        $query2 = "SELECT id, egg_id, author, comment, created_at from egg_comments where egg_id in (".$inClause.") order by created_at desc";
+        $query2 = "SELECT id, egg_id, author, comment, created_at from egg_comments where egg_id in (".$inClause.") order by created_at";
         if(!($stmt2 = $this->mysqli->prepare($query2))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
@@ -78,70 +78,17 @@ class DB {
         return $items;
     }
 
-    public function postComment($article_id, $author, $comment, $password) {
-        $query = "INSERT INTO `egg_comments`(`egg_id`, `comment`, `author`, `h_password`) VALUES (?, ?, ?, ?)";
+    public function newComment($article_id, $author, $comment) {
+        $query = "INSERT INTO `egg_comments`(`egg_id`, `comment`, `author`) VALUES (?, ?, ?)";
         // Step 2. Prepare the mysqli_stmt object (stmt)
         if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
-        $h_password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->bind_param('ssss', $article_id, $comment, $author, $h_password);
+        $stmt->bind_param('sss', $article_id, $comment, $author);
         if(!$stmt->execute()) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
         $stmt->close();
-    }
-
-    public function updateComment($comment_id, $author, $comment, $password) {
-        $ph = hPassOfComment($comment_id);
-        if(password_verify($password, $ph)){
-            $query = "UPDATE `egg_comments` SET `comment`=?,`author`=? WHERE id=?";
-            if(!($stmt2 = $this->mysqli->prepare($query))) {
-                throw new Exception('DB Error: '.$this->mysqli->error);
-            }
-            $stmt2->bind_param('sss', $comment, $author, $article_id);
-            if(!$stmt->execute()) {
-                throw new Exception('DB Error: '.$this->mysqli->error);
-            }
-            $stmt2->close();
-            return true;
-        }
-        return false;
-    }
-
-    public function deleteComment($comment_id, $password) {
-        $ph = hPassOfComment($comment_id);
-        if(password_verify($password, $ph)){
-            $query = "DELETE FROM `egg_comments` WHERE id=?";
-            if(!($stmt2 = $this->mysqli->prepare($query))) {
-                throw new Exception('DB Error: '.$this->mysqli->error);
-            }
-            $stmt2->bind_param('s', $comment_id);
-            if(!$stmt->execute()) {
-                throw new Exception('DB Error: '.$this->mysqli->error);
-            }
-            $stmt2->close();
-            return true;
-        }
-        return false;
-    }
-
-    private function hPassOfComment($comment_id) {
-        $querypre = "SELECT `h_password` FROM `egg_comments` WHERE id=?";
-        if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt->bind_param('s', $comment_id);
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt->bind_result($ph);
-        $item = '';
-        while($stmt->fetch()) {
-            $item = $ph;
-        }
-        $stmt->close();
-        return $item;
     }
 };
 
