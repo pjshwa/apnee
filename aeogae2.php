@@ -78,7 +78,6 @@
 </div>
 </form>
 <p id="station_name" style="margin-bottom: 20px; margin-top: 60px;"></p>
-<p>속도 개선을 위한 노력을 하고 있습니다</p>
 <table class="table table-striped">
     <thead>
         <tr>
