@@ -287,32 +287,6 @@ class DB {
        return $items;
     
     }
-    public function fishMax() {
-        // Step 1. Prepare the SQL query 
-        $query = "SELECT count(*) from fish";
-
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }     
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-        // Step 4. Retrieve the result and put them in the $items array
-
-        $stmt->bind_result($ans);
-        $item = '';
-        while($stmt->fetch()) {
-            $item = $ans;
-        }
-
-        // Step 5. Close the connection
-        $stmt->close();
-        return $item;
-    }
 
     /* Get items from database */
     public function getItems($page='1') {

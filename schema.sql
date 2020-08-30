@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 29, 2020 at 01:48 AM
+-- Generation Time: Aug 30, 2020 at 01:36 PM
 -- Server version: 8.0.15
 -- PHP Version: 7.3.3
 
@@ -46,19 +46,6 @@ CREATE TABLE `chats` (
   `author` varchar(30) NOT NULL,
   `content` varchar(30) NOT NULL,
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `chicken_counts`
---
-
-CREATE TABLE `chicken_counts` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `chicken` int(10) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -110,19 +97,6 @@ CREATE TABLE `crema_widget_contents` (
   `widget_device_type` int(3) NOT NULL,
   `content` varchar(255) NOT NULL,
   `new_content` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `diaries`
---
-
-CREATE TABLE `diaries` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `content` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
@@ -260,20 +234,6 @@ CREATE TABLE `important` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `music_logs`
---
-
-CREATE TABLE `music_logs` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `title` varchar(60) NOT NULL,
-  `content` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `phi_chats`
 --
 
@@ -310,18 +270,6 @@ CREATE TABLE `pika_score` (
   `success` int(1) NOT NULL,
   `remain_time` int(6) NOT NULL,
   `hits_score` int(10) NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `poll_20170424`
---
-
-CREATE TABLE `poll_20170424` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `response` longtext NOT NULL,
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
@@ -418,12 +366,6 @@ ALTER TABLE `chats`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `chicken_counts`
---
-ALTER TABLE `chicken_counts`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `coffee`
 --
 ALTER TABLE `coffee`
@@ -446,12 +388,6 @@ ALTER TABLE `crema_memo`
 -- Indexes for table `crema_widget_contents`
 --
 ALTER TABLE `crema_widget_contents`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `diaries`
---
-ALTER TABLE `diaries`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -504,12 +440,6 @@ ALTER TABLE `important`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `music_logs`
---
-ALTER TABLE `music_logs`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `phi_chats`
 --
 ALTER TABLE `phi_chats`
@@ -526,12 +456,6 @@ ALTER TABLE `phi_info`
 -- Indexes for table `pika_score`
 --
 ALTER TABLE `pika_score`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `poll_20170424`
---
-ALTER TABLE `poll_20170424`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -587,12 +511,6 @@ ALTER TABLE `chats`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `chicken_counts`
---
-ALTER TABLE `chicken_counts`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `coffee`
 --
 ALTER TABLE `coffee`
@@ -614,12 +532,6 @@ ALTER TABLE `crema_memo`
 -- AUTO_INCREMENT for table `crema_widget_contents`
 --
 ALTER TABLE `crema_widget_contents`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `diaries`
---
-ALTER TABLE `diaries`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -671,12 +583,6 @@ ALTER TABLE `important`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `music_logs`
---
-ALTER TABLE `music_logs`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `phi_chats`
 --
 ALTER TABLE `phi_chats`
@@ -692,12 +598,6 @@ ALTER TABLE `phi_info`
 -- AUTO_INCREMENT for table `pika_score`
 --
 ALTER TABLE `pika_score`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `poll_20170424`
---
-ALTER TABLE `poll_20170424`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
