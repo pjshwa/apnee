@@ -69,17 +69,18 @@ else {
 					echo $article['content'];
 					$new_comment = false;
 					foreach($article['comments'] as $comment){
-						if ($comment['commnew']) $new_comment = true;
+						if ($comment['commnew']) {
+							$new_comment = true;
+							break;
+						}
 					}
 					echo '</div><div class="container"><div class="row"><h4>';
-					if ($new_comment) echo "<div class='btn btn-primary' ";
-					else echo "<div class='btn btn-default' ";
-					echo 'onclick="toggleScriptVisibility('.$article['id'].')">댓글들 (<strong>'.count($article['comments']).'</strong>)</div></h4></div><div id="comments_for_article_'.$article['id'].'" style="display:none;"><ul>';
+					if ($new_comment) echo "<div class='btn btn-primary comments-indicator-button' ";
+					else echo "<div class='btn btn-default comments-indicator-button' ";
+					echo 'onclick="toggleScriptVisibility('.$article['id'].')">댓글들 (<strong>'.count($article['comments']).'</strong>)</div></h4></div><div id="comments_for_article_'.$article['id'].'" style="display:none;"><ul class="comments">';
 					foreach($article['comments'] as $comment){
 						echo '<li class="imojify"><strong>'.htmlspecialchars($comment['commauthor']).':</strong> '.htmlspecialchars($comment['comment']).' ('.date('Y-m-d', strtotime($comment['commdate'])).')';
-						if ($comment['commnew']){
-							echo '<img id="comm_new_gif" src="../static/pics/new.gif"/>';
-						}
+						if ($comment['commnew']) echo '<img id="comm_new_gif" src="../static/pics/new.gif"/>';
 						echo '</li>';
 					}
 					echo '</ul><hr/>';
@@ -166,11 +167,27 @@ function toggleScriptVisibility(article_id) {
 
 $('form').on('submit', function(event) {
   event.preventDefault();
+	var $form = $(this);
 	$.ajax({
 		url: 'comment_post.php',
 		type: 'post',
-		data: $(this).serialize(),
-		success: function(r) {window.location.reload();}
+		data: $form.serialize(),
+		success: function(res) {
+			var $article = $form.closest('article');
+
+			// Append new comment
+			$article.find('ul.comments').append(res);
+
+			// Update comments count
+			var $comment_indicator_button = $article.find('.comments-indicator-button');
+			$comment_indicator_button.removeClass('btn-default').addClass('btn-primary');
+			var current_comments_count = parseInt($comment_indicator_button.find('strong').text());
+			$comment_indicator_button.find('strong').text(current_comments_count + 1);
+
+			// Empty out inputs
+			$form.find('input#comment_author').val('');
+			$form.find('textarea#comment').val('');
+		}
 	});
 });
 
