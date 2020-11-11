@@ -1,7 +1,8 @@
 <?php
 require('db.php');
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+if($_SERVER['REQUEST_METHOD'] === 'GET'){
 	header('Content-Type: application/json');
-	echo json_encode($db->getEventById($_POST['event_id']));
+	echo json_encode($db->getEventById($_GET['event_id']));
 }
 ?>
