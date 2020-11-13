@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 30, 2020 at 01:36 PM
+-- Generation Time: Nov 14, 2020 at 01:39 AM
 -- Server version: 8.0.15
 -- PHP Version: 7.3.3
 
@@ -70,35 +70,6 @@ CREATE TABLE `cowgame_score` (
   `id` int(6) UNSIGNED NOT NULL,
   `score` int(6) NOT NULL,
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `crema_memo`
---
-
-CREATE TABLE `crema_memo` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `title` varchar(60) NOT NULL,
-  `content` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `crema_widget_contents`
---
-
-CREATE TABLE `crema_widget_contents` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `widget_device_type` int(3) NOT NULL,
-  `content` varchar(255) NOT NULL,
-  `new_content` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -379,18 +350,6 @@ ALTER TABLE `cowgame_score`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `crema_memo`
---
-ALTER TABLE `crema_memo`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `crema_widget_contents`
---
-ALTER TABLE `crema_widget_contents`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `eggs`
 --
 ALTER TABLE `eggs`
@@ -520,18 +479,6 @@ ALTER TABLE `coffee`
 -- AUTO_INCREMENT for table `cowgame_score`
 --
 ALTER TABLE `cowgame_score`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `crema_memo`
---
-ALTER TABLE `crema_memo`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `crema_widget_contents`
---
-ALTER TABLE `crema_widget_contents`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
