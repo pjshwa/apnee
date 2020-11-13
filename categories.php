@@ -38,9 +38,6 @@ include("header.php");?>
 		<li>
 			<a href = "./pika.php">피카추 잡기(베타)</a>
 		</li>
-		<li>
-			<a href = "./aeogae2.php">애오개 2</a>
-		</li>
 	</ul>
 </div>
 <div class="col-md-4">
