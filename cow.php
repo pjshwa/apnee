@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $score = -1;
     }
 
-    $stmt = $conn->prepare("insert into cowgame_score (score) values (?)");
+    $stmt = $conn->prepare("insert into cowgame_score (score, reg_date) values (?, CURRENT_TIMESTAMP)");
     $stmt->bind_param('s', $score);
     $stmt->execute();
     $stmt->close();

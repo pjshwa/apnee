@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $conn->set_charset("utf8"); // 인코딩 박살 방지
     $name = $_POST["chat_name"];
     $content = $_POST["chat_content"];
-    $stmt = $conn->prepare("insert into chats (author, content) values (?, ?)");
+    $stmt = $conn->prepare("insert into chats (author, content, reg_date) values (?, ?, CURRENT_TIMESTAMP)");
     $stmt->bind_param('ss', $name, $content);
     $stmt->execute();
     $stmt->close();

@@ -12,26 +12,27 @@ class DB {
             throw new Exception('Connect Error: '.$this->mysqli->connect_errno);
         }
     }
-    public function titlesOfEvents() {
-        $query = "SELECT id, title, created_at from events order by created_at desc limit 5";
-        if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt->bind_result($id, $title, $date);
-        $items = array();
-        while($stmt->fetch()) {
-            $items[] = array(
-                            'id'=>$id,
-                            'title'=>$title,
-                            'date'=>$date,
-                            );
-        }
-        $stmt->close();
-        return $items;
-    }
+
+    // public function titlesOfEvents() {
+    //     $query = "SELECT id, title, created_at from events order by created_at desc limit 5";
+    //     if(!($stmt = $this->mysqli->prepare($query))) {
+    //         throw new Exception('DB Error: '.$this->mysqli->error);
+    //     }
+    //     if(!$stmt->execute()) {
+    //         throw new Exception('DB Error: '.$this->mysqli->error);
+    //     }
+    //     $stmt->bind_result($id, $title, $date);
+    //     $items = array();
+    //     while($stmt->fetch()) {
+    //         $items[] = array(
+    //                         'id'=>$id,
+    //                         'title'=>$title,
+    //                         'date'=>$date,
+    //                         );
+    //     }
+    //     $stmt->close();
+    //     return $items;
+    // }
 
     public function getEventById($event_id) {
         $query = "SELECT title, content, created_at from events where id = ?";
@@ -53,62 +54,7 @@ class DB {
         $stmt->close();
         return $item;
     }
-    public function newHTMLText($content) {
-        // Step 1. Prepare the SQL query 
-        $query = "insert into poll_20170424(response) values (?)";
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt->bind_param('s', $content);
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        // Step 5. Close the connection
-        $stmt->close();
-    }
-    public function newProjectItem($content) {
-        // Step 1. Prepare the SQL query 
-        $query = "insert into project(content) values (?)";
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt->bind_param('s', $content);
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        // Step 5. Close the connection
-        $stmt->close();
-    }
-    public function getProjectItems() {
-        // Step 1. Prepare the SQL query 
-        $query = "SELECT content, reg_date
-        from project
-        order by reg_date desc";
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-        if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }    
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt->bind_result($content, $reg_date);
-        $items = array();
-        while($stmt->fetch()) {
-            $items[] = array(
-                            'content'=>$content,
-                            'reg_date'=>$reg_date,
-                            );
-        }
 
-        $stmt->close();
-
-        // Step 6. Return the selected $items to the function caller
-        return $items;
-    }
     public function getPika() {
         // Step 1. Prepare the SQL query 
         $query = "SELECT nickname, success, remain_time, hits_score, date(reg_date)
@@ -138,9 +84,10 @@ class DB {
         // Step 6. Return the selected $items to the function caller
         return $items;
     }
+
     public function newPika($nickname, $success, $remain_time, $hits_score) {
         // Step 1. Prepare the SQL query 
-        $query = "insert into pika_score(nickname, success, remain_time, hits_score) values (?, ?, ?, ?)";
+        $query = "insert into pika_score(nickname, success, remain_time, hits_score, reg_date) values (?, ?, ?, ?, CURRENT_TIMESTAMP)";
         // Step 2. Prepare the mysqli_stmt object (stmt)           
           if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
@@ -154,37 +101,9 @@ class DB {
         $stmt->close();
     }
 
-    public function getRandomPhi($i) { // for p_real.php
-        // Step 1. Prepare the SQL query 
-        $query = "SELECT PI.img_src, PI.desc
-        from phi_info PI
-        where PI.id = ?";
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-        if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt->bind_param('s', $i);
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt->bind_result($img_src, $description);
-        $items = array();
-        while($stmt->fetch()) {
-            $items[] = array(
-                            'img_src'=>$img_src,
-                            'description'=>$description,
-                            );
-        }
-
-        $stmt->close();
-
-        // Step 6. Return the selected $items to the function caller
-       return $items;
-    }
     public function insertPhiChat($c) {
         // Step 1. Prepare the SQL query 
-        $query = "insert into phi_chats(phi_id, content) values (?, ?)";
+        $query = "insert into phi_chats(phi_id, content, reg_date) values (?, ?, CURRENT_TIMESTAMP)";
         // Step 2. Prepare the mysqli_stmt object (stmt)           
           if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
@@ -198,6 +117,7 @@ class DB {
         // Step 5. Close the connection
         $stmt->close();
     }
+
     public function getPhiChat() {
         // Step 1. Prepare the SQL query 
         $query = "SELECT PC.content, PC.src, PI.img_src, PI.desc
@@ -206,7 +126,7 @@ class DB {
         order by PC.reg_date desc";
 
         // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
+        if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
 
@@ -231,11 +151,11 @@ class DB {
 
         // Step 6. Return the selected $items to the function caller
        return $items;
-    
     }
+
     public function insertVisitorLog($t, $c) {
         // Step 1. Prepare the SQL query 
-        $query = "insert into visitor_log (title, content) values (?, ?)";
+        $query = "insert into visitor_log (title, content, reg_date) values (?, ?, CURRENT_TIMESTAMP)";
 
 
         // Step 2. Prepare the mysqli_stmt object (stmt)           
@@ -252,26 +172,22 @@ class DB {
         // Step 5. Close the connection
         $stmt->close();
     }
+
     public function getVisitorLogs() {
         // Step 1. Prepare the SQL query 
         $query = "SELECT title, content, reg_date from visitor_log order by reg_date desc";
-
 
         // Step 2. Prepare the mysqli_stmt object (stmt)           
           if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
 
-
-
         // Step 3. Execute the statement      
         if(!$stmt->execute()) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
 
-
         // Step 4. Retrieve the result and put them in the $items array
-
         $stmt->bind_result($title, $content, $d);
         $items = array();
         while($stmt->fetch()) {
@@ -284,150 +200,7 @@ class DB {
         $stmt->close();
 
         // Step 6. Return the selected $items to the function caller
-       return $items;
-    
-    }
-
-    /* Get items from database */
-    public function getItems($page='1') {
-		// Step 1. Prepare the SQL query 
-        $page = (int)$page; if ($page < 1) $page = 1;
-        $pg_idx = ((int)$page - 1) * 5;
-        $query = "SELECT question_key, question, tries, corrects from questions limit ?,5";
-
-
-		// Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-        $stmt->bind_param('s', $pg_idx);
-
-
-
-		// Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-		// Step 4. Retrieve the result and put them in the $items array
-
-        $stmt->bind_result($id, $q, $t, $c);
-        $items = array();
-        while($stmt->fetch()) {
-           $items[] = array('id'=>$id, 
-                            'question'=>$q,
-                            'tries'=>$t,
-                            'corrects'=>$c);
-        }
-
-		// Step 5. Close the connection
-        $stmt->close();
-
-		// Step 6. Return the selected $items to the function caller
-	   return $items;
-	
-    }
-    public function updateTries($k, $correct) {
-        // Step 1. Prepare the SQL query 
-        if ($correct) $query = "update questions set tries = tries+1,corrects = corrects+1 where question_key=?";
-        else $query = "update questions set tries = tries + 1 where question_key=?";
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-        if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-        $stmt->bind_param('s', $k);
-
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-    }
-    public function updateTempQ($q, $a) {
-        // Step 1. Prepare the SQL query 
-        $query = "insert into temp_questions (question, answer) values (?, ?)";
-
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-        $stmt->bind_param('ss', $q, $a);
-
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-    }
-
-    public function getTotalPage() {
-        $query = "SELECT count(*) from questions";
-
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-        // Step 4. Retrieve the result and put them in the $items array
-
-        $stmt->bind_result($ans);
-        $item = '';
-        while($stmt->fetch()) {
-           $item = $ans;
-        }
-
-        // Step 5. Close the connection
-        $stmt->close();
-
-        // Step 6. Return the selected $items to the function caller
-       return (int)$item;
-    
-    }
-
-    public function getanswer($k) {
-        // Step 1. Prepare the SQL query 
-        $query = "SELECT answer from questions where question_key=?";
-
-
-        // Step 2. Prepare the mysqli_stmt object (stmt)           
-          if(!($stmt = $this->mysqli->prepare($query))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-        $stmt->bind_param('s', $k);
-
-        // Step 3. Execute the statement      
-        if(!$stmt->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-
-
-        // Step 4. Retrieve the result and put them in the $items array
-
-        $stmt->bind_result($a);
-        $item = '';
-        while($stmt->fetch()) {
-           $item = $a;
-        }
-
-        // Step 5. Close the connection
-        $stmt->close();
-
-        // Step 6. Return the selected $items to the function caller
-       return $item;
+        return $items;
     }
 };
 
@@ -436,5 +209,4 @@ $db = new DB($credentials['host'],
              $credentials['user'], 
 			 $credentials['pass'], 
 			 $credentials['database']);
-
 ?>

@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
 	$station = $_POST["station_name"];
-	$stmt = $conn->prepare("insert into queries (a_query) values (?)");
+	$stmt = $conn->prepare("insert into queries (a_query, reg_date) values (?, CURRENT_TIMESTAMP)");
 	$stmt->bind_param('s', $station);
 	$stmt->execute();
 	$stmt->close();

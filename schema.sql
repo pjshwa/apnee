@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 14, 2020 at 01:39 AM
+-- Generation Time: Nov 14, 2020 at 02:40 AM
 -- Server version: 8.0.15
 -- PHP Version: 7.3.3
 
@@ -32,7 +32,7 @@ CREATE TABLE `cats` (
   `id` int(6) UNSIGNED NOT NULL,
   `title` varchar(60) NOT NULL,
   `img_src` varchar(255) NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -45,7 +45,7 @@ CREATE TABLE `chats` (
   `id` int(6) UNSIGNED NOT NULL,
   `author` varchar(30) NOT NULL,
   `content` varchar(30) NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -69,7 +69,7 @@ CREATE TABLE `coffee` (
 CREATE TABLE `cowgame_score` (
   `id` int(6) UNSIGNED NOT NULL,
   `score` int(6) NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -82,7 +82,7 @@ CREATE TABLE `eggs` (
   `id` int(6) UNSIGNED NOT NULL,
   `title` varchar(60) NOT NULL,
   `content` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
@@ -108,7 +108,7 @@ CREATE TABLE `egg_comments` (
   `id` int(6) UNSIGNED NOT NULL,
   `egg_id` int(6) UNSIGNED NOT NULL,
   `comment` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `author` varchar(30) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
@@ -123,7 +123,7 @@ CREATE TABLE `events` (
   `id` int(6) UNSIGNED NOT NULL,
   `title` varchar(60) NOT NULL,
   `content` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
@@ -138,7 +138,7 @@ CREATE TABLE `fish` (
   `user_id` int(6) NOT NULL,
   `title` varchar(60) NOT NULL,
   `content` text NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -168,7 +168,7 @@ CREATE TABLE `gongboo` (
   `include_highlighter` tinyint(1) NOT NULL DEFAULT '0',
   `include_markdown` tinyint(1) NOT NULL DEFAULT '0',
   `raw_link` tinyint(1) NOT NULL DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
@@ -181,7 +181,7 @@ CREATE TABLE `gongboo` (
 CREATE TABLE `gongboo_categories` (
   `id` int(6) UNSIGNED NOT NULL,
   `title` varchar(60) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
@@ -199,7 +199,7 @@ CREATE TABLE `important` (
   `meal` int(1) NOT NULL DEFAULT '0',
   `comment` text NOT NULL,
   `review` text NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -213,7 +213,7 @@ CREATE TABLE `phi_chats` (
   `phi_id` int(6) NOT NULL,
   `content` varchar(100) CHARACTER SET euckr COLLATE euckr_korean_ci NOT NULL,
   `src` varchar(64) NOT NULL DEFAULT '#',
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -241,7 +241,7 @@ CREATE TABLE `pika_score` (
   `success` int(1) NOT NULL,
   `remain_time` int(6) NOT NULL,
   `hits_score` int(10) NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -253,7 +253,7 @@ CREATE TABLE `pika_score` (
 CREATE TABLE `project` (
   `id` int(6) UNSIGNED NOT NULL,
   `content` text NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -265,7 +265,7 @@ CREATE TABLE `project` (
 CREATE TABLE `queries` (
   `id` int(6) UNSIGNED NOT NULL,
   `a_query` varchar(30) NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -304,7 +304,7 @@ CREATE TABLE `uncle_pic` (
   `id` int(6) UNSIGNED NOT NULL,
   `title` varchar(60) NOT NULL,
   `img_src` varchar(255) NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -317,7 +317,7 @@ CREATE TABLE `visitor_log` (
   `ID` int(11) NOT NULL,
   `title` varchar(64) NOT NULL,
   `content` text NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 --

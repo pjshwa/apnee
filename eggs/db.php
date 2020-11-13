@@ -79,7 +79,7 @@ class DB {
     }
 
     public function newComment($article_id, $author, $comment) {
-        $query = "INSERT INTO `egg_comments`(`egg_id`, `comment`, `author`) VALUES (?, ?, ?)";
+        $query = "INSERT INTO `egg_comments`(`egg_id`, `comment`, `author`, `created_at`, `updated_at`) VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
         // Step 2. Prepare the mysqli_stmt object (stmt)
         if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);

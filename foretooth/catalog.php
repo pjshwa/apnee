@@ -149,5 +149,3 @@ $page->generate();
 
 /* display content */
 $page->displayAllItems($items, $total_questions, $pageno);
-
-
