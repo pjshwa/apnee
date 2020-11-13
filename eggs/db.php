@@ -97,5 +97,4 @@ $db = new DB($credentials['host'],
              $credentials['user'], 
 			 $credentials['pass'], 
 			 $credentials['database']);
-
 ?>

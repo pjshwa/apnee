@@ -1,83 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>	
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="">
-	<meta name="author" content="">
+  <head>  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-	<title></title>
-	<link href="../static/css/bootstrap.min.css" rel="stylesheet" />
-	<script src="../static/js/jquery.js"></script>
-	<script src="../static/js/bootstrap.min.js"></script>
-</head>
-<body style="margin-top: 75px;">
+    <title></title>
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="../static/js/jquery.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+  </head>
+  <body style="margin-top: 75px;">
 
-	<!-- Body -->
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<article>
-					<h3>발표 노트</h3>
-					<h4>2018년 11월 30일</h4>
-					<br/>
-					<ol class="list-group">
-						<li class="list-group-item">
-							<p>안녕하세요, 소프트웨어 종합 설계 최종 발표를 맡게 된 박진식이라고 합니다.</p>
-							<p>팀원들은 순서대로 전현준, Vincent Nguyen 입니다.</p>
-						</li>
-						<li class="list-group-item">
-              <p>발표는 다음과 같은 순서로 진행 하겠습니다.</p>
-              <p>실존하는 연구에 대한 한계점 정리를 중심으로 지난 2회 발표 동안 말씀드렸던 것들을 간단히 짚고 넘어갈 것이고요.</p>
-              <p>해당 분야에 대해 저희가 한 학기 동안 공헌한 내용에 대해 다음으로 말씀 드리겠습니다.</p>
-              <p>마지막으로, 최종 발표 이후 저희의 스케쥴에 대해서 말씀 드리겠습니다.</p>
-						</li>
-						<li class="list-group-item">
-              <p>최근 훌륭한 Deep Learning 라이브러리들이 여럿 오픈소스로 공개되고, 덕분에 많은 새로운 일들을 할 수 있게 되었는데요.</p>
-							<p>Matrix / Tensor 연산은 Deep Learning 의 핵심이라고 할 수 있습니다.</p>
-						</li>
-						<li class="list-group-item">
-              <p>하지만 TensorFlow 를 포함한 현존하는 머신러닝 라이브러리들은, Matrix / Tensor 병렬 연산을 효율적으로 수행할 수 없습니다.</p>
-              <p>그 이유로는, 첫 번째로는 병렬화를 위한 boilerplate code 를 많이 작성해줘야 한다는 것입니다.</p>
-              <p>두 번째로는 load balancing 을 수동으로 해줘야 한다는 점이 있습니다</p>
-						</li>
-						<li class="list-group-item">
-              <p>저희는 이 문제점을 인식하고, 분산 처리 시스템을 활용할 수 있는 deep learning framework 을 구축하는 것을 목표로 삼았습니다.</p>
-              <p>이번 학기에 저희가 구체적으로 공헌한 점은 아래 두 가지인데요.</p>
-              <p>Network 설정 구축 등을 위해 필요한 boilerplate code 의 양을 줄인 것과.</p>
-              <p>Tensorflow 의 single thread 연산에 적용되는 optimization 의 일부를 저희 framework 에도 적용한 것입니다.</p>
-						</li>
-						<li class="list-group-item">
-							<p>Code 의 양을 줄인 예를 보고 계십니다. 네트워크 설정에 관한 코드인데요. Tensorflow 코드에는 네트워크 설정을 정의하는 부분과, 정의한 설정을 실제로 연산에 사용하기 위한 boilerplate code 가 포함됩니다. 저희 Framework 에서는 두 가지 모두 function call 한 두개로 처리가 가능합니다. 보시는 바와 같이 Tensorflow 에서는 36줄이었던 코드가 저희 framework 에서는 9줄로 줄었죠</p>
-						</li>
-						<li class="list-group-item">
-              <p>코드 사이즈가 줄었다고 해서 무조건 좋은 것은 아니죠, 보통은 tradeoff 가 있기 마련인데요.</p>
-              <p>저희 코드의 경우 코드 사이즈가 줄었지만 연산 속도는 오히려 더 빨랐습니다.</p>
-						</li>
-						<li class="list-group-item">
-							<p>저희의 다음 공헌 사례입니다. 저희 framework 는 연산량을 최적화하기 위해 lazy evaluation 을 적용하고 있습니다. 이는 연산 sequence 로부터 AST 를 구축하여, Tree 의 일부분을 cache 하여 결과값을 사용하는 등의 최적화를 가능하게 합니다.</p>
-						</li>
-						<li class="list-group-item">
-							<p>저희는 Markov chain 연산에서의 matrix 곱셈 최적화를 가능하게 하였습니다. 같은 matrix의 곱셈 sequence 가 여러번 발생 할 경우, matrix 연산의 일부를 cache 해 두는 방식입니다. 그림에서 보실 수 있듯 (같은 matrix 가 될 수 있는) 노란 사각형 내부의 연산 결과값을 cache 해 둬서 다른 사각형에서의 실제 연산 없이 결과를 사용할 수 있게 하였습니다</p>
-						</li>
-						<li class="list-group-item">
-							<p>이 결과 exponential 한 성능 향상을 보였구요.</p>
-            </li>
-            <li class="list-group-item">
-							<p>다만 분산 처리와 optimization 을 같이 할 경우 그래프와 같이, 분산 처리를 도입한 경우에 결과가 오히려 안 좋게 나오는 문제가 있었습니다.</p>
-            </li>
-            <li class="list-group-item">
-							<p>동영상: network overhead 등, 작은 사이즈에서는 잘 동작 하지 않음. </p>
-            </li>
-            <li class="list-group-item">
-							<p>이상 저희가 이번 학기에 공헌한 내용들이었습니다. 저희는 Greedy Coal Train 이었구요.</p>
-						</li>
-					</ol>
-					<hr/>
-				</article>
-			</div>
-		</div>
-	</div>
-</body>
+    <!-- Body -->
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <article>
+            <h3>발표 노트</h3>
+            <h4>2018년 11월 30일</h4>
+            <br/>
+            <ol class="list-group">
+              <li class="list-group-item">
+                <p>안녕하세요, 소프트웨어 종합 설계 최종 발표를 맡게 된 박진식이라고 합니다.</p>
+                <p>팀원들은 순서대로 전현준, Vincent Nguyen 입니다.</p>
+              </li>
+              <li class="list-group-item">
+                <p>발표는 다음과 같은 순서로 진행 하겠습니다.</p>
+                <p>실존하는 연구에 대한 한계점 정리를 중심으로 지난 2회 발표 동안 말씀드렸던 것들을 간단히 짚고 넘어갈 것이고요.</p>
+                <p>해당 분야에 대해 저희가 한 학기 동안 공헌한 내용에 대해 다음으로 말씀 드리겠습니다.</p>
+                <p>마지막으로, 최종 발표 이후 저희의 스케쥴에 대해서 말씀 드리겠습니다.</p>
+              </li>
+              <li class="list-group-item">
+                <p>최근 훌륭한 Deep Learning 라이브러리들이 여럿 오픈소스로 공개되고, 덕분에 많은 새로운 일들을 할 수 있게 되었는데요.</p>
+                <p>Matrix / Tensor 연산은 Deep Learning 의 핵심이라고 할 수 있습니다.</p>
+              </li>
+              <li class="list-group-item">
+                <p>하지만 TensorFlow 를 포함한 현존하는 머신러닝 라이브러리들은, Matrix / Tensor 병렬 연산을 효율적으로 수행할 수 없습니다.</p>
+                <p>그 이유로는, 첫 번째로는 병렬화를 위한 boilerplate code 를 많이 작성해줘야 한다는 것입니다.</p>
+                <p>두 번째로는 load balancing 을 수동으로 해줘야 한다는 점이 있습니다</p>
+              </li>
+              <li class="list-group-item">
+                <p>저희는 이 문제점을 인식하고, 분산 처리 시스템을 활용할 수 있는 deep learning framework 을 구축하는 것을 목표로 삼았습니다.</p>
+                <p>이번 학기에 저희가 구체적으로 공헌한 점은 아래 두 가지인데요.</p>
+                <p>Network 설정 구축 등을 위해 필요한 boilerplate code 의 양을 줄인 것과.</p>
+                <p>Tensorflow 의 single thread 연산에 적용되는 optimization 의 일부를 저희 framework 에도 적용한 것입니다.</p>
+              </li>
+              <li class="list-group-item">
+                <p>Code 의 양을 줄인 예를 보고 계십니다. 네트워크 설정에 관한 코드인데요. Tensorflow 코드에는 네트워크 설정을 정의하는 부분과, 정의한 설정을 실제로 연산에 사용하기 위한 boilerplate code 가 포함됩니다. 저희 Framework 에서는 두 가지 모두 function call 한 두개로 처리가 가능합니다. 보시는 바와 같이 Tensorflow 에서는 36줄이었던 코드가 저희 framework 에서는 9줄로 줄었죠</p>
+              </li>
+              <li class="list-group-item">
+                <p>코드 사이즈가 줄었다고 해서 무조건 좋은 것은 아니죠, 보통은 tradeoff 가 있기 마련인데요.</p>
+                <p>저희 코드의 경우 코드 사이즈가 줄었지만 연산 속도는 오히려 더 빨랐습니다.</p>
+              </li>
+              <li class="list-group-item">
+                <p>저희의 다음 공헌 사례입니다. 저희 framework 는 연산량을 최적화하기 위해 lazy evaluation 을 적용하고 있습니다. 이는 연산 sequence 로부터 AST 를 구축하여, Tree 의 일부분을 cache 하여 결과값을 사용하는 등의 최적화를 가능하게 합니다.</p>
+              </li>
+              <li class="list-group-item">
+                <p>저희는 Markov chain 연산에서의 matrix 곱셈 최적화를 가능하게 하였습니다. 같은 matrix의 곱셈 sequence 가 여러번 발생 할 경우, matrix 연산의 일부를 cache 해 두는 방식입니다. 그림에서 보실 수 있듯 (같은 matrix 가 될 수 있는) 노란 사각형 내부의 연산 결과값을 cache 해 둬서 다른 사각형에서의 실제 연산 없이 결과를 사용할 수 있게 하였습니다</p>
+              </li>
+              <li class="list-group-item">
+                <p>이 결과 exponential 한 성능 향상을 보였구요.</p>
+              </li>
+              <li class="list-group-item">
+                <p>다만 분산 처리와 optimization 을 같이 할 경우 그래프와 같이, 분산 처리를 도입한 경우에 결과가 오히려 안 좋게 나오는 문제가 있었습니다.</p>
+              </li>
+              <li class="list-group-item">
+                <p>동영상: network overhead 등, 작은 사이즈에서는 잘 동작 하지 않음. </p>
+              </li>
+              <li class="list-group-item">
+                <p>이상 저희가 이번 학기에 공헌한 내용들이었습니다. 저희는 Greedy Coal Train 이었구요.</p>
+              </li>
+            </ol>
+            <hr/>
+          </article>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
