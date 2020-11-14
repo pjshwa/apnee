@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 14, 2020 at 12:23 PM
+-- Generation Time: Nov 14, 2020 at 12:38 PM
 -- Server version: 8.0.15
 -- PHP Version: 7.3.3
 
@@ -105,33 +105,6 @@ CREATE TABLE `events` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fish`
---
-
-CREATE TABLE `fish` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `user_id` int(6) NOT NULL,
-  `title` varchar(60) NOT NULL,
-  `content` text NOT NULL,
-  `reg_date` timestamp NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `fishbowl_users`
---
-
-CREATE TABLE `fishbowl_users` (
-  `user_id` int(6) UNSIGNED NOT NULL,
-  `nickname` varchar(60) NOT NULL,
-  `password_h` varchar(255) NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `important`
 --
 
@@ -185,18 +158,6 @@ CREATE TABLE `pika_score` (
   `success` int(1) NOT NULL,
   `remain_time` int(6) NOT NULL,
   `hits_score` int(10) NOT NULL,
-  `reg_date` timestamp NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `project`
---
-
-CREATE TABLE `project` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `content` text NOT NULL,
   `reg_date` timestamp NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
@@ -300,18 +261,6 @@ ALTER TABLE `events`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `fish`
---
-ALTER TABLE `fish`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `fishbowl_users`
---
-ALTER TABLE `fishbowl_users`
-  ADD PRIMARY KEY (`user_id`);
-
---
 -- Indexes for table `important`
 --
 ALTER TABLE `important`
@@ -334,12 +283,6 @@ ALTER TABLE `phi_info`
 -- Indexes for table `pika_score`
 --
 ALTER TABLE `pika_score`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `project`
---
-ALTER TABLE `project`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -407,18 +350,6 @@ ALTER TABLE `events`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `fish`
---
-ALTER TABLE `fish`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `fishbowl_users`
---
-ALTER TABLE `fishbowl_users`
-  MODIFY `user_id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `important`
 --
 ALTER TABLE `important`
@@ -440,12 +371,6 @@ ALTER TABLE `phi_info`
 -- AUTO_INCREMENT for table `pika_score`
 --
 ALTER TABLE `pika_score`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `project`
---
-ALTER TABLE `project`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
