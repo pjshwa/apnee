@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 14, 2020 at 02:40 AM
+-- Generation Time: Nov 14, 2020 at 11:26 AM
 -- Server version: 8.0.15
 -- PHP Version: 7.3.3
 
@@ -33,31 +33,6 @@ CREATE TABLE `cats` (
   `title` varchar(60) NOT NULL,
   `img_src` varchar(255) NOT NULL,
   `reg_date` timestamp NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `chats`
---
-
-CREATE TABLE `chats` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `author` varchar(30) NOT NULL,
-  `content` varchar(30) NOT NULL,
-  `reg_date` timestamp NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `coffee`
---
-
-CREATE TABLE `coffee` (
-  `ID` int(11) NOT NULL,
-  `iced_americano` int(11) NOT NULL,
-  `reg_date` date NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -331,19 +306,6 @@ ALTER TABLE `cats`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `chats`
---
-ALTER TABLE `chats`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `coffee`
---
-ALTER TABLE `coffee`
-  ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `index_reg_date_on_coffee` (`reg_date`);
-
---
 -- Indexes for table `cowgame_score`
 --
 ALTER TABLE `cowgame_score`
@@ -462,18 +424,6 @@ ALTER TABLE `visitor_log`
 --
 ALTER TABLE `cats`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `chats`
---
-ALTER TABLE `chats`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `coffee`
---
-ALTER TABLE `coffee`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `cowgame_score`

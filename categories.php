@@ -16,12 +16,6 @@ include("header.php");?>
       <a href = "./snow.php">눈</a>
     </li>
     <li>
-      <a href = "./chat.php">채팅방</a>
-    </li>
-    <li>
-      <a href = "./preg.php">정규식 테스터</a>
-    </li>
-    <li>
       <a href = "./cow.php">얼룩소</a>
     </li>
   </ul>
@@ -56,7 +50,20 @@ include("header.php");?>
 </div>
 </div>
 <div id="front_row" class="row" style="margin-top:10px;">
-<div class="col-md-4"></div>
+<div class="col-md-4">
+  <h5>삭제된 것들</h5>
+  <ul>
+    <li>
+      애오개 2
+    </li>
+    <li>
+      채팅방
+    </li>
+    <li>
+      정규식 테스터
+    </li>
+  </ul>
+</div>
 <div class="col-md-4">
 <h5>구상중</h5>
 <ul>
@@ -64,7 +71,7 @@ include("header.php");?>
     앞니 퀴즈 퀴즈쇼
   </li>
   <li>
-      다른 것 잡기
+    다른 것 잡기
   </li>
 </ul>
 </div>
