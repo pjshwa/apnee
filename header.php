@@ -15,8 +15,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 
     <!-- Custom CSS -->
-    <link href="./static/css/half-slider.css" rel="stylesheet" />
-    <link href="./static/css/notice.css" rel="stylesheet" />
+    <link href="./static/css/app.css" rel="stylesheet" />
     <link rel="shortcut icon" href="./favicon.ico">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
