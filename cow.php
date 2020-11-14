@@ -29,21 +29,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
 ?>
 <style type="text/css">
-    .cowimg {
-        display: inline-block;
-        margin: 0;
-    } 
-    @media only screen and (min-width: 320px) { 
+.cowimg {
+    display: inline-block;
+    margin: 0;
+}
+@media only screen and (min-width: 320px) {
     .cowimg {
         width: 48%;
-    } 
-    } 
-    @media only screen and (min-width: 769px) { 
+    }
+}
+@media only screen and (min-width: 769px) {
     .cowimg {
         width: 23%;
-    } 
-    } 
-
+    }
+}
 </style>
 
 <h1>얼룩소 고르는 게임</h1>
@@ -52,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 <form id="score" method="post"><input type="hidden" id="sc" name="score"/></form>
 <div id="front_row" class="row" style="margin-top:40px;">
 <div id="front_image" class="col-md-8">
-<img id="intro" class="img-responsive" src="./cows/intro.png"/>
+<img id="intro" class="img-responsive" src="./static/pics/cows/intro.png"/>
 <div id="startClock" style="display: inline-block;" class="btn btn-success">시작하기</div>
 <div id="sound_box" style="display: inline-block;"><input type="checkbox" name="sound"> 효과음</div>
 </div>
@@ -66,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $sql = "select score, reg_date from cowgame_score where score = (select max(score) from cowgame_score) limit 1";
     $r = $conn->query($sql);
     if ($r->num_rows > 0) {
-            // output data of each row
+        // output data of each row
         while($row = $r->fetch_assoc()) {
             echo '<h4 style="color:blue;">최고점수: '.$row["score"]."점 (".$row["reg_date"].")</h4>";
         }
