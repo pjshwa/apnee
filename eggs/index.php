@@ -172,7 +172,7 @@ $('form').on('submit', function(event) {
   event.preventDefault();
   var $form = $(this);
   $.ajax({
-    url: 'comment_post.php',
+    url: '/eggs/comment_post.php',
     type: 'post',
     data: $form.serialize(),
     success: function(res) {
