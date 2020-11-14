@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 14, 2020 at 11:26 AM
+-- Generation Time: Nov 14, 2020 at 12:23 PM
 -- Server version: 8.0.15
 -- PHP Version: 7.3.3
 
@@ -127,37 +127,6 @@ CREATE TABLE `fishbowl_users` (
   `nickname` varchar(60) NOT NULL,
   `password_h` varchar(255) NOT NULL,
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `gongboo`
---
-
-CREATE TABLE `gongboo` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `category_id` int(6) NOT NULL,
-  `title` varchar(60) NOT NULL,
-  `content` text NOT NULL,
-  `include_highlighter` tinyint(1) NOT NULL DEFAULT '0',
-  `include_markdown` tinyint(1) NOT NULL DEFAULT '0',
-  `raw_link` tinyint(1) NOT NULL DEFAULT '0',
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=euckr;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `gongboo_categories`
---
-
-CREATE TABLE `gongboo_categories` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `title` varchar(60) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=euckr;
 
 -- --------------------------------------------------------
@@ -343,18 +312,6 @@ ALTER TABLE `fishbowl_users`
   ADD PRIMARY KEY (`user_id`);
 
 --
--- Indexes for table `gongboo`
---
-ALTER TABLE `gongboo`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `gongboo_categories`
---
-ALTER TABLE `gongboo_categories`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `important`
 --
 ALTER TABLE `important`
@@ -460,18 +417,6 @@ ALTER TABLE `fish`
 --
 ALTER TABLE `fishbowl_users`
   MODIFY `user_id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `gongboo`
---
-ALTER TABLE `gongboo`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `gongboo_categories`
---
-ALTER TABLE `gongboo_categories`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `important`
