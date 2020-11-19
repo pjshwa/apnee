@@ -121,6 +121,15 @@ else {
     </div>
   </div>
 <style>
+<?php
+$rand = mt_rand(0, 2);
+if ($rand == 0) $stroke = 'hsla(66, 64%, 86%, 1)';
+elseif ($rand == 1) $stroke = 'hsla(54, 85%, 83%, 1)';
+else $stroke = 'hsla(231, 53%, 95%, 1)';
+?>
+body {
+  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='70' height='70' patternTransform='scale(2) rotate(0)'><rect x='0' y='0' width='100%' height='100%' fill='rgb(255,255,255)'/><path d='M-4.793 4.438l8.788 12.156 12.156-8.79M8.42 62.57l6.408 2.818 2.817-6.408M62.644 27.187l2.746 1.208 1.207-2.746M31.998 30.542l-13.232 7.066 7.067 13.23M50.772 43.744l-4.859-5.038-5.038 4.86M59.713 62.882v3h3M-9.003 38.035l-3.81 14.508 14.508 3.809M54.983 27.574L52.625 16.83 41.88 19.189M26.88 23.931l4.838-5.058-5.058-4.838M4.838 25.543l-1.972 2.26 2.261 1.972M31.98-4.869l2.735 10.654L45.37 3.048M65.207 4.438l8.788 12.156 12.155-8.79M31.98 65.131l2.735 10.654 10.654-2.737M60.998 38.035l-3.811 14.508 14.508 3.809M12.778 46.169l-2.21-2.029-2.028 2.21M37.802 53.484l.556 2.948 2.948-.556'  stroke-linecap='square' stroke-width='1' stroke='<?php echo $stroke ?>' fill='none'/></pattern></defs><rect width='100%' height='100%' fill='url(%23a)'/></svg>")
+}
 .video-container {
   position: relative;
   width: 100%;
