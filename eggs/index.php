@@ -46,8 +46,8 @@ if ($is_danger_zone){
 }
 else {
 ?>
-<body style="margin-top: 75px;">
-  <div class="container">
+<body>
+  <div class="main-container">
     <div class="row">
       <div class="col-md-12">
         <?php
@@ -74,10 +74,11 @@ else {
               break;
             }
           }
-          echo '</div><div class="container"><div class="row"><h4>';
+          echo '</div>';
+          echo '<h4>';
           if ($new_comment) echo "<div class='btn btn-primary comments-indicator-button' ";
           else echo "<div class='btn btn-default comments-indicator-button' ";
-          echo 'onclick="toggleScriptVisibility('.$article['id'].')">댓글들 (<strong>'.count($article['comments']).'</strong>)</div></h4></div><div id="comments_for_article_'.$article['id'].'" style="display:none;"><ul class="comments">';
+          echo 'onclick="toggleScriptVisibility('.$article['id'].')">댓글들 (<strong>'.count($article['comments']).'</strong>)</h4><div id="comments_for_article_'.$article['id'].'" style="display: none; padding: 0 20px;"><ul class="comments">';
           foreach($article['comments'] as $comment){
             echo '<li class="imojify"><strong>'.htmlspecialchars($comment['commauthor']).':</strong> '.htmlspecialchars($comment['comment']).' ('.date('Y-m-d', strtotime($comment['commdate'])).')';
             if ($comment['commnew']) echo '<img id="comm_new_gif" src="../static/pics/new.gif"/>';
@@ -123,12 +124,30 @@ else {
 <style>
 <?php
 $rand = mt_rand(0, 2);
-if ($rand == 0) $stroke = 'hsla(66, 64%, 86%, 1)';
-elseif ($rand == 1) $stroke = 'hsla(54, 85%, 83%, 1)';
-else $stroke = 'hsla(231, 53%, 95%, 1)';
-?>
+// if ($rand == 0) $stroke = 'hsla(66, 64%, 86%, 1)';
+// elseif ($rand == 1) $stroke = 'hsla(54, 85%, 83%, 1)';
+// else $stroke = 'hsla(231, 53%, 95%, 1)';
+if ($rand == 0) { ?>
 body {
-  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='70' height='70' patternTransform='scale(2) rotate(0)'><rect x='0' y='0' width='100%' height='100%' fill='rgb(255,255,255)'/><path d='M-4.793 4.438l8.788 12.156 12.156-8.79M8.42 62.57l6.408 2.818 2.817-6.408M62.644 27.187l2.746 1.208 1.207-2.746M31.998 30.542l-13.232 7.066 7.067 13.23M50.772 43.744l-4.859-5.038-5.038 4.86M59.713 62.882v3h3M-9.003 38.035l-3.81 14.508 14.508 3.809M54.983 27.574L52.625 16.83 41.88 19.189M26.88 23.931l4.838-5.058-5.058-4.838M4.838 25.543l-1.972 2.26 2.261 1.972M31.98-4.869l2.735 10.654L45.37 3.048M65.207 4.438l8.788 12.156 12.155-8.79M31.98 65.131l2.735 10.654 10.654-2.737M60.998 38.035l-3.811 14.508 14.508 3.809M12.778 46.169l-2.21-2.029-2.028 2.21M37.802 53.484l.556 2.948 2.948-.556'  stroke-linecap='square' stroke-width='1' stroke='<?php echo $stroke ?>' fill='none'/></pattern></defs><rect width='100%' height='100%' fill='url(%23a)'/></svg>")
+  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='40' height='40' patternTransform='scale(4) rotate(120)'><rect x='0' y='0' width='100%' height='100%' fill='hsla(56,73%,61%, 1)'/><path d='M20-5V5m0 30v10m20-30v10M0 15v10'  stroke-linejoin='round' stroke-linecap='round' stroke-width='15' stroke='hsla(68,35%,90%, 1)' fill='none'/><path d='M-5 40H5M-5 0H5m30 0h10M35 40h10M15 20h10'  stroke-linejoin='round' stroke-linecap='round' stroke-width='15' stroke='hsla(144,49%,75%, 1)' fill='none'/></pattern></defs><rect width='100%' height='100%' fill='url(%23a)'/></svg>");
+}
+<?php }
+elseif ($rand == 1) { ?>
+body {
+  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='40' height='40' patternTransform='scale(4) rotate(5)'><rect x='0' y='0' width='100%' height='100%' fill='hsla(63,91%,78%, 0.4)'/><path d='M20 0L0 10v10l20-10zm0 10v10l20 10V20z'  stroke-width='4' stroke='none' fill='hsla(50,25%,46%, 0.4)'/><path d='M20-10V0l20 10V0zm0 30L0 30v10l20-10zm0 10v10l20 10V40z'  stroke-width='4' stroke='none' fill='hsla(21,51%,20%, 0.4)'/></pattern></defs><rect width='100%' height='100%' fill='url(%23a)'/></svg>");
+}
+<?php }
+else { ?>
+body {
+  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='40' height='40' patternTransform='scale(5) rotate(50)'><rect x='0' y='0' width='100%' height='100%' fill='hsla(112,100%,59%, 0.4)'/><path d='M20 0L0 10v10l20-10zm0 10v10l20 10V20z'  stroke-width='1' stroke='none' fill='hsla(85,86%,85%, 0.4)'/><path d='M20-10V0l20 10V0zm0 30L0 30v10l20-10zm0 10v10l20 10V40z'  stroke-width='1' stroke='none' fill='hsla(228,98%,55%, 0.4)'/></pattern></defs><rect width='100%' height='100%' fill='url(%23a)'/></svg>");
+}
+<?php }
+?>
+html {height: 100%;}
+.main-container {
+  background: white;
+  margin: 75px 0;
+  padding: 20px;
 }
 .video-container {
   position: relative;
@@ -151,6 +170,9 @@ body {
     width: 10%;
     display: inline-block;
   }
+  .main-container {
+    margin: 75px 5px;
+  }
 }
 @media only screen and (min-width: 769px) { 
   #comm_new_gif {
@@ -160,6 +182,9 @@ body {
   .video-container {
     width: 768px;
     padding-bottom: 432px;
+  }
+  .main-container {
+    margin: 75px;
   }
 }
 </style>
