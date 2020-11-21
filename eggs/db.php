@@ -12,7 +12,7 @@ class DB {
         }
     }
 
-    public function articlesOfMonth($year, $month) {
+    public function getArticlesOfMonth($year, $month) {
         // Step 1. Prepare the SQL query
         $query = "SELECT id, title, content, created_at from eggs where YEAR(created_at) = ? AND MONTH(created_at) = ? order by created_at desc";
         if(!($stmt = $this->mysqli->prepare($query))) {
@@ -26,22 +26,16 @@ class DB {
         $items = array();
         while($stmt->fetch()) {
             $items[] = array(
-            'id'=>$id,
-            'title'=>$title,
-            'content'=>$content,
-            'date'=>$date,
+                'id'=>$id,
+                'title'=>$title,
+                'content'=>$content,
+                'date'=>$date,
             );
         }
         $stmt->close();
-        $idsOfArticles = array_map(function($elements){
-            return $elements['id'];
-        }, $items);
-        if (count($idsOfArticles) == 0){
-            $inClause = '0';
-        }
-        else {
-            $inClause = join(',', $idsOfArticles);
-        }
+        if (count($items) == 0) return $items;
+
+        $inClause = join(',', array_map(function($el) {return $el['id'];}, $items));
         $query2 = "SELECT id, egg_id, author, comment, created_at from egg_comments where egg_id in (".$inClause.") order by created_at";
         if(!($stmt2 = $this->mysqli->prepare($query2))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
@@ -51,18 +45,10 @@ class DB {
         }
         $stmt2->bind_result($id, $egg_id, $author, $comment, $commdate);
         $allCommentsById = array();
-        foreach($idsOfArticles as $egg_id){
-            $allCommentsById[$egg_id] = array();
-        }
         $finish_time = new DateTime('now');
         while($stmt2->fetch()){
             $start_time = new DateTime($commdate);
-            if ($start_time->diff($finish_time)->days < 2){
-                $commnew = true;
-            }
-            else {
-                $commnew = false;
-            }
+            $commnew = $start_time->diff($finish_time)->days < 2;
             $allCommentsById[$egg_id][] = array(
                 'commid'=>$id,
                 'commauthor'=>$author,
@@ -71,15 +57,16 @@ class DB {
                 'commnew'=>$commnew,
             );
         }
-        foreach($items as &$item){ // mutable $item
-            $item['comments'] = $allCommentsById[$item['id']];
-        }
+
+        // $item is mutable
+        foreach($items as &$item) $item['comments'] = $allCommentsById[$item['id']] ?? array();
+
         $stmt2->close();
         return $items;
     }
 
     public function newComment($article_id, $author, $comment) {
-        $query = "INSERT INTO `egg_comments`(`egg_id`, `comment`, `author`, `created_at`, `updated_at`) VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+        $query = "INSERT INTO `egg_comments` (`egg_id`, `comment`, `author`, `created_at`, `updated_at`) VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
         // Step 2. Prepare the mysqli_stmt object (stmt)
         if(!($stmt = $this->mysqli->prepare($query))) {
             throw new Exception('DB Error: '.$this->mysqli->error);
