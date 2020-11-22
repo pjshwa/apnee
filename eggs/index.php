@@ -130,7 +130,8 @@ body {
 }
 <?php } ?>
 html {
-  height: 100%;
+  height: auto;
+  min-height: 100%;
 }
 .main-container {
   background: white;
