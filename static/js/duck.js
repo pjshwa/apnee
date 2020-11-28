@@ -100,7 +100,7 @@ function duckVerticalMove(duck, index){
   var initial_y_pos = (de.bottom - de.top) * 0.5;
   var y_pos = initial_y_pos;
   var direction = false;
-  var move = setInterval(function(){
+  setInterval(function() {
     de = document.documentElement.getBoundingClientRect();
     initial_y_pos = (de.bottom - de.top) * 0.5;
     if (direction) y_pos += 1;
@@ -114,8 +114,8 @@ function duckVerticalMove(duck, index){
 function duckHorizontalMove(duck, index){
   var x_pos = 0;
   var x_limit = de.right - de.left;
-  const speed = randomIntFromInterval(100,190) * 0.01;
-  var move = setInterval(function(){
+  const speed = randomIntFromInterval(100, 150) * 0.01;
+  setInterval(function() {
     de = document.documentElement.getBoundingClientRect();
     x_limit = de.right - de.left;
     if (duck_directions[index]) x_pos += speed;
