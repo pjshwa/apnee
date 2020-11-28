@@ -21,6 +21,7 @@ jobs:
           release_directory="releases/$(date '+%Y%m%d%H%M%S')"
           mkdir -p $release_directory
           ln -sfn $release_directory current
+          cd /home/bitnami/htdocs-test/releases
           rm -rf `ls -t | tail -n +6`
           cd /home/bitnami/htdocs-test/repo
           git fetch --depth 1 origin master
