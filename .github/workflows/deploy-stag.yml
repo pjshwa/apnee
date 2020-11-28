@@ -1,0 +1,41 @@
+name: Deploy staging
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy staging from git
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        script: |
+          [ -d /home/bitnami/htdocs-test/repo/ ] || git clone --mirror --depth 1 https://github.com/pjshwa/apnee.git /home/bitnami/htdocs-test/repo/
+          cd /home/bitnami/htdocs-test
+          release_directory="releases/$(date '+%Y%m%d%H%M%S')"
+          mkdir -p $release_directory
+          ln -sfn $release_directory current
+          rm -rf `ls -t | tail -n +6`
+          cd /home/bitnami/htdocs-test/repo
+          git fetch --depth 1 origin master
+          git archive master | /usr/bin/env tar -x -f - -C /home/bitnami/htdocs-test/current
+    - name: Fill credentials
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        script: echo "<?php \$credentials = array('host' => 'localhost', 'user' => '${{ secrets.DBUSER }}', 'pass' => '${{ secrets.DBPASS }}', 'database' => 'pjshwa_test'); ?>" | tee -a /home/bitnami/htdocs-test/current/credentials.php
+    - name: Restart apache
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        script: sudo apachectl -k graceful
