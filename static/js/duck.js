@@ -127,22 +127,36 @@ function duckCollisionCheck(duck1_i, duck2_i) {
   if (all_ducks[duck1_i].offsetLeft < all_ducks[duck2_i].width + all_ducks[duck2_i].offsetLeft &&
     all_ducks[duck2_i].offsetLeft < all_ducks[duck1_i].width + all_ducks[duck1_i].offsetLeft) {
 
-    // Algorithm: duck 1 will always change its direction,
-    // UNLESS two ducks were already distancing themselves apart. (<-  ->)
-    // duck 2 will then change its direction opposite to duck 1's new direction
-    // This prevents the ducks from fidgeting around
-    // even if their speeds aren't enough to get out of collision status
-    var new_dir = !duck_directions[duck1_i];
+    // Algorithm:
+    // If two ducks collide, and were going in the same direction,
+    // The duck from behind flips its direction.
+    // If two ducks were already distancing themselves apart, (<-  ->)
+    // Nothing is done.
+    // If two ducks were colliding into each other, both ducks flip their directions.
 
     // duck 1 is left to duck 2
     if (all_ducks[duck1_i].offsetLeft < all_ducks[duck2_i].offsetLeft) {
-      if (duck_directions[duck1_i] || !duck_directions[duck2_i]) {
+      if (duck_directions[duck1_i] && duck_directions[duck1_i] == duck_directions[duck2_i]) {
+        changeDuckDirection(duck1_i, !duck_directions[duck1_i]);
+      }
+      else if (!duck_directions[duck1_i] && duck_directions[duck1_i] == duck_directions[duck2_i]) {
+        changeDuckDirection(duck2_i, !duck_directions[duck2_i]);
+      }
+      else if (duck_directions[duck1_i] && !duck_directions[duck2_i]) {
+        var new_dir = !duck_directions[duck1_i];
         changeDuckDirection(duck1_i, new_dir);
         changeDuckDirection(duck2_i, !new_dir);
       }
     }
     else {
-      if (duck_directions[duck2_i] || !duck_directions[duck1_i]) {
+      if (duck_directions[duck1_i] && duck_directions[duck1_i] == duck_directions[duck2_i]) {
+        changeDuckDirection(duck2_i, !duck_directions[duck2_i]);
+      }
+      else if (!duck_directions[duck1_i] && duck_directions[duck1_i] == duck_directions[duck2_i]) {
+        changeDuckDirection(duck1_i, !duck_directions[duck1_i]);
+      }
+      else if (!duck_directions[duck1_i] && duck_directions[duck2_i]) {
+        var new_dir = !duck_directions[duck1_i];
         changeDuckDirection(duck1_i, new_dir);
         changeDuckDirection(duck2_i, !new_dir);
       }
