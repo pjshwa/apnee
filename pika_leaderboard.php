@@ -14,7 +14,7 @@ $items = $db->getPika();
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title></title>
+    <title>피카추 리더 보드</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="./static/css/bootstrap.min.css" rel="stylesheet" />

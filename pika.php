@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title></title>
+    <title>피카추 잡기</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="./static/css/bootstrap.min.css" rel="stylesheet" />
