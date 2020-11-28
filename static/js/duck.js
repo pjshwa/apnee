@@ -1,14 +1,9 @@
-var quack = new Audio('./m/quack.ogg');
+var quack = new Audio('/m/quack.ogg');
 var txt = document.getElementById("center_text");
 
-$(document).ready(function() {
-  $('#duck1').click(function(e) {
-    quack.play();
-  });
-  $('#duck2').click(function(e) {
-    quack.play();
-  });
-  $('#duck3').click(function(e) {
+document.addEventListener("DOMContentLoaded", function(e) { 
+  document.addEventListener('click', function (event) {
+    if (!event.target.matches('.duck')) return;
     quack.play();
   });
 
@@ -33,7 +28,7 @@ $(document).ready(function() {
   }, 280000);
 
   // Story Time
-  // 
+  //
   // var event_5 = setInterval(function(){
   //   var prompts = ["a","b"];
   //   var index = 0;
@@ -54,12 +49,11 @@ var de = document.documentElement.getBoundingClientRect();
 var duck_directions = [];
 
 // Initially all ducks are facing right.
-for (var i = 0; i < all_ducks.length; i++) duck_directions.push(false);
+for (var i = 0; i < all_ducks.length; i++) duck_directions.push(true);
 
 var periodicalCollisionCheck = setInterval(function(){
   for (var i = 0; i < active_ducks_cnt; i++) {
     for (var j = i + 1; j < active_ducks_cnt; j++) duckCollisionCheck(i, j);
-
   }
 }, 1000);
 
@@ -74,7 +68,10 @@ function addOneDuck(){
 }
 
 function changeDuckDirection(duck_index, direction) {
-  if (!duck_directions[duck_index]){
+  duck_directions[duck_index] = direction;
+
+  // true: right, false: left
+  if (direction) {
     all_ducks[duck_index].style.webkitTransform = "translate(-50%, -50%) scaleX(1)";
     all_ducks[duck_index].style.transform = "translate(-50%, -50%) scaleX(1)";
   }
@@ -82,7 +79,6 @@ function changeDuckDirection(duck_index, direction) {
     all_ducks[duck_index].style.webkitTransform = "translate(-50%, -50%) scaleX(-1)";
     all_ducks[duck_index].style.transform = "translate(-50%, -50%) scaleX(-1)";
   }
-  duck_directions[duck_index] = direction;
 }
 
 var addDucks = setInterval(function(){
@@ -131,17 +127,24 @@ function duckCollisionCheck(duck1_i, duck2_i) {
   if (all_ducks[duck1_i].offsetLeft < all_ducks[duck2_i].width + all_ducks[duck2_i].offsetLeft &&
     all_ducks[duck2_i].offsetLeft < all_ducks[duck1_i].width + all_ducks[duck1_i].offsetLeft) {
 
+    // Algorithm: duck 1 will always change its direction,
+    // UNLESS two ducks were already distancing themselves apart. (<-  ->)
+    // duck 2 will then change its direction opposite to duck 1's new direction
+    // This prevents the ducks from fidgeting around
+    // even if their speeds aren't enough to get out of collision status
+    var new_dir = !duck_directions[duck1_i];
+
     // duck 1 is left to duck 2
     if (all_ducks[duck1_i].offsetLeft < all_ducks[duck2_i].offsetLeft) {
       if (duck_directions[duck1_i] || !duck_directions[duck2_i]) {
-        changeDuckDirection(duck1_i, !duck_directions[duck1_i]);
-        changeDuckDirection(duck2_i, !duck_directions[duck1_i]);
+        changeDuckDirection(duck1_i, new_dir);
+        changeDuckDirection(duck2_i, !new_dir);
       }
     }
     else {
       if (duck_directions[duck2_i] || !duck_directions[duck1_i]) {
-        changeDuckDirection(duck1_i, !duck_directions[duck1_i]);
-        changeDuckDirection(duck2_i, !duck_directions[duck1_i]);
+        changeDuckDirection(duck1_i, new_dir);
+        changeDuckDirection(duck2_i, !new_dir);
       }
     }
   }
