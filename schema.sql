@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 22, 2020 at 12:09 PM
--- Server version: 10.3.25-MariaDB-0ubuntu0.20.04.1
--- PHP Version: 7.4.3
+-- Generation Time: Nov 29, 2020 at 11:11 AM
+-- Server version: 8.0.15
+-- PHP Version: 7.3.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -30,9 +30,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `cats` (
   `id` int(6) UNSIGNED NOT NULL,
-  `title` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `img_src` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `title` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `img_src` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reg_date` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -44,7 +44,7 @@ CREATE TABLE `cats` (
 CREATE TABLE `cowgame_score` (
   `id` int(6) UNSIGNED NOT NULL,
   `score` int(6) NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `reg_date` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -55,10 +55,10 @@ CREATE TABLE `cowgame_score` (
 
 CREATE TABLE `eggs` (
   `id` int(6) UNSIGNED NOT NULL,
-  `title` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `content` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `title` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -82,10 +82,10 @@ DELIMITER ;
 CREATE TABLE `egg_comments` (
   `id` int(6) UNSIGNED NOT NULL,
   `egg_id` int(6) UNSIGNED NOT NULL,
-  `comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `author` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `author` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -96,10 +96,10 @@ CREATE TABLE `egg_comments` (
 
 CREATE TABLE `events` (
   `id` int(6) UNSIGNED NOT NULL,
-  `title` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `content` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `title` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -110,13 +110,13 @@ CREATE TABLE `events` (
 
 CREATE TABLE `important` (
   `id` int(6) UNSIGNED NOT NULL,
-  `canting` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `img_src` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `have_been` int(1) NOT NULL DEFAULT 0,
-  `meal` int(1) NOT NULL DEFAULT 0,
-  `comment` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `review` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `canting` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `img_src` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `have_been` int(1) NOT NULL DEFAULT '0',
+  `meal` int(1) NOT NULL DEFAULT '0',
+  `comment` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `review` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reg_date` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -128,9 +128,9 @@ CREATE TABLE `important` (
 CREATE TABLE `phi_chats` (
   `id` int(6) UNSIGNED NOT NULL,
   `phi_id` int(6) NOT NULL,
-  `content` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `src` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '#',
-  `reg_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `content` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `src` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '#',
+  `reg_date` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -141,9 +141,9 @@ CREATE TABLE `phi_chats` (
 
 CREATE TABLE `phi_info` (
   `id` int(6) UNSIGNED NOT NULL,
-  `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `img_src` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `desc` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `img_src` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `desc` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -154,11 +154,11 @@ CREATE TABLE `phi_info` (
 
 CREATE TABLE `pika_score` (
   `id` int(6) UNSIGNED NOT NULL,
-  `nickname` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nickname` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `success` int(1) NOT NULL,
   `remain_time` int(6) NOT NULL,
   `hits_score` int(10) NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `reg_date` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -169,8 +169,8 @@ CREATE TABLE `pika_score` (
 
 CREATE TABLE `queries` (
   `id` int(6) UNSIGNED NOT NULL,
-  `a_query` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `a_query` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reg_date` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -181,10 +181,10 @@ CREATE TABLE `queries` (
 
 CREATE TABLE `questions` (
   `question_key` int(11) NOT NULL,
-  `question` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `answer` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tries` int(11) NOT NULL DEFAULT 0,
-  `corrects` int(11) NOT NULL DEFAULT 0
+  `question` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `answer` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tries` int(11) NOT NULL DEFAULT '0',
+  `corrects` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -195,8 +195,8 @@ CREATE TABLE `questions` (
 
 CREATE TABLE `temp_questions` (
   `question_key` int(11) NOT NULL,
-  `question` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `answer` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL
+  `question` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `answer` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -207,9 +207,9 @@ CREATE TABLE `temp_questions` (
 
 CREATE TABLE `uncle_pic` (
   `id` int(6) UNSIGNED NOT NULL,
-  `title` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `img_src` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `title` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `img_src` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reg_date` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -220,9 +220,9 @@ CREATE TABLE `uncle_pic` (
 
 CREATE TABLE `visitor_log` (
   `ID` int(11) NOT NULL,
-  `title` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `content` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reg_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `title` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reg_date` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
