@@ -1,3 +1,16 @@
+
+<?php
+require('db.php');
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+    $db->insertPhiChat($_POST['content']);
+    header("Location: " . $_SERVER['REQUEST_URI']);
+}
+else {
+    $items = $db->getPhiChat();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -152,17 +165,6 @@
         <!-- /.container -->
     </nav>
 <div class="container">
-<?php
-require('db.php');
-if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $db->insertPhiChat($_POST['content']);
-    header("Location: " . $_SERVER['REQUEST_URI']);
-}
-else {
-    $items = $db->getPhiChat();
-}
-
-?>
 <ul class="article-list-vertical">
 <?php
     foreach($items as $item){
