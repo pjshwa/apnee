@@ -13,18 +13,18 @@ function preload() {
 }
 
 preload(
-  "./static/pics/cows/n_1.png",
-  "./static/pics/cows/n_2.png",
-  "./static/pics/cows/n_3.png",
-  "./static/pics/cows/n_4.png",
-  "./static/pics/cows/n_5.png",
-  "./static/pics/cows/n_6.png",
-  "./static/pics/cows/y_1.png",
-  "./static/pics/cows/y_2.png",
-  "./static/pics/cows/y_3.png",
-  "./static/pics/cows/y_4.png",
-  "./static/pics/cows/y_5.png",
-  "./static/pics/cows/y_6.png"
+  "./static/images/cows/n_1.png",
+  "./static/images/cows/n_2.png",
+  "./static/images/cows/n_3.png",
+  "./static/images/cows/n_4.png",
+  "./static/images/cows/n_5.png",
+  "./static/images/cows/n_6.png",
+  "./static/images/cows/y_1.png",
+  "./static/images/cows/y_2.png",
+  "./static/images/cows/y_3.png",
+  "./static/images/cows/y_4.png",
+  "./static/images/cows/y_5.png",
+  "./static/images/cows/y_6.png"
 )
 
 $("#startClock").click( function(){
@@ -83,13 +83,13 @@ function refreshCows() {
   for (var i = 0; i < 4; i++) {
     if (i === answer) {
       cows[i].setAttribute('onclick','moveOn()');
-      if (yes_or_no === 0) cows[i].src = './static/pics/cows/n_'+randomIntFromInterval(1, 6)+'.png';
-      else cows[i].src = './static/pics/cows/y_'+randomIntFromInterval(1, 6)+'.png';
+      if (yes_or_no === 0) cows[i].src = './static/images/cows/n_'+randomIntFromInterval(1, 6)+'.png';
+      else cows[i].src = './static/images/cows/y_'+randomIntFromInterval(1, 6)+'.png';
     }
     else {
       cows[i].setAttribute('onclick','gameOver()');
-      if (yes_or_no === 0) cows[i].src = './static/pics/cows/y_'+randomIntFromInterval(1, 6)+'.png';
-      else cows[i].src = './static/pics/cows/n_'+randomIntFromInterval(1, 6)+'.png';
+      if (yes_or_no === 0) cows[i].src = './static/images/cows/y_'+randomIntFromInterval(1, 6)+'.png';
+      else cows[i].src = './static/images/cows/n_'+randomIntFromInterval(1, 6)+'.png';
     }
   }
 }

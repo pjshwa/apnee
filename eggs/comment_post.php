@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo ' ('.$date.')';
 
     // New posted comment is always... new
-    echo '<img id="comm_new_gif" src="../static/pics/new.gif"/>';
+    echo '<img id="comm_new_gif" src="../static/images/new.gif"/>';
     echo '</li>';
 }
 ?>

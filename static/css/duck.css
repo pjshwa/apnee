@@ -1,6 +1,6 @@
 html {
   height: 100%;
-  background: url(/static/pics/sea.png) no-repeat center center fixed; 
+  background: url(/static/images/sea.png) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

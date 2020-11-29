@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 </form>
 <div id="start" class="btn btn-large btn-success" style="width:100%; height:80px; display: block; visibility: hidden;" onclick="start();">시작하기</div>
 <div id="leaderboard" class="btn btn-large btn-danger" style="width:100%; height:80px; display: block; visibility: hidden;" onclick="leaderboard();">리더보드</div>
-<img id="pika" src="./static/pics/pika.png" style="visibility: hidden;"/>
+<img id="pika" src="./static/images/pika.png" style="visibility: hidden;"/>
 <div id="hit_rect_0" class="hit_rect" onclick="deductHealth(70);"></div>
 <div id="hit_rect_1" class="hit_rect" onclick="deductHealth(40);"></div>
 <div id="hit_rect_2" class="hit_rect" onclick="deductHealth(40);"></div>
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 <style>
 html {
     height: 100%;
-    background: url(./static/pics/stars-min.png) no-repeat center center fixed; 
+    background: url(./static/images/stars-min.png) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -254,15 +254,15 @@ function hitEffect(){
     var i = randomIntFromInterval(1,3);
     if(i == 1){
         hit_01.play();
-        // pika.src = "./static/pics/pika-hit1.png";
+        // pika.src = "./static/images/pika-hit1.png";
     }
     else if(i == 2){
         hit_02.play();
-        // pika.src = "./static/pics/pika-hit2.png";
+        // pika.src = "./static/images/pika-hit2.png";
     }
     else if(i == 3){
         hit_03.play();
-        // pika.src = "./static/pics/pika-hit2.png";
+        // pika.src = "./static/images/pika-hit2.png";
     }
 }
 

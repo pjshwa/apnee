@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 <form id="score" method="post"><input type="hidden" id="sc" name="score"/></form>
 <div id="front_row" class="row" style="margin-top:40px;">
 <div id="front_image" class="col-md-8">
-<img id="intro" class="img-responsive" src="./static/pics/cows/intro.png"/>
+<img id="intro" class="img-responsive" src="./static/images/cows/intro.png"/>
 <div id="startClock" style="display: inline-block;" class="btn btn-success">시작하기</div>
 <div id="sound_box" style="display: inline-block;"><input type="checkbox" name="sound"> 효과음</div>
 </div>

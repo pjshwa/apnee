@@ -5,16 +5,16 @@ include("header.php");
 <div class="container">
   <div class="row">
     <div class="col-sm-8">
-      <img src="./static/pics/smilehand.gif" width="30%"/>
+      <img src="./static/images/smilehand.gif" width="30%"/>
       <h3>Hello Hello!</h3>
     </div>
     <div class="col-sm-4">
       <br/><br/>
       <a href="./duck.html">
-        <img src="./static/pics/ducky_flip_v.png" width="90px"/>
+        <img src="./static/images/ducky_flip_v.png" width="90px"/>
       </a>
-      <a href="javascript:var audio2 = new Audio('./static/pics/Dramatic-chipmunk.mp3'); audio2.play();">
-        <img src="./static/pics/slide.png" id="myImg" width="100px"/>
+      <a href="javascript:var audio2 = new Audio('./static/images/Dramatic-chipmunk.mp3'); audio2.play();">
+        <img src="./static/images/slide.png" id="myImg" width="100px"/>
       </a>
     </div>
   </div>

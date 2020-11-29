@@ -73,7 +73,7 @@ else {
           echo 'onclick="toggleScriptVisibility('.$article['id'].')">댓글들 (<strong>'.count($article['comments']).'</strong>)</h4><div id="comments_for_article_'.$article['id'].'" style="display: none; padding: 0 20px;"><ul class="comments">';
           foreach($article['comments'] as $comment){
             echo '<li class="imojify"><strong>'.htmlspecialchars($comment['commauthor']).':</strong> '.htmlspecialchars($comment['comment']).' ('.date('Y-m-d', strtotime($comment['commdate'])).')';
-            if ($comment['commnew']) echo '<img id="comm_new_gif" src="../static/pics/new.gif"/>';
+            if ($comment['commnew']) echo '<img id="comm_new_gif" src="../static/images/new.gif"/>';
             echo '</li>';
           }
           echo '</ul><hr/>';

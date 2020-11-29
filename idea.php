@@ -15,7 +15,7 @@
 <style>
 body {
     height: 100%;
-    background: url(./static/pics/bullshrimp.jpg) no-repeat center center fixed; 
+    background: url(./static/images/bullshrimp.jpg) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

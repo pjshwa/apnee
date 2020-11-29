@@ -2,7 +2,7 @@
 include("header.php");?>
 <!-- <script>NekoType="colourful"</script>
 <h1 id=nl><script src="http://webneko.net/n200504.js"></script></h1> -->
-<img id="apeach" src="./static/pics/apeachdance.gif" style="" onclick="apeachClick();" />
+<img id="apeach" src="./static/images/apeachdance.gif" style="" onclick="apeachClick();" />
 <div class="container" style="margin-top:20px;">
 <h3>분류</h3>
 <div id="front_row" class="row" style="margin-top:40px;">
@@ -44,7 +44,7 @@ include("header.php");?>
       <a href = "./idea.php">아이디어?</a>
     </li>
     <li>
-      <a href = "./eggs"><img src="./static/pics/egg.png" style="width: 10%;"/></a>
+      <a href = "./eggs"><img src="./static/images/egg.png" style="width: 10%;"/></a>
     </li>
   </ul>
 </div>
