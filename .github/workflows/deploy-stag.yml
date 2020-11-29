@@ -21,11 +21,15 @@ jobs:
           release_directory="releases/$(date '+%Y%m%d%H%M%S')"
           mkdir -p $release_directory
           ln -sfn $release_directory current
+          mkdir -p shared/static
           cd /home/bitnami/htdocs-test/releases
           rm -rf `ls -t | tail -n +6`
           cd /home/bitnami/htdocs-test/repo
           git fetch --depth 1 origin master
           git archive master | /usr/bin/env tar -x -f - -C /home/bitnami/htdocs-test/current
+          cd /home/bitnami/htdocs-test/current
+          ln -sfn /home/bitnami/htdocs-test/shared/static
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} /home/bitnami/.pyenv/shims/aws s3 sync s3://pjshwa-homepage-assets/static ./static --delete --no-follow-symlinks
     - name: Fill credentials
       uses: appleboy/ssh-action@master
       with:

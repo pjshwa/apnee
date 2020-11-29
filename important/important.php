@@ -59,7 +59,7 @@ if($totalCount > 10*$page) $is_next_page = true;
           echo '<h4>'.$item['date'].'</h4>';
           echo '<br/>';
         ?>
-        <img src="/images/important/<?php echo $item['img_src']; ?>" class="img-responsive foodimage"/>
+        <img src="/static/images/important/<?php echo $item['img_src']; ?>" class="img-responsive foodimage"/>
         <?php
           echo '<br/>';
           echo '<p class="lead" style="white-space: pre-wrap;">'.$item['comment'].'</p>';

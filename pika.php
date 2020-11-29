@@ -145,12 +145,12 @@ var health = max_health;
 var health_bar = document.getElementById("remaining_health");
 var health_bar_2 = document.getElementById("remaining_health_2");
 // audios
-var bgm = new Audio('./m/battle.ogg');
-var hit_01 = new Audio('./m/hit1.ogg');
-var hit_02 = new Audio('./m/hit2.ogg');
-var hit_03 = new Audio('./m/hit3.ogg');
-var explode = new Audio('./m/explode.ogg');
-var nothing_audio = new Audio('./m/nothingcanstop.mp3');
+var bgm = new Audio('./static/sounds/battle.ogg');
+var hit_01 = new Audio('./static/sounds/hit1.ogg');
+var hit_02 = new Audio('./static/sounds/hit2.ogg');
+var hit_03 = new Audio('./static/sounds/hit3.ogg');
+var explode = new Audio('./static/sounds/explode.ogg');
+var nothing_audio = new Audio('./static/sounds/nothingcanstop.mp3');
 bgm.loop = true;
 var hit_rects_pos = {
     0:{"top":0.8, "left":0.3, "width":0.4, "height":0.2},

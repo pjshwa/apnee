@@ -180,7 +180,7 @@ function setbackground()
     }, 600); //  milliseconds delay
 }
 
-var bgm = new Audio('./m/sandcanyon.ogg');
+var bgm = new Audio('./static/sounds/sandcanyon.ogg');
 
 function apeachClick(){
   clicks++;

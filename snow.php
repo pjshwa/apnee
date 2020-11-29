@@ -51,13 +51,13 @@ canvas {
 <?php
   $rand = mt_rand(0,2);
 	if($rand == 0){
-		echo '<audio autoplay="true" controls src="./m/icecavechant.mp3">';
+		echo '<audio autoplay="true" controls src="./static/sounds/icecavechant.mp3">';
 	}
 	elseif($rand == 1){
-		echo '<audio autoplay="true" controls src="./m/dance.mp3">';
+		echo '<audio autoplay="true" controls src="./static/sounds/dance.mp3">';
 	}
   else{
-    echo '<audio autoplay="true" controls src="./m/mous.mp3">';
+    echo '<audio autoplay="true" controls src="./static/sounds/mous.mp3">';
   }
 
 ?></audio>

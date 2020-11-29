@@ -23,6 +23,6 @@ body {
 }
 </style>
 <body>
-<div id="idea"><audio autoplay="true" controls src="./m/trh.mp3"></audio></div>
+<div id="idea"><audio autoplay="true" controls src="./static/sounds/trh.mp3"></audio></div>
 </body>
 </html>

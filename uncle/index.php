@@ -54,7 +54,7 @@ if($totalCount > 10*$page) $is_next_page = true;
 					echo '<h4>'.$item['date'].'</h4>';
 					echo '<br/>';
 				?>
-				<img src="/images/uncle/<?php echo $item['img_src']; ?>" class="img-responsive uncleimage"/>
+				<img src="/static/images/uncle/<?php echo $item['img_src']; ?>" class="img-responsive uncleimage"/>
 				<?php
 					echo '<br/>';
 					echo '<hr/>';
