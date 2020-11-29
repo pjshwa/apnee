@@ -29,7 +29,7 @@ jobs:
           git archive master | /usr/bin/env tar -x -f - -C /home/bitnami/htdocs-test/current
           cd /home/bitnami/htdocs-test/current
           ln -sfn /home/bitnami/htdocs-test/shared/static
-          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} /home/bitnami/.pyenv/shims/aws s3 sync s3://pjshwa-homepage-assets/static ./static --delete --no-follow-symlinks
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} /home/bitnami/.pyenv/shims/aws s3 sync s3://pjshwa-homepage-assets/static ./static --delete
     - name: Fill credentials
       uses: appleboy/ssh-action@master
       with:
