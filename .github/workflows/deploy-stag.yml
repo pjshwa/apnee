@@ -16,31 +16,37 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PRIVATE_KEY }}
         script: |
-          [ -d /home/bitnami/htdocs-test/repo/ ] || git clone --mirror --depth 1 https://github.com/pjshwa/apnee.git /home/bitnami/htdocs-test/repo/
-          cd /home/bitnami/htdocs-test
-          release_directory="releases/$(date '+%Y%m%d%H%M%S')"
-          mkdir -p $release_directory
-          ln -sfn $release_directory current
-          mkdir -p shared/static
-          cd /home/bitnami/htdocs-test/releases
+          root_directory="/home/bitnami/htdocs-test"
+          repo_directory="$root_directory/repo"
+          release_directory="$root_directory/releases"
+          current_directory="$release_directory/$(date '+%Y%m%d%H%M%S')"
+
+          # Clone bare repository
+          [ -d $repo_directory ] || git clone --mirror --depth 1 https://github.com/pjshwa/apnee.git $repo_directory
+
+          # Make new release directory, and shared links
+          mkdir -p $current_directory
+          mkdir -p $root_directory/shared/static
+
+          # Keep only 5 recent releases
+          cd $release_directory
           rm -rf `ls -t | tail -n +6`
-          cd /home/bitnami/htdocs-test/repo
+
+          # Clone materials into new release directory from git branch
+          cd $repo_directory
           git fetch --depth 1 origin master
-          git archive master | /usr/bin/env tar -x -f - -C /home/bitnami/htdocs-test/current
-          cd /home/bitnami/htdocs-test/current
-          ln -sfn /home/bitnami/htdocs-test/shared/static
+          git archive master | /usr/bin/env tar -x -f - -C $current_directory
+
+          # Symlink shared materials
+          cd $current_directory
+          ln -sfn $root_directory/shared/static
+
+          # Fill credentials
+          echo "<?php \$credentials = array('host' => 'localhost', 'user' => '${{ secrets.DBUSER }}', 'pass' => '${{ secrets.DBPASS }}', 'database' => 'pjshwa_test'); ?>" | tee -a $current_directory/credentials.php
+
+          # Sync assets
           AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} /home/bitnami/.pyenv/shims/aws s3 sync s3://pjshwa-homepage-assets/static ./static --delete
-    - name: Fill credentials
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
-        script: echo "<?php \$credentials = array('host' => 'localhost', 'user' => '${{ secrets.DBUSER }}', 'pass' => '${{ secrets.DBPASS }}', 'database' => 'pjshwa_test'); ?>" | tee -a /home/bitnami/htdocs-test/current/credentials.php
-    - name: Restart apache
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
-        script: sudo apachectl -k graceful
+
+          # Symlink current directory
+          cd $root_directory
+          ln -sfn $current_directory current
