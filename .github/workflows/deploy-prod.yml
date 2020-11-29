@@ -20,7 +20,7 @@ jobs:
           ln -sfn $release_directory current
           mkdir -p shared/static
           cd /home/bitnami/htdocs-prod/releases
-          rm -rf `ls -t | tail -n +6`
+          # rm -rf `ls -t | tail -n +6`
           cd /home/bitnami/htdocs-prod/repo
           git fetch --depth 1 origin master
           git archive master | /usr/bin/env tar -x -f - -C /home/bitnami/htdocs-prod/current
