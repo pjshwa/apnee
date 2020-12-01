@@ -13,7 +13,7 @@ include("header.php");
       <a href="./duck.html">
         <img src="./static/images/ducky_flip_v.png" width="90px"/>
       </a>
-      <a href="javascript:var audio2 = new Audio('./static/images/Dramatic-chipmunk.mp3'); audio2.play();">
+      <a href="javascript:var audio2 = new Audio('./static/sounds/Dramatic-chipmunk.mp3'); audio2.play();">
         <img src="./static/images/slide.png" id="myImg" width="100px"/>
       </a>
     </div>

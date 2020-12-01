@@ -50,3 +50,11 @@ jobs:
           # Symlink current directory
           cd $root_directory
           ln -sfn $current_directory current
+
+    - name: Flush the PHP opcache
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        script: sudo /opt/bitnami/php/bin/cachetool opcache:reset --fcgi=/opt/bitnami/php/var/run/www.sock
