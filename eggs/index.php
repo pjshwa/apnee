@@ -54,7 +54,7 @@ else {
         foreach($articles as $article){
           echo '<article id="article_'.$article['id'].'">';
           echo '<h2>'.$article['title'].'</h2>';
-          echo '<h4>'.date('Y년 n월 j일', strtotime($article['date'])).'</h4>';
+          echo '<h4>'.date('Y년 n월 j일 H시 i분', strtotime($article['date'])).'</h4>';
           echo '<br/>';
           echo '<div class="lead imojify" style="white-space: pre-wrap;">';
           echo $article['content'];
@@ -72,7 +72,7 @@ else {
           else echo "<div class='btn btn-default comments-indicator-button' ";
           echo 'onclick="toggleScriptVisibility('.$article['id'].')">댓글들 (<strong>'.count($article['comments']).'</strong>)</h4><div id="comments_for_article_'.$article['id'].'" style="display: none; padding: 0 20px;"><ul class="comments">';
           foreach($article['comments'] as $comment){
-            echo '<li class="imojify"><strong>'.htmlspecialchars($comment['commauthor']).':</strong> '.htmlspecialchars($comment['comment']).' ('.date('Y-m-d', strtotime($comment['commdate'])).')';
+            echo '<li class="imojify"><strong>'.htmlspecialchars($comment['commauthor']).':</strong> '.htmlspecialchars($comment['comment']).' ('.date('Y-m-d H:i', strtotime($comment['commdate'])).')';
             if ($comment['commnew']) echo '<img id="comm_new_gif" src="../static/images/new.gif"/>';
             echo '</li>';
           }
