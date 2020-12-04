@@ -2,7 +2,7 @@
 include("header.php");?>
 <!-- <script>NekoType="colourful"</script>
 <h1 id=nl><script src="http://webneko.net/n200504.js"></script></h1> -->
-<img id="apeach" src="./static/images/apeachdance.gif" style="" onclick="apeachClick();" />
+<img id="apeach" src="/static/images/apeachdance.gif" style="" onclick="apeachClick();" />
 <div class="container" style="margin-top:20px;">
 <h3>분류</h3>
 <div id="front_row" class="row" style="margin-top:40px;">
@@ -10,13 +10,13 @@ include("header.php");?>
   <h5>완성 또는 더 고칠 생각이 없음</h5>
   <ul>
     <li>
-      <a href = "./aeogae.php">애오개</a>
+      <a href = "/aeogae.php">애오개</a>
     </li>
     <li>
-      <a href = "./snow.php">눈</a>
+      <a href = "/snow.php">눈</a>
     </li>
     <li>
-      <a href = "./cow.php">얼룩소</a>
+      <a href = "/cow.php">얼룩소</a>
     </li>
   </ul>
 </div>
@@ -24,13 +24,13 @@ include("header.php");?>
   <h5>미완성</h5>
   <ul>
     <li>
-      <a href = "./foretooth">앞니저지</a>
+      <a href = "/foretooth">앞니저지</a>
     </li>
     <li>
-      <a href = "./philosophy.php">철학자 채팅</a>
+      <a href = "/philosophy.php">철학자 채팅</a>
     </li>
     <li>
-      <a href = "./pika.php">피카추 잡기(베타)</a>
+      <a href = "/pika.php">피카추 잡기(베타)</a>
     </li>
   </ul>
 </div>
@@ -38,13 +38,13 @@ include("header.php");?>
   <h5>기타</h5>
   <ul>
     <li>
-      <a href = "./collections.php">수집 목록</a>
+      <a href = "/collections.php">수집 목록</a>
     </li>
     <li>
-      <a href = "./idea.php">아이디어?</a>
+      <a href = "/idea.php">아이디어?</a>
     </li>
     <li>
-      <a href = "./eggs"><img src="./static/images/egg.png" style="width: 10%;"/></a>
+      <a href = "/eggs/"><img src="/static/images/egg.png" style="width: 10%;"/></a>
     </li>
   </ul>
 </div>
@@ -79,7 +79,7 @@ include("header.php");?>
 <h5>방명록~</h5>
 <ul>
   <li>
-    <a href = "./visitor.php">방명록</a>
+    <a href = "/visitor.php">방명록</a>
   </li>
 </ul>
 </div>
@@ -180,7 +180,7 @@ function setbackground()
     }, 600); //  milliseconds delay
 }
 
-var bgm = new Audio('./static/sounds/sandcanyon.ogg');
+var bgm = new Audio('/static/sounds/sandcanyon.ogg');
 
 function apeachClick(){
   clicks++;
