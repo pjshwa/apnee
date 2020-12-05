@@ -215,6 +215,7 @@ $('form').on('submit', function(event) {
 
       // Append new comment
       $article.find('ul.comments').append(res);
+      imojify();
 
       // Update comments count
       var $comment_indicator_button = $article.find('.comments-indicator-button');
