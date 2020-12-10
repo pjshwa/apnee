@@ -90,7 +90,9 @@ include("header.php");?>
 #apeach {
   display: inline;
   position: absolute;
-  left:0;top:0;
+  left: 0;
+  top: 0;
+  z-index: 1;
 }
 
 @media only screen and (min-width: 320px) { 
