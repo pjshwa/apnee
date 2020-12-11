@@ -30,11 +30,11 @@ include("header.php");
           </div>
           <div class="panel-body">
             <ul>
+              <li><a href="https://youtu.be/0Da8ZhKcNKQ?t=8" style="cursor: text;">중요한 공지</a> (2020년 12월 11일)</li>
               <li><a data-toggle="modal" data-target="#eventsModal" data-id="11">드디어!!!</a> (2020년 10월 28일)</li>
               <li><a data-toggle="modal" data-target="#eventsModal" data-id="10">거북이 궁둥이</a> (2020년 10월 15일)</li>
               <li><a data-toggle="modal" data-target="#eventsModal" data-id="9">오늘은</a> (2020년 9월 11일)</li>
               <li><a data-toggle="modal" data-target="#eventsModal" data-id="8">닭강정</a> (2020년 4월 8일)</li>
-              <li><a data-toggle="modal" data-target="#eventsModal" data-id="7">재밌는거</a> (2019년 2월 8일)</li>
             </ul>
           </div>
         </div>
