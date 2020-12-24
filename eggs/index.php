@@ -73,7 +73,7 @@ else {
           echo 'onclick="toggleScriptVisibility('.$article['id'].')">댓글들 (<strong>'.count($article['comments']).'</strong>)</h4><div id="comments_for_article_'.$article['id'].'" style="display: none; padding: 0 20px;"><ul class="comments">';
           foreach($article['comments'] as $comment){
             echo '<li class="imojify"><strong>'.htmlspecialchars($comment['commauthor']).':</strong> '.htmlspecialchars($comment['comment']).' ('.date('Y-m-d H:i', strtotime($comment['commdate'])).')';
-            if ($comment['commnew']) echo '<img id="comm_new_gif" src="../static/images/new.gif"/>';
+            if ($comment['commnew']) echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
             echo '</li>';
           }
           echo '</ul><hr/>';
@@ -166,20 +166,16 @@ html {
 .highlight {
   background-color: #cbf09c;
 }
+.comm_new_gif {
+  width: 35px;
+  display: inline-block;
+}
 @media only screen and (min-width: 320px) { 
-  #comm_new_gif {
-    width: 10%;
-    display: inline-block;
-  }
   .main-container {
     margin: 75px 5px;
   }
 }
 @media only screen and (min-width: 769px) {
-  #comm_new_gif {
-    width: 5%;
-    display: inline-block;
-  }
   .video-container {
     width: 768px;
     padding-bottom: 432px;
