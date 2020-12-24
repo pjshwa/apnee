@@ -86,7 +86,7 @@ else {
             </div>
             <div class="row">
               내용
-              <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+              <textarea class="form-control" id="comment" name="comment" rows="3" maxlength="1000" required></textarea>
             </div>
           </form>
         <?php
