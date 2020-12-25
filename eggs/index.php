@@ -222,6 +222,9 @@ $('form').on('submit', function(event) {
       // Empty out inputs
       $form.find('input#comment_author').val('');
       $form.find('textarea#comment').val('');
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+      alert(XMLHttpRequest.responseText);
     }
   });
 });
