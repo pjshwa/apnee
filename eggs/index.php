@@ -51,42 +51,79 @@ else {
           }
         }
         else {
-        foreach($articles as $article){
+        foreach ($articles as $article) {
           echo '<article id="article_'.$article['id'].'">';
           echo '<h2>'.$article['title'].'</h2>';
           echo '<h4>'.date('Y년 n월 j일 H시 i분', strtotime($article['date'])).'</h4>';
           echo '<br/>';
           echo '<div class="lead imojify" style="white-space: pre-wrap;">';
           echo $article['content'];
-          $new_comment = false;
 
-          foreach($article['comments'] as $comment){
+          $new_comment = false;
+          $comments_count = count($article['comments']);
+          foreach ($article['comments'] as $comment) {
             if ($comment['commnew']) {
               $new_comment = true;
-              break;
+            }
+            if ($comment['subcomments']) {
+              $comments_count += count($comment['subcomments']);
+              foreach ($comment['subcomments'] as $subcomment) {
+                if ($subcomment['commnew']) {
+                  $new_comment = true;
+                }
+              }
             }
           }
+
           echo '</div>';
           echo '<h4>';
+
           if ($new_comment) echo "<div class='btn btn-primary comments-indicator-button' ";
           else echo "<div class='btn btn-default comments-indicator-button' ";
-          echo 'onclick="toggleScriptVisibility('.$article['id'].')">댓글들 (<strong>'.count($article['comments']).'</strong>)</h4><div id="comments_for_article_'.$article['id'].'" style="display: none; padding: 0 20px;"><ul class="comments">';
-          foreach($article['comments'] as $comment){
-            echo '<li class="imojify"><strong>'.htmlspecialchars($comment['commauthor']).':</strong> '.htmlspecialchars($comment['comment']).' ('.date('Y-m-d H:i', strtotime($comment['commdate'])).')';
+
+          echo 'onclick="toggleCommentVisible('.$article['id'].')">댓글들 (<strong>'.$comments_count.'</strong>)</h4><div id="comments_for_article_'.$article['id'].'" style="display: none; padding: 0 20px;"><ul class="comments">';
+
+          foreach ($article['comments'] as $comment) {
+            echo '<li id="comment_'.$comment['commid'].'" onclick="toggleNestedCommentFormVisible('.$comment['commid'].')" class="imojify"><strong>'.htmlspecialchars($comment['commauthor']).':</strong> '.htmlspecialchars($comment['message']).' ('.date('Y-m-d H:i', strtotime($comment['commdate'])).')';
             if ($comment['commnew']) echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
+
+            echo '<ul class="subcomments">';
+            if ($comment['subcomments']) {
+              foreach ($comment['subcomments'] as $subcomment) {
+                echo '<li class="imojify"><strong>'.htmlspecialchars($subcomment['commauthor']).':</strong> '.htmlspecialchars($subcomment['message']).' ('.date('Y-m-d H:i', strtotime($subcomment['commdate'])).')';
+                if ($subcomment['commnew']) echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
+                echo '</li>';
+              }
+            }
+            echo '</ul>';
             echo '</li>';
+
+            echo '<div id="nested_comment_form_for_comment_'.$comment['commid'].'" class="nested_comment_form_container js-nested-comment-form-container" style="display: none;">';
+            echo '<form class="nested_comment_form">';
+            echo '<input type="hidden" id="article_id" name="article_id" value="'.$article['id'].'"/>';
+            echo '<input type="hidden" id="comment_id" name="comment_id" value="'.$comment['commid'].'"/>';
+        ?>
+            <h5>▲ 대댓글 달기</h5>
+            <p>이름 <input type="text" class="nested_comment_author" name="comment_author" maxlength="30" required/></p>
+            <p>내용 <input type="text" class="nested_comment_message" name="comment" maxlength="1000" required/></p>
+            <p><input type="submit" class="btn btn-link" value="등록"/></p>
+          </form>
+        </div>
+
+        <?php
           }
+
           echo '</ul><hr/>';
-          echo '<form id="comment_post_'.$article['id'].'" name="comment_post_'.$article['id'].'">';
+          echo '<form class="comment_form">';
           echo '<input type="hidden" id="article_id" name="article_id" value="'.$article['id'].'"/>';
         ?>
             <div class="row">
-              <strong>이름 <input type="text" id="comment_author" name="comment_author" maxlength="30" required/></strong>
+              <strong>이름 <input type="text" class="comment_author" name="comment_author" maxlength="30" required/></strong>
               <input type="submit" class="btn btn-link" value="댓글 등록하기"/>
             </div>
             <div class="row">
               내용
-              <textarea class="form-control" id="comment" name="comment" rows="3" maxlength="1000" required></textarea>
+              <textarea class="form-control comment_message" name="comment" rows="3" maxlength="1000" required></textarea>
             </div>
           </form>
         <?php
@@ -170,6 +207,13 @@ html {
   width: 35px;
   display: inline-block;
 }
+.nested_comment_form_container {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding-left: 20px;
+  padding-top: 10px;
+  margin: 10px 0;
+}
 @media only screen and (min-width: 320px) { 
   .main-container {
     margin: 75px 5px;
@@ -189,13 +233,24 @@ html {
 <!-- source: https://github.com/danielthepope/imojify -->
 <script>
 
-function toggleScriptVisibility(article_id) {
+function toggleCommentVisible(article_id) {
   var comments_block = document.getElementById('comments_for_article_' + article_id);
   if (comments_block.style.display === 'block'){
     comments_block.style.display = 'none';
   }
   else if (comments_block.style.display === 'none'){
     comments_block.style.display = 'block';
+  }
+}
+
+function toggleNestedCommentFormVisible(comment_id) {
+  var form_block = document.getElementById('nested_comment_form_for_comment_' + comment_id);
+  if (form_block.style.display === 'block') {
+    form_block.style.display = 'none';
+  }
+  else if (form_block.style.display === 'none') {
+    $('.js-nested-comment-form-container').hide();
+    form_block.style.display = 'block';
   }
 }
 
@@ -209,19 +264,30 @@ $('form').on('submit', function(event) {
     success: function(res) {
       var $article = $form.closest('article');
 
-      // Append new comment
-      $article.find('ul.comments').append(res);
-      imojify();
-
       // Update comments count
       var $comment_indicator_button = $article.find('.comments-indicator-button');
       $comment_indicator_button.removeClass('btn-default').addClass('btn-primary');
       var current_comments_count = parseInt($comment_indicator_button.find('strong').text());
       $comment_indicator_button.find('strong').text(current_comments_count + 1);
 
-      // Empty out inputs
-      $form.find('input#comment_author').val('');
-      $form.find('textarea#comment').val('');
+      // Append new comment
+      if ($form.hasClass('comment_form')) {
+        $article.find('ul.comments').append(res);
+
+        // Empty out inputs
+        $form.find('input.comment_author').val('');
+        $form.find('textarea.comment_message').val('');
+      }
+      else {
+        var $comment_id = $form.find('input#comment_id').val();
+        $article.find('li#comment_' + $comment_id).find('ul.subcomments').append(res);
+
+        // Empty out inputs
+        $form.find('input.nested_comment_author').val('');
+        $form.find('input.nested_comment_message').val('');
+      }
+      imojify();
+
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
       alert(XMLHttpRequest.responseText);

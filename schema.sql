@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 25, 2020 at 12:07 AM
+-- Generation Time: Jul 12, 2022 at 12:24 AM
 -- Server version: 8.0.15
 -- PHP Version: 7.3.3
 
@@ -82,6 +82,7 @@ DELIMITER ;
 CREATE TABLE `egg_comments` (
   `id` int(6) UNSIGNED NOT NULL,
   `egg_id` int(6) UNSIGNED NOT NULL,
+  `comment_id` int(6) DEFAULT NULL,
   `comment` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
