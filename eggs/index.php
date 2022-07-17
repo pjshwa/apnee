@@ -98,19 +98,17 @@ else {
             echo '</ul>';
             echo '</li>';
 
+            // Comment form
             echo '<div id="nested_comment_form_for_comment_'.$comment['commid'].'" class="nested_comment_form_container js-nested-comment-form-container" style="display: none;">';
             echo '<form class="nested_comment_form">';
             echo '<input type="hidden" id="article_id" name="article_id" value="'.$article['id'].'"/>';
             echo '<input type="hidden" id="comment_id" name="comment_id" value="'.$comment['commid'].'"/>';
-        ?>
-            <h5>▲ 대댓글 달기</h5>
-            <p>이름 <input type="text" class="nested_comment_author" name="comment_author" maxlength="30" required/></p>
-            <p>내용 <input type="text" class="nested_comment_message" name="comment" maxlength="1000" required/></p>
-            <p><input type="submit" class="btn btn-link" value="등록"/></p>
-          </form>
-        </div>
-
-        <?php
+            echo '<h5>▲ 대댓글 달기</h5>';
+            echo '<p>이름 <input type="text" class="nested_comment_author" name="comment_author" maxlength="30" required/></p>';
+            echo '<p>내용 <input type="text" class="nested_comment_message" name="comment" maxlength="1000" required/></p>';
+            echo '<p><input type="submit" class="btn btn-link" value="등록"/></p>';
+            echo '</form>';
+            echo '</div>';
           }
 
           echo '</ul><hr/>';
@@ -254,7 +252,7 @@ function toggleNestedCommentFormVisible(comment_id) {
   }
 }
 
-$('form').on('submit', function(event) {
+$("body").on('submit', 'form', function(event) {
   event.preventDefault();
   var $form = $(this);
   $.ajax({
