@@ -60,31 +60,36 @@ class DB {
         }
         $stmt2->close();
 
-        $inClause = join(',', array_map(function($el) {return $el['commid'];}, $comments));
-        $query3 = "SELECT id, comment_id, author, comment, created_at from egg_comments where comment_id in (".$inClause.") order by created_at";
-        if(!($stmt3 = $this->mysqli->prepare($query3))) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        if(!$stmt3->execute()) {
-            throw new Exception('DB Error: '.$this->mysqli->error);
-        }
-        $stmt3->bind_result($id, $comment_id, $author, $message, $commdate);
-        while($stmt3->fetch()) {
-            foreach ($comments as &$comment) {
-                if ($comment['commid'] == $comment_id) {
-                    $start_time = new DateTime($commdate);
-                    $commnew = $start_time->diff($finish_time)->days < 2;
-                    $comment['subcomments'][] = array(
-                        'commid'=>$id,
-                        'commauthor'=>$author,
-                        'message'=>$message,
-                        'commdate'=>$commdate,
-                        'commnew'=>$commnew,
-                    );
+        if (count($comments) > 0) {
+
+            $inClause = join(',', array_map(function($el) {return $el['commid'];}, $comments));
+            $query3 = "SELECT id, comment_id, author, comment, created_at from egg_comments where comment_id in (".$inClause.") order by created_at";
+            if(!($stmt3 = $this->mysqli->prepare($query3))) {
+                throw new Exception('DB Error: '.$this->mysqli->error);
+            }
+            if(!$stmt3->execute()) {
+                throw new Exception('DB Error: '.$this->mysqli->error);
+            }
+            $stmt3->bind_result($id, $comment_id, $author, $message, $commdate);
+            while($stmt3->fetch()) {
+                foreach ($comments as &$comment) {
+                    if ($comment['commid'] == $comment_id) {
+                        $start_time = new DateTime($commdate);
+                        $commnew = $start_time->diff($finish_time)->days < 2;
+                        $comment['subcomments'][] = array(
+                            'commid'=>$id,
+                            'commauthor'=>$author,
+                            'message'=>$message,
+                            'commdate'=>$commdate,
+                            'commnew'=>$commnew,
+                        );
+                    }
                 }
             }
+            $stmt3->close();
+
         }
-        $stmt3->close();
+
 
         // $item is mutable
         foreach($items as &$item) foreach($comments as &$comment) {
