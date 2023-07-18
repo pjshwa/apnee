@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 12, 2022 at 12:24 AM
--- Server version: 8.0.15
--- PHP Version: 7.3.3
+-- 생성 시간: 23-07-18 20:23
+-- 서버 버전: 8.0.15
+-- PHP 버전: 7.3.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,13 +19,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `pjshwa`
+-- 데이터베이스: `pjshwa`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cats`
+-- 테이블 구조 `cats`
 --
 
 CREATE TABLE `cats` (
@@ -38,7 +38,7 @@ CREATE TABLE `cats` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cowgame_score`
+-- 테이블 구조 `cowgame_score`
 --
 
 CREATE TABLE `cowgame_score` (
@@ -50,7 +50,19 @@ CREATE TABLE `cowgame_score` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `eggs`
+-- 테이블 구조 `daily_problems`
+--
+
+CREATE TABLE `daily_problems` (
+  `ID` int(11) NOT NULL,
+  `url` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reg_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- 테이블 구조 `eggs`
 --
 
 CREATE TABLE `eggs` (
@@ -62,7 +74,7 @@ CREATE TABLE `eggs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Triggers `eggs`
+-- 트리거 `eggs`
 --
 DELIMITER $$
 CREATE TRIGGER `eggs_before_insert` BEFORE INSERT ON `eggs` FOR EACH ROW BEGIN
@@ -76,7 +88,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `egg_comments`
+-- 테이블 구조 `egg_comments`
 --
 
 CREATE TABLE `egg_comments` (
@@ -92,7 +104,7 @@ CREATE TABLE `egg_comments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `events`
+-- 테이블 구조 `events`
 --
 
 CREATE TABLE `events` (
@@ -106,7 +118,7 @@ CREATE TABLE `events` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `important`
+-- 테이블 구조 `important`
 --
 
 CREATE TABLE `important` (
@@ -123,7 +135,7 @@ CREATE TABLE `important` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `phi_chats`
+-- 테이블 구조 `phi_chats`
 --
 
 CREATE TABLE `phi_chats` (
@@ -137,7 +149,7 @@ CREATE TABLE `phi_chats` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `phi_info`
+-- 테이블 구조 `phi_info`
 --
 
 CREATE TABLE `phi_info` (
@@ -150,7 +162,7 @@ CREATE TABLE `phi_info` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pika_score`
+-- 테이블 구조 `pika_score`
 --
 
 CREATE TABLE `pika_score` (
@@ -165,7 +177,7 @@ CREATE TABLE `pika_score` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `queries`
+-- 테이블 구조 `queries`
 --
 
 CREATE TABLE `queries` (
@@ -177,7 +189,7 @@ CREATE TABLE `queries` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `questions`
+-- 테이블 구조 `questions`
 --
 
 CREATE TABLE `questions` (
@@ -191,7 +203,7 @@ CREATE TABLE `questions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `temp_questions`
+-- 테이블 구조 `temp_questions`
 --
 
 CREATE TABLE `temp_questions` (
@@ -203,7 +215,7 @@ CREATE TABLE `temp_questions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `uncle_pic`
+-- 테이블 구조 `uncle_pic`
 --
 
 CREATE TABLE `uncle_pic` (
@@ -216,7 +228,7 @@ CREATE TABLE `uncle_pic` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `visitor_log`
+-- 테이블 구조 `visitor_log`
 --
 
 CREATE TABLE `visitor_log` (
@@ -227,179 +239,191 @@ CREATE TABLE `visitor_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Indexes for dumped tables
+-- 덤프된 테이블의 인덱스
 --
 
 --
--- Indexes for table `cats`
+-- 테이블의 인덱스 `cats`
 --
 ALTER TABLE `cats`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `cowgame_score`
+-- 테이블의 인덱스 `cowgame_score`
 --
 ALTER TABLE `cowgame_score`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `eggs`
+-- 테이블의 인덱스 `daily_problems`
+--
+ALTER TABLE `daily_problems`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- 테이블의 인덱스 `eggs`
 --
 ALTER TABLE `eggs`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `egg_comments`
+-- 테이블의 인덱스 `egg_comments`
 --
 ALTER TABLE `egg_comments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `egg_id` (`egg_id`);
 
 --
--- Indexes for table `events`
+-- 테이블의 인덱스 `events`
 --
 ALTER TABLE `events`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `important`
+-- 테이블의 인덱스 `important`
 --
 ALTER TABLE `important`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `phi_chats`
+-- 테이블의 인덱스 `phi_chats`
 --
 ALTER TABLE `phi_chats`
   ADD PRIMARY KEY (`id`),
   ADD KEY `phi_id` (`phi_id`);
 
 --
--- Indexes for table `phi_info`
+-- 테이블의 인덱스 `phi_info`
 --
 ALTER TABLE `phi_info`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `pika_score`
+-- 테이블의 인덱스 `pika_score`
 --
 ALTER TABLE `pika_score`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `queries`
+-- 테이블의 인덱스 `queries`
 --
 ALTER TABLE `queries`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `questions`
+-- 테이블의 인덱스 `questions`
 --
 ALTER TABLE `questions`
   ADD PRIMARY KEY (`question_key`);
 
 --
--- Indexes for table `temp_questions`
+-- 테이블의 인덱스 `temp_questions`
 --
 ALTER TABLE `temp_questions`
   ADD PRIMARY KEY (`question_key`);
 
 --
--- Indexes for table `uncle_pic`
+-- 테이블의 인덱스 `uncle_pic`
 --
 ALTER TABLE `uncle_pic`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `visitor_log`
+-- 테이블의 인덱스 `visitor_log`
 --
 ALTER TABLE `visitor_log`
   ADD PRIMARY KEY (`ID`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- 덤프된 테이블의 AUTO_INCREMENT
 --
 
 --
--- AUTO_INCREMENT for table `cats`
+-- 테이블의 AUTO_INCREMENT `cats`
 --
 ALTER TABLE `cats`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `cowgame_score`
+-- 테이블의 AUTO_INCREMENT `cowgame_score`
 --
 ALTER TABLE `cowgame_score`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `eggs`
+-- 테이블의 AUTO_INCREMENT `daily_problems`
+--
+ALTER TABLE `daily_problems`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- 테이블의 AUTO_INCREMENT `eggs`
 --
 ALTER TABLE `eggs`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `egg_comments`
+-- 테이블의 AUTO_INCREMENT `egg_comments`
 --
 ALTER TABLE `egg_comments`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `events`
+-- 테이블의 AUTO_INCREMENT `events`
 --
 ALTER TABLE `events`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `important`
+-- 테이블의 AUTO_INCREMENT `important`
 --
 ALTER TABLE `important`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `phi_chats`
+-- 테이블의 AUTO_INCREMENT `phi_chats`
 --
 ALTER TABLE `phi_chats`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `phi_info`
+-- 테이블의 AUTO_INCREMENT `phi_info`
 --
 ALTER TABLE `phi_info`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `pika_score`
+-- 테이블의 AUTO_INCREMENT `pika_score`
 --
 ALTER TABLE `pika_score`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `queries`
+-- 테이블의 AUTO_INCREMENT `queries`
 --
 ALTER TABLE `queries`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `questions`
+-- 테이블의 AUTO_INCREMENT `questions`
 --
 ALTER TABLE `questions`
   MODIFY `question_key` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `temp_questions`
+-- 테이블의 AUTO_INCREMENT `temp_questions`
 --
 ALTER TABLE `temp_questions`
   MODIFY `question_key` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `uncle_pic`
+-- 테이블의 AUTO_INCREMENT `uncle_pic`
 --
 ALTER TABLE `uncle_pic`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `visitor_log`
+-- 테이블의 AUTO_INCREMENT `visitor_log`
 --
 ALTER TABLE `visitor_log`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;

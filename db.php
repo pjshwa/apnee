@@ -202,6 +202,27 @@ class DB {
         // Step 6. Return the selected $items to the function caller
         return $items;
     }
+
+
+    public function getDailyLeetCode($date) {
+        $query = "SELECT url from daily_problems where reg_date = ?";
+        if(!($stmt = $this->mysqli->prepare($query))) {
+            throw new Exception('DB Error: '.$this->mysqli->error);
+        }
+
+        $stmt->bind_param('s', $date);
+        if(!$stmt->execute()) {
+            throw new Exception('DB Error: '.$this->mysqli->error);
+        }
+
+        $stmt->bind_result($url);
+        $items = array();
+        while($stmt->fetch()) {
+            $items[] = $url;
+        }
+        $stmt->close();
+        return $items[0];
+    }
 };
 
 // Create a DB object $db. We will use $db to connect to database in catalog.php
