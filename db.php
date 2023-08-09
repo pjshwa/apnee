@@ -223,6 +223,26 @@ class DB {
         $stmt->close();
         return $items[0];
     }
+
+    public function getDailyLeetCodeList() {
+        $query = "SELECT url, reg_date from daily_problems order by reg_date";
+        if(!($stmt = $this->mysqli->prepare($query))) {
+            throw new Exception('DB Error: '.$this->mysqli->error);
+        }
+
+        if(!$stmt->execute()) {
+            throw new Exception('DB Error: '.$this->mysqli->error);
+        }
+
+        $stmt->bind_result($url, $date);
+        $items = array();
+        while($stmt->fetch()) {
+            $items[] = array('url'=>$url,
+                            'date'=>$date);
+        }
+        $stmt->close();
+        return $items;
+    }
 };
 
 // Create a DB object $db. We will use $db to connect to database in catalog.php
