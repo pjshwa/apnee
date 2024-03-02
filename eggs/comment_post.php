@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     http_response_code(400);
   }
   else {
-    $date = date('Y-m-d H:i');
+    $date = new DateTime('now', new DateTimeZone('Asia/Seoul'));
     $nid = $db->newComment($article_id, $author, $comment, $comment_id);
 
     echo '<li id="comment_'.$nid.'" ';
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo htmlspecialchars($author);
     echo ':</strong> ';
     echo htmlspecialchars($comment);
-    echo ' ('.$date.')';
+    echo ' ('.$date->format('Y-m-d H:i').')';
 
     echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
     

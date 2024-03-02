@@ -18,13 +18,11 @@ include("credentials.php");
       $r = $conn->query($sql);
     echo "<ul>";
     if ($r->num_rows > 0) {
-        // output data of each row
-
-        while($row = $r->fetch_assoc()) {
-        $reg_date = DateTime::createFromFormat('Y-m-d H:i:s', $row["reg_date"], new DateTimeZone('UTC'));
-        $reg_date->setTimezone(new DateTimeZone('Asia/Seoul'));
-        echo "<li>".$row["a_query"]." (".$reg_date->format('Y-m-d H:i:s').")</li>";
-        }
+      while ($row = $r->fetch_assoc()) {
+        $date = new DateTime($row["reg_date"], new DateTimeZone('UTC'));
+        $date->setTimezone(new DateTimeZone('Asia/Seoul'));
+        echo "<li>".$row["a_query"]." (".$date->format('Y-m-d H:i:s').")</li>";
+      }
     } else {
         echo "검색 결과가 없다";
     }
