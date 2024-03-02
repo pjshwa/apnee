@@ -45,7 +45,7 @@ jobs:
           echo "<?php \$credentials = array('host' => 'localhost', 'user' => '${{ secrets.DBUSER }}', 'pass' => '${{ secrets.DBPASS }}', 'database' => 'pjshwa_test'); ?>" | tee -a $current_directory/credentials.php
 
           # Sync assets
-          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} /home/bitnami/.pyenv/shims/aws s3 sync s3://pjshwa-homepage-assets/static ./static --delete
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} aws s3 sync s3://pjshwa-homepage-assets/static ./static --delete
 
           # Symlink current directory
           cd $root_directory
