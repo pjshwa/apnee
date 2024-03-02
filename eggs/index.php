@@ -52,9 +52,12 @@ else {
         }
         else {
         foreach ($articles as $article) {
+          $date = new DateTime($article['date']);
+          $datestr = $date->format('Y년 n월 j일 H시 i분');
+
           echo '<article id="article_'.$article['id'].'">';
           echo '<h2>'.$article['title'].'</h2>';
-          echo '<h4>'.date('Y년 n월 j일 H시 i분', strtotime($article['date'])).'</h4>';
+          echo '<h4>'.$datestr.'</h4>';
           echo '<br/>';
           echo '<div class="lead imojify" style="white-space: pre-wrap;">';
           echo $article['content'];
