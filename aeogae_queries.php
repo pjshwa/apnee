@@ -1,6 +1,7 @@
 <?php
-include("header.php");
-include("credentials.php");
+require("header.php");
+require("credentials.php");
+require("consts/consts.php");
 ?>
 <div class="container" style="margin-top:20px;">
   <h1>지금까지의 검색어</h1>
@@ -20,7 +21,7 @@ include("credentials.php");
     if ($r->num_rows > 0) {
       while ($row = $r->fetch_assoc()) {
         $date = new DateTime($row["reg_date"], new DateTimeZone('UTC'));
-        $date->setTimezone(new DateTimeZone('Asia/Seoul'));
+        $date->setTimezone($TIMEZONE);
         echo "<li>".$row["a_query"]." (".$date->format('Y-m-d H:i:s').")</li>";
       }
     } else {
@@ -36,4 +37,4 @@ include("credentials.php");
 
 </div>
 
-<?php include("footer.php"); ?>
+<?php require("footer.php"); ?>

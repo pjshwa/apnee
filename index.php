@@ -1,6 +1,6 @@
 
 <?php
-include("header.php");
+require("header.php");
 ?>
 <div class="container">
   <div class="row">

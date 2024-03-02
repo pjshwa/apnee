@@ -1,5 +1,7 @@
 <?php
 require('db.php');
+require('../consts/consts.php');
+
 $now = new DateTime('now');
 $now_month = $now->format('m');
 $now_year = $now->format('Y');
@@ -53,7 +55,7 @@ else {
         else {
         foreach ($articles as $article) {
           $date = new DateTime($article['date'], new DateTimeZone('UTC'));
-          $date->setTimezone(new DateTimeZone('Asia/Seoul'));
+          $date->setTimezone($TIMEZONE);
           $datestr = $date->format('Y년 n월 j일 H시 i분');
 
           echo '<article id="article_'.$article['id'].'">';
@@ -89,7 +91,7 @@ else {
 
           foreach ($article['comments'] as $comment) {
             $commdate = new DateTime($comment['commdate'], new DateTimeZone('UTC'));
-            $commdate->setTimezone(new DateTimeZone('Asia/Seoul'));
+            $commdate->setTimezone($TIMEZONE);
             $commdatestr = $commdate->format('Y-m-d H:i');
 
             echo '<li id="comment_'.$comment['commid'].'" onclick="toggleNestedCommentFormVisible('.$comment['commid'].')" class="imojify"><strong>'.htmlspecialchars($comment['commauthor']).':</strong> '.htmlspecialchars($comment['message']).' ('.$commdatestr.')';

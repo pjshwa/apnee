@@ -1,5 +1,5 @@
 <?php
-include('credentials.php');
+require('credentials.php');
 
 class DB {
     private $mysqli;

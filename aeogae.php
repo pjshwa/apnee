@@ -1,7 +1,7 @@
 
 <?php
-include("header.php");
-include("credentials.php");
+require("header.php");
+require("credentials.php");
 ?><div class="container" style="margin-top:20px;"><?php
 
 $greenish = "['rgb(21,201,161)', 'rgb(21,201,161)', 'rgb(1,92,76)', 'rgb(17,117,99)', 'rgb(14,142,113)', 'rgb(23,175,148)', 'rgb(21,201,161)', 'rgb(21,201,161)']";
@@ -106,4 +106,4 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
 ?>
 </div>
 
-<?php include("footer.php"); ?>
+<?php require("footer.php"); ?>

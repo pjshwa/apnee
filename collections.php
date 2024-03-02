@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php require("header.php"); ?>
 <div class="container" style="margin-top:20px;">
   <h3>수집 목록</h3>
   <div id="front_row" class="row" style="margin-top:40px;">
@@ -17,4 +17,4 @@
     </div>
   </div>
 </div>
-<?php include("footer.php"); ?>
+<?php require("footer.php"); ?>

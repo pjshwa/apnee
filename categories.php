@@ -1,5 +1,5 @@
 <?php
-include("header.php");?>
+require("header.php");?>
 <!-- <script>NekoType="colourful"</script>
 <h1 id=nl><script src="http://webneko.net/n200504.js"></script></h1> -->
 <img id="apeach" src="/static/images/apeachdance.gif" style="" onclick="apeachClick();" />
@@ -227,4 +227,4 @@ function moveApeach() {
 }
 </script>
 
-<?php include("footer.php"); ?>
+<?php require("footer.php"); ?>

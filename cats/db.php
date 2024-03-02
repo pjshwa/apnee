@@ -1,5 +1,5 @@
 <?php
-include(dirname(__FILE__).'/../credentials.php');
+require(dirname(__FILE__).'/../credentials.php');
 
 class DB {
     private $mysqli;

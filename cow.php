@@ -1,7 +1,7 @@
 
 <?php
-include("header.php");
-include("credentials.php");
+require("header.php");
+require("credentials.php");
 echo '<div class="container">';
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $conn = new mysqli($credentials["host"], $credentials["user"], $credentials["pass"], $credentials["database"]);
@@ -98,4 +98,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 </div>
 </div>
 <script src= "./static/js/cow.js"></script>
-<?php include("footer.php"); ?>
+<?php require("footer.php"); ?>

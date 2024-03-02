@@ -1,4 +1,6 @@
 <?php
+require('../consts/consts.php');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   require('db.php');
   $article_id = $_POST["article_id"];
@@ -16,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     http_response_code(400);
   }
   else {
-    $date = new DateTime('now', new DateTimeZone('Asia/Seoul'));
+    $date = new DateTime('now', $TIMEZONE);
     $nid = $db->newComment($article_id, $author, $comment, $comment_id);
 
     echo '<li id="comment_'.$nid.'" ';
