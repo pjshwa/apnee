@@ -2,7 +2,7 @@ name: Deploy staging
 on:
   push:
     branches:
-    - master
+    - main
 
 jobs:
   build:
@@ -34,8 +34,8 @@ jobs:
 
           # Clone materials into new release directory from git branch
           cd $repo_directory
-          git fetch --depth 1 origin master
-          git archive master | /usr/bin/env tar -x -f - -C $current_directory
+          git fetch --depth 1 origin main
+          git archive main | /usr/bin/env tar -x -f - -C $current_directory
 
           # Symlink shared materials
           cd $current_directory
