@@ -7,11 +7,7 @@ class Page {
     /* Get data sent from GET method */
     public function getPageParam($var) {
         if(isSet($_GET[$var])) {
-            // for PHP <5.4.0
-            if (get_magic_quotes_gpc())
-                return stripslashes($_GET[$var]);
-            else 
-                return $_GET[$var];
+            return $_GET[$var];
         } else {
             return '1';
         }
@@ -134,7 +130,7 @@ $page = new Page();
 require('db.php');
 
 /* For searching */
-$pageno =$page->getPageParam('page');
+$pageno = $page->getPageParam('page');
 
 /* get items */
 
