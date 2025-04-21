@@ -92,11 +92,15 @@ class DB {
 
 
         // $item is mutable
-        foreach($items as &$item) foreach($comments as &$comment) {
-            if ($item['id'] == $comment['egg_id']) {
-                $item['comments'][] = $comment;
+        foreach($items as &$item) {
+            if ($item['comments'] == null) {
+                $item['comments'] = array();
             }
-            if ($item['comments'] == null) $item['comments'] = array();
+            foreach($comments as $comment) {
+                if ($item['id'] == $comment['egg_id']) {
+                    $item['comments'][] = $comment;
+                }
+            }
         }
 
         return $items;
