@@ -90,10 +90,12 @@ class DB {
 
         }
 
+        unset($comment);
+
 
         // $item is mutable
         foreach($items as &$item) {
-            if ($item['comments'] == null) {
+            if (!isset($item['comments'])) {
                 $item['comments'] = array();
             }
             foreach($comments as $comment) {

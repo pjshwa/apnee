@@ -71,7 +71,7 @@ else {
             if ($comment['commnew']) {
               $new_comment = true;
             }
-            if ($comment['subcomments']) {
+            if (isset($comment['subcomments'])) {
               $comments_count += count($comment['subcomments']);
               foreach ($comment['subcomments'] as $subcomment) {
                 if ($subcomment['commnew']) {
@@ -98,7 +98,7 @@ else {
             if ($comment['commnew']) echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
 
             echo '<ul class="subcomments">';
-            if ($comment['subcomments']) {
+            if (isset($comment['subcomments'])) {
               foreach ($comment['subcomments'] as $subcomment) {
                 echo '<li class="imojify"><strong>'.htmlspecialchars($subcomment['commauthor']).':</strong> '.htmlspecialchars($subcomment['message']).' ('.date('Y-m-d H:i', strtotime($subcomment['commdate'])).')';
                 if ($subcomment['commnew']) echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
