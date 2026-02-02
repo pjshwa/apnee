@@ -68,9 +68,12 @@ class LevelEditor {
     
     bindEvents() {
         // 에디터 토글
-        document.getElementById('editor-btn').addEventListener('click', () => {
-            this.toggle();
-        });
+        const editorBtn = document.getElementById('editor-btn');
+        if (editorBtn) {
+            editorBtn.addEventListener('click', () => {
+                this.toggle();
+            });
+        }
         
         // 도구 선택
         document.querySelectorAll('.tool-btn').forEach(btn => {
@@ -82,25 +85,63 @@ class LevelEditor {
         });
         
         // 레벨 관리 버튼들
-        document.getElementById('test-level-btn').addEventListener('click', () => {
-            this.testLevel();
-        });
+        const testLevelBtn = document.getElementById('test-level-btn');
+        if (testLevelBtn) {
+            testLevelBtn.addEventListener('click', () => {
+                this.testLevel();
+            });
+        }
         
-        document.getElementById('clear-level-btn')?.addEventListener('click', () => {
-            this.clearLevel();
-        });
+        const clearLevelBtn = document.getElementById('clear-level-btn');
+        if (clearLevelBtn) {
+            clearLevelBtn.addEventListener('click', () => {
+                this.clearLevel();
+            });
+        }
         
-        document.getElementById('export-level-btn').addEventListener('click', () => {
-            this.exportLevel();
-        });
+        const exportLevelBtn = document.getElementById('export-level-btn');
+        if (exportLevelBtn) {
+            exportLevelBtn.addEventListener('click', () => {
+                this.exportLevel();
+            });
+        }
         
-        document.getElementById('import-level-btn').addEventListener('click', () => {
-            this.importLevel();
-        });
+        const importLevelBtn = document.getElementById('import-level-btn');
+        if (importLevelBtn) {
+            importLevelBtn.addEventListener('click', () => {
+                this.importLevel();
+            });
+        }
         
-        document.getElementById('share-level-btn')?.addEventListener('click', () => {
-            this.shareLevel();
-        });
+        const shareLevelBtn = document.getElementById('share-level-btn');
+        if (shareLevelBtn) {
+            shareLevelBtn.addEventListener('click', () => {
+                this.shareLevel();
+            });
+        }
+        
+        // Download JSON button
+        const downloadJsonBtn = document.getElementById('download-json-btn');
+        if (downloadJsonBtn) {
+            downloadJsonBtn.addEventListener('click', () => {
+                const json = downloadJsonBtn.dataset.json;
+                if (json) {
+                    const blob = new Blob([json], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    
+                    // Generate filename with timestamp
+                    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+                    a.download = `level_${timestamp}.json`;
+                    
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            });
+        }
     }
     
     toggle() {
@@ -390,7 +431,11 @@ class LevelEditor {
         
         // 스위치 클릭 시 선택
         if (boardCell.type === 'switch' && boardCell.switchData) {
-            this.selectSwitch(boardCell.switchData, cell);
+            if (this.currentTool === 'empty') {
+                this.placeTile(x, y);
+            } else {
+                this.selectSwitch(boardCell.switchData, cell);
+            }
             return;
         }
         
@@ -660,26 +705,73 @@ class LevelEditor {
     
     exportLevel() {
         const levelData = this.exportLevelData();
-        const json = JSON.stringify(levelData, null, 2);
+        // Compact JSON with minimal newlines for easier human editing
+        const json = JSON.stringify(levelData);
+        
+        // Show in textarea and copy to clipboard
         const textarea = document.getElementById('level-json');
         textarea.style.display = 'block';
         textarea.value = json;
         textarea.select();
         
-        // 클립보드에 복사
+        // Show download button
+        const downloadBtn = document.getElementById('download-json-btn');
+        if (downloadBtn) {
+            downloadBtn.style.display = 'block';
+            // Store JSON data for download
+            downloadBtn.dataset.json = json;
+        }
+        
         navigator.clipboard.writeText(json).then(() => {
-            alert('레벨 JSON이 클립보드에 복사되었습니다!');
+            alert('Level JSON copied to clipboard!');
         });
     }
     
     shareLevel() {
         const levelData = this.exportLevelData();
-        const shareURL = this.game.generateShareURL(levelData);
         
-        navigator.clipboard.writeText(shareURL).then(() => {
-            alert('공유 URL이 클립보드에 복사되었습니다!\n\n' + shareURL);
-        }).catch(() => {
-            prompt('아래 URL을 복사하세요:', shareURL);
+        // 레벨 이름과 설명 입력받기
+        const name = prompt('레벨 이름을 입력하세요:', 'My Custom Level');
+        if (!name) return; // 취소한 경우
+        
+        const description = prompt('레벨 설명을 입력하세요 (선택사항):', '');
+        
+        // 서버에 저장
+        const saveBtn = document.getElementById('share-level-btn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = '저장 중...';
+        
+        fetch('api_save_level.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                description: description,
+                level_data: levelData
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const fullURL = window.location.origin + data.url;
+                navigator.clipboard.writeText(fullURL).then(() => {
+                    alert('레벨이 저장되었습니다!\n\n공유 URL이 클립보드에 복사되었습니다:\n' + fullURL);
+                }).catch(() => {
+                    prompt('아래 URL을 복사하세요:', fullURL);
+                });
+            } else {
+                alert('레벨 저장 실패: ' + (data.error || '알 수 없는 오류'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('레벨 저장 중 오류가 발생했습니다.');
+        })
+        .finally(() => {
+            saveBtn.disabled = false;
+            saveBtn.textContent = '🔗 공유 URL 생성';
         });
     }
     
@@ -728,9 +820,9 @@ class LevelEditor {
 class PuzzleGame {
     // 물리 설정 상수 (튜닝 용이성을 위해 분리)
     static PHYSICS = {
-        MOVE_SPEED: 0.08,       // 이동 속도
-        JUMP_VELOCITY: -0.19,   // 점프 초기 속도 (1칸 점프)
-        GRAVITY: 0.015,         // 중력
+        MOVE_SPEED: 0.05,       // 이동 속도
+        JUMP_VELOCITY: -0.155,  // 점프 초기 속도 (1칸 점프, 중력에 맞춰 조정)
+        GRAVITY: 0.01,          // 중력 (낮춰서 체공시간 증가)
         MAX_FALL_SPEED: 0.25,   // 최대 낙하 속도
         FRICTION: 0.8,          // 마찰력
         PLAYER_SIZE: 0.8        // 플레이어 크기 (셀 기준)
@@ -757,20 +849,34 @@ class PuzzleGame {
     
     async loadLevelsFromJSON() {
         try {
-            const response = await fetch('levels.json');
-            if (!response.ok) {
-                throw new Error('레벨 파일을 불러올 수 없습니다');
+            // Try to load individual level files
+            this.levels = [];
+            let levelNum = 1;
+            
+            while (true) {
+                try {
+                    const response = await fetch(`levels/level${levelNum}.json`);
+                    if (!response.ok) break;
+                    const levelData = await response.json();
+                    this.levels.push(levelData);
+                    levelNum++;
+                } catch {
+                    break;
+                }
             }
-            const data = await response.json();
-            this.levels = data.levels;
+            
+            if (this.levels.length === 0) {
+                throw new Error('No level files found');
+            }
+            
             this.levelsLoaded = true;
-            console.log(`${this.levels.length}개의 레벨을 불러왔습니다.`);
+            console.log(`${this.levels.length} levels loaded.`);
             return true;
         } catch (error) {
-            console.error('레벨 로딩 실패:', error);
-            // 기본 레벨 (폴백)
+            console.error('Level loading failed:', error);
+            // Fallback default level
             this.levels = [{
-                name: "기본 레벨",
+                name: "Default Level",
                 startPosition: { x: 1, y: 12 },
                 switches: [],
                 walls: Array.from({length: 15}, (_, i) => ({x: i, y: 14})),
@@ -900,11 +1006,20 @@ class PuzzleGame {
         this.lastSwitchPos = null;
         this.updatePlayerPosition();
         
-        // UI 업데이트
-        document.getElementById('current-level').textContent = 'Custom';
+        // UI 업데이트 (요소가 있는 경우만)
+        const levelElement = document.getElementById('current-level');
+        if (levelElement) {
+            levelElement.textContent = 'Custom';
+        }
         this.gameWon = false;
-        document.getElementById('next-level-btn').style.display = 'none';
-        document.getElementById('victory-message').style.display = 'none';
+        const nextBtn = document.getElementById('next-level-btn');
+        if (nextBtn) {
+            nextBtn.style.display = 'none';
+        }
+        const victoryMsg = document.getElementById('victory-message');
+        if (victoryMsg) {
+            victoryMsg.style.display = 'none';
+        }
     }
     
     createBoard() {
@@ -978,10 +1093,12 @@ class PuzzleGame {
         }
         
         // 목표 설정
-        const goalCell = this.board[level.goal.y][level.goal.x];
-        goalCell.type = 'goal';
-        goalCell.element.classList.add('goal');
-        goalCell.element.innerHTML = '🏁';
+        if (level.goal && level.goal.x !== undefined && level.goal.y !== undefined) {
+            const goalCell = this.board[level.goal.y][level.goal.x];
+            goalCell.type = 'goal';
+            goalCell.element.classList.add('goal');
+            goalCell.element.innerHTML = '🏁';
+        }
         
         // 시작점 설정 (에디터에서 인식할 수 있도록 - 내부 타입만 설정)
         const start = level.startPosition || { x: 1, y: 12 };
@@ -1002,10 +1119,19 @@ class PuzzleGame {
         
         // 레벨 이름 표시 (있는 경우)
         const levelText = level.name ? `${levelNum}. ${level.name}` : levelNum;
-        document.getElementById('current-level').textContent = levelText;
+        const levelElement = document.getElementById('current-level');
+        if (levelElement) {
+            levelElement.textContent = levelText;
+        }
         this.gameWon = false;
-        document.getElementById('next-level-btn').style.display = 'none';
-        document.getElementById('victory-message').style.display = 'none';
+        const nextBtn = document.getElementById('next-level-btn');
+        if (nextBtn) {
+            nextBtn.style.display = 'none';
+        }
+        const victoryMsg = document.getElementById('victory-message');
+        if (victoryMsg) {
+            victoryMsg.style.display = 'none';
+        }
         
         // URL 업데이트 (에디터 모드가 아닐 때만)
         if (!this.editor || !this.editor.isActive) {
@@ -1065,26 +1191,35 @@ class PuzzleGame {
         });
         
         // 버튼 이벤트
-        document.getElementById('reset-btn').addEventListener('click', () => {
-            this.loadLevel(this.currentLevel);
-        });
+        const resetBtn = document.getElementById('reset-btn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                this.loadLevel(this.currentLevel);
+            });
+        }
         
-        document.getElementById('next-level-btn').addEventListener('click', () => {
-            this.currentLevel++;
-            this.loadLevel(this.currentLevel);
-        });
+        const nextBtn = document.getElementById('next-level-btn');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                this.currentLevel++;
+                this.loadLevel(this.currentLevel);
+            });
+        }
         
-        document.getElementById('continue-btn').addEventListener('click', () => {
-            // 테스트 플레이 모드면 에디터로 돌아가기
-            if (this.editor && this.editor.isTestPlaying) {
-                this.editor.returnToEditor();
-                return;
-            }
-            
-            document.getElementById('victory-message').style.display = 'none';
-            this.currentLevel++;
-            this.loadLevel(this.currentLevel);
-        });
+        const continueBtn = document.getElementById('continue-btn');
+        if (continueBtn) {
+            continueBtn.addEventListener('click', () => {
+                // 테스트 플레이 모드면 에디터로 돌아가기
+                if (this.editor && this.editor.isTestPlaying) {
+                    this.editor.returnToEditor();
+                    return;
+                }
+                
+                document.getElementById('victory-message').style.display = 'none';
+                this.currentLevel++;
+                this.loadLevel(this.currentLevel);
+            });
+        }
     }
     
     jump() {
@@ -1096,6 +1231,55 @@ class PuzzleGame {
                 this.playerSprite.classList.add('jumping');
                 this.playerSprite.classList.remove('falling');
             }
+        }
+    }
+    
+    processMovement() {
+        if (this.gameWon) return;
+        
+        const now = Date.now();
+        if (now - this.lastMoveTime < this.moveDelay) return;
+        this.lastMoveTime = now;
+        
+        // 왼쪽 이동
+        if (this.keysPressed['KeyA'] || this.keysPressed['ArrowLeft']) {
+            const targetX = this.player.x - this.physics.MOVE_SPEED;
+            if (!this.checkCollision(targetX, this.player.y)) {
+                this.player.x = targetX;
+            }
+        }
+        
+        // 오른쪽 이동
+        if (this.keysPressed['KeyD'] || this.keysPressed['ArrowRight']) {
+            const targetX = this.player.x + this.physics.MOVE_SPEED;
+            if (!this.checkCollision(targetX, this.player.y)) {
+                this.player.x = targetX;
+            }
+        }
+        
+        // 아래 이동 (빠른 낙하)
+        if (this.keysPressed['KeyS'] || this.keysPressed['ArrowDown']) {
+            const targetY = this.player.y + this.physics.MOVE_SPEED;
+            if (!this.checkCollision(this.player.x, targetY)) {
+                this.player.y = targetY;
+            }
+        }
+        
+        this.updatePlayerPosition();
+    }
+    
+    startContinuousMovement() {
+        if (this.moveInterval) return;
+        
+        this.moveInterval = setInterval(() => {
+            this.processMovement();
+        }, this.moveDelay);
+    }
+    
+    stopContinuousMovement() {
+        if (this.moveInterval) {
+            clearInterval(this.moveInterval);
+            this.moveInterval = null;
         }
     }
     
@@ -1134,7 +1318,15 @@ class PuzzleGame {
         for (let cy = minCellY; cy <= maxCellY; cy++) {
             for (let cx = minCellX; cx <= maxCellX; cx++) {
                 if (this.isWall(cx, cy)) {
-                    return true;
+                    // 벽의 높이의 위에서부터 80%까지만 충돌 판정
+                    // 벽의 상단 80% 영역 (cy부터 cy + 0.8까지)
+                    const wallTop = cy;
+                    const wallCollisionBottom = cy + 0.8;
+                    
+                    // 플레이어의 상단이 벽의 충돌 영역 내에 있는지 확인
+                    if (top < wallCollisionBottom) {
+                        return true;
+                    }
                 }
             }
         }
@@ -1269,11 +1461,8 @@ class PuzzleGame {
             } else if (this.keysPressed['KeyD'] || this.keysPressed['ArrowRight']) {
                 this.velocity.x = this.physics.MOVE_SPEED;
             } else {
-                // 마찰
-                this.velocity.x *= this.physics.FRICTION;
-                if (Math.abs(this.velocity.x) < 0.01) {
-                    this.velocity.x = 0;
-                }
+                // 키를 떼면 즉시 멈춤
+                this.velocity.x = 0;
             }
             
             // 아래키 - 빠른 낙하
@@ -1438,5 +1627,14 @@ class PuzzleGame {
 
 // 게임 시작
 document.addEventListener('DOMContentLoaded', () => {
-    new PuzzleGame();
+    const game = new PuzzleGame();
+    window.game = game; // 전역 접근 가능하도록
+    
+    // 공유 레벨 데이터가 있으면 로드
+    if (window.sharedLevelData) {
+        game.loadCustomLevel(window.sharedLevelData);
+    }
+    
+    // 게임 준비 이벤트 발생
+    window.dispatchEvent(new Event('gameReady'));
 });
