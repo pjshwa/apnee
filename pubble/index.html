@@ -1,72 +1,74 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pubble - 퍼즐 플랫포머</title>
+    <title>Pubble - Puzzle Platformer</title>
     <link rel="stylesheet" href="puzzle_game.css">
 </head>
 <body>
     <div class="game-container">
         <div class="game-header">
             <h1>Pubble</h1>
-            <p class="game-subtitle">퍼즐 플랫포머</p>
+            <p class="game-subtitle">Puzzle Platformer</p>
             <div class="game-info">
-                <div class="level">레벨: <span id="current-level">1</span></div>
-                <button id="reset-btn">다시시작</button>
-                <button id="next-level-btn" style="display:none;">다음 레벨</button>
-                <button id="editor-btn">레벨 에디터</button>
+                <div class="level">Level: <span id="current-level">1</span></div>
+                <button id="reset-btn">Restart</button>
+                <button id="next-level-btn" style="display:none;">Next Level</button>
+                <button id="editor-btn">Level Editor</button>
+                <a href="gallery.html" style="background: rgba(99, 102, 241, 0.2); color: #fff; border: 2px solid rgba(99, 102, 241, 0.5); padding: 8px 16px; border-radius: 4px; text-decoration: none; display: inline-block; transition: all 0.2s;">🎮 Level Gallery</a>
             </div>
         </div>
         
         <div id="editor-panel" class="editor-panel" style="display:none;">
-            <h3>레벨 에디터</h3>
+            <h3>Level Editor</h3>
             <div class="editor-tools">
                 <div class="tool-group">
-                    <h4>브러시 선택:</h4>
-                    <button class="tool-btn active" data-tool="wall">🧱 벽</button>
-                    <button class="tool-btn" data-tool="switch">🔴 스위치</button>
-                    <button class="tool-btn" data-tool="toggle-block">🟣 토글블록</button>
-                    <button class="tool-btn" data-tool="goal">🏁 목표</button>
-                    <button class="tool-btn" data-tool="start">🧙‍♂️ 시작점</button>
-                    <button class="tool-btn" data-tool="empty">🗑️ 지우기</button>
+                    <h4>Select Brush:</h4>
+                    <button class="tool-btn active" data-tool="wall">🧱 Wall</button>
+                    <button class="tool-btn" data-tool="switch">🔴 Switch</button>
+                    <button class="tool-btn" data-tool="toggle-block">🟣 Toggle Block</button>
+                    <button class="tool-btn" data-tool="goal">🏁 Goal</button>
+                    <button class="tool-btn" data-tool="start">🧙‍♂️ Start Point</button>
+                    <button class="tool-btn" data-tool="empty">🗑️ Erase</button>
                 </div>
                 <div class="tool-group">
-                    <h4>스위치 연결:</h4>
-                    <p class="editor-hint">🔴 스위치 클릭 → 🟣 토글블록 클릭으로 연결</p>
-                    <p class="editor-hint">다른 스위치 클릭으로 선택 변경</p>
+                    <h4>Switch Connection:</h4>
+                    <p class="editor-hint">Click 🔴 Switch → Click 🟣 Toggle Block to connect</p>
+                    <p class="editor-hint">Click another switch to change selection</p>
                     <div id="switch-info" class="switch-status"></div>
                 </div>
                 <div class="tool-group">
-                    <h4>레벨 관리:</h4>
-                    <button id="test-level-btn">▶️ 테스트 플레이</button>
-                    <button id="clear-level-btn">🗑️ 전체 지우기</button>
-                    <button id="export-level-btn">💾 JSON 내보내기</button>
-                    <button id="import-level-btn">📂 JSON 가져오기</button>
-                    <button id="share-level-btn">🔗 공유 URL 생성</button>
+                    <h4>Level Management:</h4>
+                    <button id="test-level-btn">▶️ Test Play</button>
+                    <button id="clear-level-btn">🗑️ Clear All</button>
+                    <button id="export-level-btn">💾 Export JSON</button>
+                    <button id="import-level-btn">📂 Import JSON</button>
+                    <button id="share-level-btn">🔗 Generate Share URL</button>
                 </div>
             </div>
-            <textarea id="level-json" placeholder="레벨 JSON 데이터" style="display:none;"></textarea>
+            <textarea id="level-json" placeholder="Level JSON data" style="display:none;"></textarea>
+            <button id="download-json-btn" style="display:none; margin-top: 8px;">⬇️ Download JSON File</button>
         </div>
         
         <div class="game-board" id="game-board">
-            <!-- 15x15 그리드가 여기에 생성됩니다 -->
+            <!-- 15x15 grid will be generated here -->
         </div>
         
         <div class="controls">
-            <h3>조작법:</h3>
-            <p><strong>WASD</strong> 또는 <strong>방향키</strong>로 이동</p>
-            <p><strong>스페이스바</strong>로 점프 (1칸만 가능)</p>
-            <p><strong>🔴 스위치</strong>에 가까이 가면 자동으로 활성화되어 연결된 <strong>🟣 토글블록</strong>이 나타납니다</p>
-            <p><strong>목표</strong>: 🏁에 도착하세요!</p>
+            <h3>Controls:</h3>
+            <p><strong>WASD</strong> or <strong>Arrow Keys</strong> to move</p>
+            <p><strong>Spacebar</strong> to jump (1 cell only)</p>
+            <p>Get close to <strong>🔴 Switch</strong> to activate and reveal connected <strong>🟣 Toggle Blocks</strong></p>
+            <p><strong>Goal</strong>: Reach the 🏁!</p>
         </div>
     </div>
     
     <div id="victory-message" class="victory-message" style="display:none;">
         <div class="victory-content">
-            <h2>🎉 클리어!</h2>
-            <p>축하합니다!</p>
-            <button id="continue-btn">계속하기</button>
+            <h2>🎉 Clear!</h2>
+            <p>Congratulations!</p>
+            <button id="continue-btn">Continue</button>
         </div>
     </div>
 

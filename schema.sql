@@ -427,6 +427,39 @@ ALTER TABLE `uncle_pic`
 --
 ALTER TABLE `visitor_log`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+-- --------------------------------------------------------
+
+--
+-- 테이블 구조 `pubble_levels`
+--
+
+CREATE TABLE `pubble_levels` (
+  `id` int(6) UNSIGNED NOT NULL,
+  `level_id` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level_data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `plays` int(11) DEFAULT '0',
+  `likes` int(11) DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- 덤프된 테이블의 인덱스
+--
+
+ALTER TABLE `pubble_levels`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `level_id` (`level_id`),
+  ADD KEY `created_at` (`created_at`);
+
+--
+-- 덤프된 테이블의 AUTO_INCREMENT
+--
+
+ALTER TABLE `pubble_levels`
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
