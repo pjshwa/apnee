@@ -258,7 +258,18 @@ class LevelEditor {
         
         const x = parseInt(cell.dataset.x);
         const y = parseInt(cell.dataset.y);
-        const boardCell = this.game.board[y][x];
+        let boardCell = this.game.board[y][x];
+        let dragOriginX = x;
+        let dragOriginY = y;
+        if (boardCell.type === 'image-block' && boardCell.imageBlockData) {
+            const originX = boardCell.imageBlockData.originX;
+            const originY = boardCell.imageBlockData.originY;
+            if (typeof originX === 'number' && typeof originY === 'number') {
+                dragOriginX = originX;
+                dragOriginY = originY;
+                boardCell = this.game.board[originY][originX];
+            }
+        }
 
         if (this.currentTool === 'empty') {
             this.isErasing = true;
@@ -271,12 +282,13 @@ class LevelEditor {
         // 이동 가능한 오브젝트만 드래그 가능 (빈 칸 제외)
         if (boardCell.type !== 'empty') {
             this.isDragging = true;
-            this.draggedFromX = x;
-            this.draggedFromY = y;
+            this.draggedFromX = dragOriginX;
+            this.draggedFromY = dragOriginY;
             this.draggedObject = {
                 type: boardCell.type,
                 switchData: boardCell.switchData ? JSON.parse(JSON.stringify(boardCell.switchData)) : null,
-                movingBlockData: boardCell.movingBlockData ? JSON.parse(JSON.stringify(boardCell.movingBlockData)) : null
+                movingBlockData: boardCell.movingBlockData ? JSON.parse(JSON.stringify(boardCell.movingBlockData)) : null,
+                imageBlockData: boardCell.imageBlockData ? JSON.parse(JSON.stringify(boardCell.imageBlockData)) : null
             };
             
             // 고스트 표시
@@ -356,6 +368,25 @@ class LevelEditor {
         const objectType = fromCell.type;
         const objectSwitchData = fromCell.switchData;
         const objectMovingBlockData = fromCell.movingBlockData ? JSON.parse(JSON.stringify(fromCell.movingBlockData)) : null;
+        const objectImageBlockData = fromCell.imageBlockData ? JSON.parse(JSON.stringify(fromCell.imageBlockData)) : null;
+
+        if (objectType === 'image-block' && objectImageBlockData) {
+            const size = objectImageBlockData.size === 2 ? 2 : 1;
+            if (!this.canPlaceImageBlockForMove(fromX, fromY, toX, toY, size)) {
+                return;
+            }
+            const imageUrl = objectImageBlockData.url || objectImageBlockData.imageUrl || '';
+            if (!imageUrl) {
+                return;
+            }
+            this.game.clearImageBlockAt(fromX, fromY);
+            this.game.placeImageBlock(toX, toY, size, imageUrl);
+            this.updateConnectionLines();
+            if (this.isActive && this.game.applyEditorVisuals) {
+                this.game.applyEditorVisuals(true);
+            }
+            return;
+        }
         
         // 목표 위치에 이미 오브젝트가 있으면 스왑 또는 무시
         if (toCell.type !== 'empty') {
@@ -366,10 +397,15 @@ class LevelEditor {
         // 원래 위치 비우기
         fromCell.element.className = 'cell';
         fromCell.element.innerHTML = '';
+        fromCell.element.style.backgroundImage = '';
+        fromCell.element.style.backgroundSize = '';
+        fromCell.element.style.backgroundPosition = '';
+        fromCell.element.style.backgroundRepeat = '';
         fromCell.type = 'empty';
         fromCell.switchData = null;
         fromCell.wallActive = false;
         fromCell.movingBlockData = null;
+        fromCell.imageBlockData = null;
         
         // 새 위치에 배치
         toCell.type = objectType;
@@ -456,6 +492,7 @@ class LevelEditor {
             case 'moving-h': emoji = '↔️'; break;
             case 'moving-v': emoji = '↕️'; break;
             case 'event-block': emoji = '⚙️'; break;
+            case 'image-block': emoji = '🖼️'; break;
             default: emoji = '❓';
         }
         this.dragGhost.textContent = emoji;
@@ -611,6 +648,101 @@ class LevelEditor {
             info.innerHTML = '<span class="no-switch">스위치를 클릭하여 선택하세요</span>';
         }
     }
+
+    getImageBlockUrl() {
+        const input = document.getElementById('image-block-url');
+        if (!input) return '';
+        return (input.value || '').trim();
+    }
+
+    resolveImageBlockUrl() {
+        let url = this.getImageBlockUrl();
+        if (!url) {
+            url = prompt('이미지 URL을 입력하세요:', '') || '';
+            const input = document.getElementById('image-block-url');
+            if (input && url) {
+                input.value = url.trim();
+            }
+        }
+        return url.trim();
+    }
+
+    getImageBlockCells(originX, originY, size) {
+        const cells = [];
+        const blockSize = size === 2 ? 2 : 1;
+        for (let dy = 0; dy < blockSize; dy++) {
+            for (let dx = 0; dx < blockSize; dx++) {
+                cells.push({ x: originX + dx, y: originY + dy });
+            }
+        }
+        return cells;
+    }
+
+    clearCellForPlacement(x, y) {
+        const cell = this.game.board[y][x];
+        if (!cell) return;
+
+        if (cell.type === 'switch' && cell.switchData) {
+            if (this.selectedSwitch === cell.switchData) {
+                this.deselectSwitch();
+            }
+        }
+
+        if (cell.type === 'start') {
+            this.startPosition = null;
+        }
+
+        if (cell.type === 'toggle-block') {
+            this.removeBlockFromAllSwitches(x, y);
+        }
+
+        if (cell.type === 'image-block' && cell.imageBlockData) {
+            this.game.clearImageBlockAt(x, y);
+            return;
+        }
+
+        cell.element.className = 'cell';
+        cell.element.innerHTML = '';
+        cell.element.style.backgroundImage = '';
+        cell.element.style.backgroundSize = '';
+        cell.element.style.backgroundPosition = '';
+        cell.element.style.backgroundRepeat = '';
+        cell.type = 'empty';
+        cell.switchData = null;
+        cell.wallActive = false;
+        cell.movingBlockData = null;
+        cell.imageBlockData = null;
+    }
+
+    placeImageBlockAt(x, y, size, imageUrl) {
+        const blockSize = size === 2 ? 2 : 1;
+        if (x < 0 || y < 0 || x + blockSize - 1 >= this.game.gridSize || y + blockSize - 1 >= this.game.gridSize) {
+            alert('이미지 블록이 보드 범위를 벗어났습니다.');
+            return false;
+        }
+
+        const cells = this.getImageBlockCells(x, y, blockSize);
+        cells.forEach(pos => this.clearCellForPlacement(pos.x, pos.y));
+        this.game.placeImageBlock(x, y, blockSize, imageUrl);
+        return true;
+    }
+
+    canPlaceImageBlockForMove(fromX, fromY, toX, toY, size) {
+        const blockSize = size === 2 ? 2 : 1;
+        if (toX < 0 || toY < 0 || toX + blockSize - 1 >= this.game.gridSize || toY + blockSize - 1 >= this.game.gridSize) {
+            return false;
+        }
+        const cells = this.getImageBlockCells(toX, toY, blockSize);
+        return cells.every(pos => {
+            const cell = this.game.board[pos.y][pos.x];
+            if (!cell) return false;
+            if (cell.type === 'empty') return true;
+            if (cell.type === 'image-block' && cell.imageBlockData) {
+                return cell.imageBlockData.originX === fromX && cell.imageBlockData.originY === fromY;
+            }
+            return false;
+        });
+    }
     
     placeTile(x, y) {
         const cell = this.game.board[y][x];
@@ -626,6 +758,19 @@ class LevelEditor {
         if (this.currentTool === 'moving-v' && oldType === 'moving-v' && cell.movingBlockData) {
             cell.movingBlockData.direction = cell.movingBlockData.direction === 1 ? -1 : 1;
             if (this.isActive && this.game.applyEditorVisuals) {
+                this.game.applyEditorVisuals(true);
+            }
+            return;
+        }
+
+        if (this.currentTool === 'image-block-1' || this.currentTool === 'image-block-2') {
+            const size = this.currentTool === 'image-block-2' ? 2 : 1;
+            const imageUrl = this.resolveImageBlockUrl();
+            if (!imageUrl) {
+                return;
+            }
+            const placed = this.placeImageBlockAt(x, y, size, imageUrl);
+            if (placed && this.isActive && this.game.applyEditorVisuals) {
                 this.game.applyEditorVisuals(true);
             }
             return;
@@ -647,14 +792,23 @@ class LevelEditor {
         if (oldType === 'toggle-block') {
             this.removeBlockFromAllSwitches(x, y);
         }
+
+        if (oldType === 'image-block' && cell.imageBlockData) {
+            this.game.clearImageBlockAt(x, y);
+        }
         
         // 기존 타입 제거
         cell.element.className = 'cell';
         cell.element.innerHTML = '';
+        cell.element.style.backgroundImage = '';
+        cell.element.style.backgroundSize = '';
+        cell.element.style.backgroundPosition = '';
+        cell.element.style.backgroundRepeat = '';
         cell.type = 'empty';
         cell.switchData = null;
         cell.wallActive = false;
         cell.movingBlockData = null;
+        cell.imageBlockData = null;
         
         switch(this.currentTool) {
             case 'wall':
@@ -756,10 +910,18 @@ class LevelEditor {
                 const cell = this.game.board[y][x];
                 cell.element.className = 'cell';
                 cell.element.innerHTML = '';
+                cell.element.style.backgroundImage = '';
+                cell.element.style.backgroundSize = '';
+                cell.element.style.backgroundPosition = '';
+                cell.element.style.backgroundRepeat = '';
                 cell.type = 'empty';
                 cell.switchData = null;
                 cell.movingBlockData = null;
+                cell.imageBlockData = null;
             }
+        }
+        if (this.game) {
+            this.game.imageBlocks = [];
         }
         
         this.deselectSwitch();
@@ -904,6 +1066,7 @@ class LevelEditor {
         const toggleBlocks = [];
         const movingBlocks = { horizontal: [], vertical: [] };
         const eventBlocks = [];
+        const imageBlocks = [];
         let goal = null;
         let startPosition = this.startPosition || { x: 1, y: 12 };
         
@@ -927,26 +1090,35 @@ class LevelEditor {
                     movingBlocks.vertical.push({ x, y, direction: cell.movingBlockData.direction });
                 } else if (cell.type === 'event-block') {
                     eventBlocks.push({ x, y });
+                } else if (cell.type === 'image-block' && cell.imageBlockData &&
+                           cell.imageBlockData.originX === x && cell.imageBlockData.originY === y) {
+                    imageBlocks.push({
+                        x,
+                        y,
+                        size: cell.imageBlockData.size === 2 ? 2 : 1,
+                        url: cell.imageBlockData.url || cell.imageBlockData.imageUrl
+                    });
                 }
             }
         }
         
-        return { switches, walls, toggleBlocks, goal, startPosition, movingBlocks, eventBlocks };
+        return { switches, walls, toggleBlocks, goal, startPosition, movingBlocks, eventBlocks, imageBlocks };
     }
 }
 
 class PuzzleGame {
     // 물리 설정 상수 (튜닝 용이성을 위해 분리)
     static PHYSICS = {
-        MOVE_SPEED: 0.05,       // 이동 속도
-        JUMP_VELOCITY: -0.155,  // 점프 초기 속도 (1칸 점프, 중력에 맞춰 조정)
-        GRAVITY: 0.01,          // 중력 (낮춰서 체공시간 증가)
+        MOVE_SPEED: 0.05,       // 이동 속도 (감소: 3칸 점프 방지)
+        JUMP_VELOCITY: -0.15,   // 점프 초기 속도 (감소: 1칸 높이로 제한)
+        GRAVITY: 0.01,         // 중력 (증가: 더 빠른 낙하로 체공시간 감소)
         MAX_FALL_SPEED: 0.25,   // 최대 낙하 속도
         FRICTION: 0.8,          // 마찰력
         PLAYER_SIZE: 0.8        // 플레이어 크기 (셀 기준)
     };
     static MOVING_BLOCK_SPEED = 0.03;
     static MOVING_BLOCK_REVERSAL_THRESHOLD = 0.4;
+    static MOVING_BLOCK_REST_TIME = 800; // ms to rest when hitting a wall
     
     constructor() {
         this.gridSize = 15;
@@ -957,16 +1129,20 @@ class PuzzleGame {
         this.currentLevel = 1;
         this.isJumping = false;
         this.gameWon = false;
+        this.isReloading = false;
         this.editor = null;
         this.levels = [];
         this.levelsLoaded = false;
         this.movingBlocks = [];
         this.eventBlocks = new Set();
+        this.imageBlocks = [];
         this.activeCustomLevel = null;
         this.disableAutoLevelLoad = Boolean(window.disableAutoLevelLoad);
         this.disableURLUpdates = this.disableAutoLevelLoad;
         this.playerOnMovingBlock = null;
+        this.lastStoodOnBlock = null;
         this.lastMovingBlockCollision = null;
+        this.jumpStartTime = 0;
         
         // 물리 상수 (정적 상수에서 참조)
         this.physics = PuzzleGame.PHYSICS;
@@ -1082,10 +1258,15 @@ class PuzzleGame {
                 cell.type = 'empty';
                 cell.element.className = 'cell';
                 cell.element.innerHTML = '';
+                cell.element.style.backgroundImage = '';
+                cell.element.style.backgroundSize = '';
+                cell.element.style.backgroundPosition = '';
+                cell.element.style.backgroundRepeat = '';
                 cell.switchData = null;
                 cell.wallActive = false;
                 cell.isToggleBlock = false;
                 cell.movingBlockData = null;
+                cell.imageBlockData = null;
             }
         }
 
@@ -1136,6 +1317,7 @@ class PuzzleGame {
 
         this.setupEventBlocks(levelData.eventBlocks || []);
         this.setupMovingBlocks(levelData.movingBlocks || { horizontal: [], vertical: [] });
+        this.setupImageBlocks(levelData.imageBlocks || []);
         
         // 플레이어 위치 초기화 (커스텀 시작점 사용)
         this.player = { x: start.x, y: start.y };
@@ -1174,6 +1356,96 @@ class PuzzleGame {
             cell.movingBlockData = null;
             this.eventBlocks.add(this.cellKey(x, y));
         });
+    }
+
+    clearImageBlocks() {
+        this.imageBlocks = [];
+        for (let y = 0; y < this.gridSize; y++) {
+            for (let x = 0; x < this.gridSize; x++) {
+                const cell = this.board[y][x];
+                if (!cell || cell.type !== 'image-block') continue;
+                cell.element.className = 'cell';
+                cell.element.innerHTML = '';
+                cell.element.style.backgroundImage = '';
+                cell.element.style.backgroundSize = '';
+                cell.element.style.backgroundPosition = '';
+                cell.element.style.backgroundRepeat = '';
+                cell.type = 'empty';
+                cell.imageBlockData = null;
+            }
+        }
+    }
+
+    setupImageBlocks(blocks = []) {
+        this.clearImageBlocks();
+        if (!Array.isArray(blocks)) return;
+        blocks.forEach(block => {
+            if (!block) return;
+            const size = block.size === 2 ? 2 : 1;
+            const x = Number.isInteger(block.x) ? block.x : 0;
+            const y = Number.isInteger(block.y) ? block.y : 0;
+            const url = (block.url || block.imageUrl || '').trim();
+            if (!url) return;
+            this.placeImageBlock(x, y, size, url);
+        });
+    }
+
+    placeImageBlock(x, y, size, imageUrl) {
+        const blockSize = size === 2 ? 2 : 1;
+        if (x < 0 || y < 0 || x + blockSize - 1 >= this.gridSize || y + blockSize - 1 >= this.gridSize) {
+            return false;
+        }
+        const url = (imageUrl || '').trim();
+        if (!url) return false;
+
+        const blockData = { x, y, size: blockSize, url };
+        for (let dy = 0; dy < blockSize; dy++) {
+            for (let dx = 0; dx < blockSize; dx++) {
+                const cell = this.board[y + dy][x + dx];
+                if (!cell) continue;
+                cell.type = 'image-block';
+                cell.imageBlockData = {
+                    originX: x,
+                    originY: y,
+                    size: blockSize,
+                    url,
+                    isOrigin: dx === 0 && dy === 0
+                };
+                cell.element.classList.add('image-block');
+                cell.element.style.backgroundImage = `url('${url}')`;
+                cell.element.style.backgroundRepeat = 'no-repeat';
+                cell.element.style.backgroundSize = `${blockSize * 100}% ${blockSize * 100}%`;
+                cell.element.style.backgroundPosition = `${dx * 100}% ${dy * 100}%`;
+            }
+        }
+        this.imageBlocks.push(blockData);
+        return true;
+    }
+
+    clearImageBlockAt(x, y) {
+        if (x < 0 || y < 0 || x >= this.gridSize || y >= this.gridSize) return;
+        const cell = this.board[y][x];
+        if (!cell || cell.type !== 'image-block' || !cell.imageBlockData) return;
+        const originX = cell.imageBlockData.originX;
+        const originY = cell.imageBlockData.originY;
+        const size = cell.imageBlockData.size === 2 ? 2 : 1;
+        for (let dy = 0; dy < size; dy++) {
+            for (let dx = 0; dx < size; dx++) {
+                const target = this.board[originY + dy]?.[originX + dx];
+                if (!target) continue;
+                if (target.type === 'image-block') {
+                    target.element.className = 'cell';
+                    target.element.innerHTML = '';
+                    target.element.style.backgroundImage = '';
+                    target.element.style.backgroundSize = '';
+                    target.element.style.backgroundPosition = '';
+                    target.element.style.backgroundRepeat = '';
+                    target.type = 'empty';
+                    target.imageBlockData = null;
+                }
+            }
+        }
+        this.imageBlocks = this.imageBlocks.filter(block => !(block.x === originX && block.y === originY));
     }
 
     clearMovingBlocks() {
@@ -1268,23 +1540,39 @@ class PuzzleGame {
             });
             return;
         }
+        const now = Date.now();
         for (const block of this.movingBlocks) {
             block.prevX = block.x;
             block.prevY = block.y;
+            
+            // Check if block is resting
+            if (block.restUntil && now < block.restUntil) {
+                block.deltaX = 0;
+                block.deltaY = 0;
+                continue;
+            }
+            block.restUntil = null;
+            
             let nextX = block.x;
             let nextY = block.y;
             if (block.type === 'horizontal') {
                 nextX += block.dir * block.speed;
                 if (this.movingBlockShouldReverse(block, nextX, block.y)) {
                     block.dir *= -1;
-                    nextX = block.x + block.dir * block.speed;
+                    block.restUntil = now + PuzzleGame.MOVING_BLOCK_REST_TIME;
+                    block.deltaX = 0;
+                    block.deltaY = 0;
+                    continue;
                 }
                 block.x = this.clampToGrid(nextX);
             } else {
                 nextY += block.dir * block.speed;
                 if (this.movingBlockShouldReverse(block, block.x, nextY)) {
                     block.dir *= -1;
-                    nextY = block.y + block.dir * block.speed;
+                    block.restUntil = now + PuzzleGame.MOVING_BLOCK_REST_TIME;
+                    block.deltaX = 0;
+                    block.deltaY = 0;
+                    continue;
                 }
                 block.y = this.clampToGrid(nextY);
             }
@@ -1303,6 +1591,32 @@ class PuzzleGame {
         if (left < 0 || right > this.gridSize || top < 0 || bottom > this.gridSize) {
             return true;
         }
+        if (this.player && !this.gameWon) {
+            const playerSize = this.physics.PLAYER_SIZE;
+            const offset = (1 - playerSize) / 2;
+            const playerRect = {
+                left: this.player.x + offset,
+                right: this.player.x + 1 - offset,
+                top: this.player.y + offset,
+                bottom: this.player.y + 1 - offset
+            };
+            const nextRect = { left, right, top, bottom };
+            if (this.rectanglesOverlap(playerRect, nextRect)) {
+                const onTop = playerRect.bottom <= nextRect.top + 0.05;
+                if (!onTop) {
+                    if (block.type === 'horizontal') {
+                        const deltaX = targetX - block.x;
+                        const canPush = Math.abs(deltaX) > 0.0001 &&
+                            !this.checkCollision(this.player.x + deltaX, this.player.y, { ignoreBlock: block });
+                        if (!canPush) {
+                            return true;
+                        }
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        }
         const minCellX = Math.floor(left);
         const maxCellX = Math.floor(right - 0.001);
         const minCellY = Math.floor(top);
@@ -1315,7 +1629,9 @@ class PuzzleGame {
             }
         }
         if (block.type === 'horizontal') {
-            const eventKey = this.cellKey(Math.floor(targetX + 0.5), Math.floor(targetY + 0.5));
+            const centerX = Math.floor(targetX + 0.5);
+            const centerY = Math.floor(targetY + 0.5);
+            const eventKey = this.cellKey(centerX, centerY);
             if (this.eventBlocks.has(eventKey)) {
                 return true;
             }
@@ -1361,6 +1677,10 @@ class PuzzleGame {
     }
 
     handleMovingBlockCarryCollision(block, axis, delta) {
+        if (block.type === 'horizontal' && axis === 'x') {
+            this.playerOnMovingBlock = null;
+            return 'detach';
+        }
         const diffs = this.getPlayerBlockDiff(block);
         const diff = axis === 'x' ? diffs.horizontal : diffs.vertical;
         if (diff >= PuzzleGame.MOVING_BLOCK_REVERSAL_THRESHOLD) {
@@ -1373,6 +1693,11 @@ class PuzzleGame {
 
     applyMovingBlockCarry() {
         if (!this.playerOnMovingBlock) return;
+        // Don't carry if player is jumping (has upward velocity)
+        if (this.isJumping || this.velocity.y < 0) {
+            this.playerOnMovingBlock = null;
+            return;
+        }
         const block = this.playerOnMovingBlock;
         const deltaX = block.deltaX || 0;
         const deltaY = block.deltaY || 0;
@@ -1389,6 +1714,9 @@ class PuzzleGame {
             } else {
                 const resolutionX = this.handleMovingBlockCarryCollision(block, 'x', deltaX);
                 if (resolutionX === 'reversed-detach') {
+                    blockedX = true;
+                    detachFromBlock = true;
+                } else if (resolutionX === 'detach') {
                     blockedX = true;
                     detachFromBlock = true;
                 } else {
@@ -1437,6 +1765,11 @@ class PuzzleGame {
 
     verifyPlayerOnMovingBlock() {
         if (!this.playerOnMovingBlock) return;
+        // Don't verify/realign if player is jumping
+        if (this.isJumping || this.velocity.y < 0) {
+            this.playerOnMovingBlock = null;
+            return;
+        }
         const block = this.playerOnMovingBlock;
         const playerSize = this.physics.PLAYER_SIZE;
         const offset = (1 - playerSize) / 2;
@@ -1463,6 +1796,11 @@ class PuzzleGame {
         if (!this.movingBlocks.length || (this.editor && this.editor.isActive)) {
             return;
         }
+        // Don't check collisions during jump cooldown - player is detaching from block
+        const jumpCooldown = Date.now() - this.jumpStartTime < 200;
+        if (jumpCooldown) {
+            return;
+        }
         const playerSize = this.physics.PLAYER_SIZE;
         const offset = (1 - playerSize) / 2;
         const playerRect = {
@@ -1485,6 +1823,16 @@ class PuzzleGame {
                 const onTop = playerRect.bottom <= blockRect.top + 0.05;
                 if (onTop) {
                     continue;
+                }
+                if (block.type === 'horizontal') {
+                    const deltaX = block.deltaX || 0;
+                    if (Math.abs(deltaX) > 0.0001 &&
+                        !this.checkCollision(this.player.x + deltaX, this.player.y, { ignoreBlock: block })) {
+                        this.player.x += deltaX;
+                    } else {
+                        this.reverseMovingBlock(block);
+                    }
+                    return;
                 }
                 this.reloadCurrentLevel();
                 return;
@@ -1608,7 +1956,7 @@ class PuzzleGame {
                 cell.dataset.x = x;
                 cell.dataset.y = y;
                 gameBoard.appendChild(cell);
-                this.board[y][x] = { type: 'empty', element: cell, movingBlockData: null };
+                this.board[y][x] = { type: 'empty', element: cell, movingBlockData: null, imageBlockData: null };
             }
         }
         
@@ -1632,10 +1980,15 @@ class PuzzleGame {
                 cell.type = 'empty';
                 cell.element.className = 'cell';
                 cell.element.innerHTML = '';
+                cell.element.style.backgroundImage = '';
+                cell.element.style.backgroundSize = '';
+                cell.element.style.backgroundPosition = '';
+                cell.element.style.backgroundRepeat = '';
                 cell.switchData = null;
                 cell.wallActive = false;
                 cell.isToggleBlock = false;
                 cell.movingBlockData = null;
+                cell.imageBlockData = null;
             }
         }
 
@@ -1690,6 +2043,7 @@ class PuzzleGame {
 
         this.setupEventBlocks(level.eventBlocks || []);
         this.setupMovingBlocks(level.movingBlocks || { horizontal: [], vertical: [] });
+        this.setupImageBlocks(level.imageBlocks || []);
         
         // 플레이어 위치 초기화 (레벨의 시작점 사용)
         this.player = { x: start.x, y: start.y };
@@ -1814,6 +2168,8 @@ class PuzzleGame {
     jump() {
         if (this.isOnGround() && !this.isJumping) {
             this.isJumping = true;
+            this.jumpStartTime = Date.now();
+            this.lastStoodOnBlock = this.playerOnMovingBlock;
             this.playerOnMovingBlock = null;
             this.velocity.y = this.physics.JUMP_VELOCITY;
             
@@ -1886,6 +2242,9 @@ class PuzzleGame {
         if (cell.type === 'toggle-block' && !cell.element.classList.contains('hidden')) {
             return true;
         }
+        if (cell.type === 'image-block') {
+            return true;
+        }
         return false;
     }
     
@@ -1900,6 +2259,11 @@ class PuzzleGame {
         const right = x + 1 - offset;
         const top = y + offset;
         const bottom = y + 1 - offset;
+        
+        // Grid boundary collision (treat edges as solid walls)
+        if (left < 0 || right > this.gridSize || bottom > this.gridSize) {
+            return true;
+        }
         
         // 플레이어가 차지하는 모든 셀 확인
         const minCellX = Math.floor(left);
@@ -1952,9 +2316,9 @@ class PuzzleGame {
         const maxCellX = Math.floor(right);
         const cellY = Math.floor(checkY);
         
-        // 경계를 벗어나면 땅이 아님
+        // Bottom edge acts as ground
         if (cellY >= this.gridSize) {
-            return false;
+            return true;
         }
         
         for (let cx = minCellX; cx <= maxCellX; cx++) {
@@ -2050,7 +2414,7 @@ class PuzzleGame {
     
     startGameLoop() {
         const loop = () => {
-            if (this.gameWon) {
+            if (this.gameWon || this.isReloading) {
                 requestAnimationFrame(loop);
                 return;
             }
@@ -2082,22 +2446,29 @@ class PuzzleGame {
             const playerSize = this.physics.PLAYER_SIZE;
             const playerOffset = (1 - playerSize) / 2;
             
+            // Ignore the block we're standing on for horizontal collision
+            // Also ignore the block we just jumped off during cooldown
+            const jumpCooldown = Date.now() - this.jumpStartTime < 200;
+            const ignoreBlock = this.playerOnMovingBlock || (jumpCooldown ? this.lastStoodOnBlock : null);
             let newX = this.player.x + this.velocity.x;
-            if (!this.checkCollision(newX, this.player.y)) {
+            if (!this.checkCollision(newX, this.player.y, { ignoreBlock })) {
                 this.player.x = newX;
             } else {
                 const movingCollision = this.lastMovingBlockCollision;
                 if (movingCollision) {
-                    this.playerOnMovingBlock = null;
                     const block = movingCollision.block;
-                    if (this.velocity.x > 0) {
-                        const newPlayerRight = block.x - 0.001;
-                        const newPlayerLeft = newPlayerRight - playerSize;
-                        this.player.x = newPlayerLeft - playerOffset;
-                    } else if (this.velocity.x < 0) {
-                        const blockRight = block.x + 1;
-                        const newPlayerLeft = blockRight + 0.001;
-                        this.player.x = newPlayerLeft - playerOffset;
+                    // Don't snap to block if player is jumping/trying to jump
+                    if (!jumpCooldown && !this.isJumping) {
+                        this.playerOnMovingBlock = null;
+                        if (this.velocity.x > 0) {
+                            const newPlayerRight = block.x - 0.001;
+                            const newPlayerLeft = newPlayerRight - playerSize;
+                            this.player.x = newPlayerLeft - playerOffset;
+                        } else if (this.velocity.x < 0) {
+                            const blockRight = block.x + 1;
+                            const newPlayerLeft = blockRight + 0.001;
+                            this.player.x = newPlayerLeft - playerOffset;
+                        }
                     }
                 } else {
                     // 벽에 부딧힘 - 위치 조정
@@ -2117,8 +2488,10 @@ class PuzzleGame {
             }
             
             // 수직 이동 + 충돌
+            // When jumping (moving up), ignore the block we were standing on
+            const verticalIgnoreBlock = this.velocity.y < 0 ? ignoreBlock : null;
             let newY = this.player.y + this.velocity.y;
-            if (!this.checkCollision(this.player.x, newY)) {
+            if (!this.checkCollision(this.player.x, newY, { ignoreBlock: verticalIgnoreBlock })) {
                 this.player.y = newY;
                 if (this.velocity.y > 0) {
                     this.playerOnMovingBlock = null;
@@ -2128,7 +2501,9 @@ class PuzzleGame {
                 // 땅/천장에 부딧힘
                 if (movingCollision) {
                     const block = movingCollision.block;
-                    if (this.velocity.y > 0) {
+                    // Don't re-attach to moving block within 200ms of jumping
+                    const jumpCooldown = Date.now() - this.jumpStartTime < 200;
+                    if (this.velocity.y > 0 && !jumpCooldown) {
                         this.alignPlayerOnMovingBlock(block);
                         this.playerOnMovingBlock = block;
                         this.isJumping = false;
@@ -2161,7 +2536,7 @@ class PuzzleGame {
                 this.velocity.y = 0;
             }
             
-            // 경계 체크
+            // 경계 체크 (backup clamp - collision should handle most cases)
             if (this.player.x < 0) this.player.x = 0;
             if (this.player.x > this.gridSize - 1) this.player.x = this.gridSize - 1;
             if (this.player.y < -1 + playerOffset) {
@@ -2169,11 +2544,6 @@ class PuzzleGame {
             }
             if (this.player.y < 0 && !this.playerOnMovingBlock) {
                 this.player.y = 0;
-            }
-            if (this.player.y > this.gridSize - 1) {
-                // 화면 밖으로 떨어짐 - 리셋
-                this.reloadCurrentLevel();
-                return;
             }
             
             // 점프/낙하 애니메이션

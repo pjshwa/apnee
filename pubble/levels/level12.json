@@ -1,0 +1,18 @@
+{
+  "name": "Dual Platforms",
+  "switches": [],
+  "walls": [
+    {"x": 0, "y": 14}, {"x": 1, "y": 14}, {"x": 2, "y": 14},
+    {"x": 13, "y": 14}, {"x": 14, "y": 14},
+    {"x": 13, "y": 10}, {"x": 14, "y": 10}
+  ],
+  "toggleBlocks": [],
+  "goal": {"x": 13, "y": 9},
+  "startPosition": {"x": 1, "y": 13},
+  "movingBlocks": {
+    "horizontal": [{"x": 4, "y": 13, "direction": 1}],
+    "vertical": [{"x": 10, "y": 11, "direction": -1}]
+  },
+  "eventBlocks": [],
+  "imageBlocks": []
+}

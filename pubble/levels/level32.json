@@ -1,0 +1,25 @@
+{
+  "name": "Conveyor Belt",
+  "switches": [],
+  "walls": [
+    {"x": 0, "y": 14}, {"x": 1, "y": 14}, {"x": 2, "y": 14},
+    {"x": 0, "y": 11}, {"x": 1, "y": 11}, {"x": 2, "y": 11},
+    {"x": 13, "y": 11}, {"x": 14, "y": 11},
+    {"x": 0, "y": 8}, {"x": 1, "y": 8}, {"x": 2, "y": 8},
+    {"x": 13, "y": 5}, {"x": 14, "y": 5}
+  ],
+  "toggleBlocks": [],
+  "goal": {"x": 13, "y": 4},
+  "startPosition": {"x": 1, "y": 13},
+  "movingBlocks": {
+    "horizontal": [
+      {"x": 4, "y": 13, "direction": 1},
+      {"x": 4, "y": 10, "direction": -1},
+      {"x": 4, "y": 7, "direction": 1},
+      {"x": 4, "y": 4, "direction": -1}
+    ],
+    "vertical": []
+  },
+  "eventBlocks": [],
+  "imageBlocks": []
+}

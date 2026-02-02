@@ -1,0 +1,23 @@
+{
+  "name": "Elevator Shaft",
+  "switches": [],
+  "walls": [
+    {"x": 0, "y": 14}, {"x": 1, "y": 14}, {"x": 2, "y": 14}, {"x": 3, "y": 14},
+    {"x": 6, "y": 14}, {"x": 7, "y": 14},
+    {"x": 10, "y": 14}, {"x": 11, "y": 14},
+    {"x": 13, "y": 3}, {"x": 14, "y": 3}
+  ],
+  "toggleBlocks": [],
+  "goal": {"x": 13, "y": 2},
+  "startPosition": {"x": 1, "y": 13},
+  "movingBlocks": {
+    "horizontal": [],
+    "vertical": [
+      {"x": 5, "y": 10, "direction": -1},
+      {"x": 8, "y": 8, "direction": 1},
+      {"x": 12, "y": 5, "direction": -1}
+    ]
+  },
+  "eventBlocks": [],
+  "imageBlocks": []
+}

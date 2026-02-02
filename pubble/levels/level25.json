@@ -1,0 +1,19 @@
+{
+  "name": "Platform Dance",
+  "switches": [],
+  "walls": [
+    {"x": 0, "y": 14}, {"x": 1, "y": 14}, {"x": 2, "y": 14},
+    {"x": 7, "y": 11},
+    {"x": 12, "y": 8},
+    {"x": 13, "y": 5}, {"x": 14, "y": 5}
+  ],
+  "toggleBlocks": [],
+  "goal": {"x": 13, "y": 4},
+  "startPosition": {"x": 1, "y": 13},
+  "movingBlocks": {
+    "horizontal": [{"x": 3, "y": 13, "direction": 1}, {"x": 8, "y": 10, "direction": 1}],
+    "vertical": [{"x": 6, "y": 12, "direction": -1}, {"x": 11, "y": 6, "direction": 1}]
+  },
+  "eventBlocks": [],
+  "imageBlocks": []
+}
