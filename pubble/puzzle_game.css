@@ -328,6 +328,48 @@ button:disabled {
     box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
 }
 
+.cell.event-block {
+    background: rgba(99, 102, 241, 0.15);
+    border: 2px dashed rgba(255, 255, 255, 0.35);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.cell.moving-block-cell {
+    background: rgba(248, 250, 252, 0.05);
+    border: 2px dashed rgba(148, 163, 184, 0.6);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.cell.moving-block-cell.horizontal {
+    border-color: rgba(99, 102, 241, 0.6);
+}
+
+.cell.moving-block-cell.vertical {
+    border-color: rgba(16, 185, 129, 0.6);
+}
+
+.moving-block-entity {
+    position: absolute;
+    width: calc(100% / 15);
+    height: calc(100% / 15);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    z-index: 60;
+    pointer-events: none;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.35);
+}
+
+.moving-block-entity.horizontal {
+    background: linear-gradient(135deg, #6366f1, #4338ca);
+}
+
+.moving-block-entity.vertical {
+    background: linear-gradient(135deg, #10b981, #047857);
+}
+
 /* Controls Section */
 .controls {
     background: var(--bg-secondary);

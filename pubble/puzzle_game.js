@@ -15,6 +15,8 @@ class LevelEditor {
         this.draggedFromX = -1;
         this.draggedFromY = -1;
         this.dragGhost = null;
+        this.isErasing = false;
+        this.lastErasedCell = null;
         
         // 바인딩된 이벤트 핸들러 저장 (removeEventListener를 위해)
         this.boundHandleCellClick = this.handleCellClick.bind(this);
@@ -196,6 +198,9 @@ class LevelEditor {
         
         this.updateConnectionLines();
         this.updateSwitchInfo();
+        if (this.game && this.game.applyEditorVisuals) {
+            this.game.applyEditorVisuals(true);
+        }
     }
     
     exitEditorMode() {
@@ -226,6 +231,9 @@ class LevelEditor {
         this.draggedObject = null;
         this.dragGhost.style.display = 'none';
         this.updateSwitchInfo();
+        if (this.game && this.game.applyEditorVisuals) {
+            this.game.applyEditorVisuals(false);
+        }
     }
     
     selectTool(tool) {
@@ -251,6 +259,14 @@ class LevelEditor {
         const x = parseInt(cell.dataset.x);
         const y = parseInt(cell.dataset.y);
         const boardCell = this.game.board[y][x];
+
+        if (this.currentTool === 'empty') {
+            this.isErasing = true;
+            this.lastErasedCell = null;
+            this.eraseCellAt(x, y);
+            event.preventDefault();
+            return;
+        }
         
         // 이동 가능한 오브젝트만 드래그 가능 (빈 칸 제외)
         if (boardCell.type !== 'empty') {
@@ -259,7 +275,8 @@ class LevelEditor {
             this.draggedFromY = y;
             this.draggedObject = {
                 type: boardCell.type,
-                switchData: boardCell.switchData ? JSON.parse(JSON.stringify(boardCell.switchData)) : null
+                switchData: boardCell.switchData ? JSON.parse(JSON.stringify(boardCell.switchData)) : null,
+                movingBlockData: boardCell.movingBlockData ? JSON.parse(JSON.stringify(boardCell.movingBlockData)) : null
             };
             
             // 고스트 표시
@@ -277,6 +294,14 @@ class LevelEditor {
     
     // 드래그 중
     handleDragMove(event) {
+        if (this.isErasing) {
+            const coords = this.getCellCoordsFromPointer(event);
+            if (coords) {
+                this.eraseCellAt(coords.x, coords.y);
+            }
+            event.preventDefault();
+            return;
+        }
         if (!this.isDragging) return;
         
         this.dragGhost.style.left = event.clientX + 'px';
@@ -285,6 +310,11 @@ class LevelEditor {
     
     // 드래그 종료
     handleDragEnd(event) {
+        if (this.isErasing) {
+            this.isErasing = false;
+            this.lastErasedCell = null;
+            return;
+        }
         if (!this.isDragging) return;
         
         // 드래그 중 표시 제거
@@ -325,6 +355,7 @@ class LevelEditor {
         // 원본 정보 저장
         const objectType = fromCell.type;
         const objectSwitchData = fromCell.switchData;
+        const objectMovingBlockData = fromCell.movingBlockData ? JSON.parse(JSON.stringify(fromCell.movingBlockData)) : null;
         
         // 목표 위치에 이미 오브젝트가 있으면 스왑 또는 무시
         if (toCell.type !== 'empty') {
@@ -338,10 +369,12 @@ class LevelEditor {
         fromCell.type = 'empty';
         fromCell.switchData = null;
         fromCell.wallActive = false;
+        fromCell.movingBlockData = null;
         
         // 새 위치에 배치
         toCell.type = objectType;
         toCell.switchData = objectSwitchData;
+        toCell.movingBlockData = objectMovingBlockData;
         
         switch(objectType) {
             case 'wall':
@@ -375,9 +408,23 @@ class LevelEditor {
                 toCell.element.innerHTML = '🧙‍♂️';
                 this.startPosition = { x: toX, y: toY };
                 break;
+            case 'moving-h':
+            case 'moving-v':
+                if (!toCell.movingBlockData) {
+                    toCell.movingBlockData = {
+                        orientation: objectType === 'moving-h' ? 'horizontal' : 'vertical',
+                        direction: 1
+                    };
+                }
+                break;
+            case 'event-block':
+                break;
         }
         
         this.updateConnectionLines();
+        if (this.isActive && this.game.applyEditorVisuals) {
+            this.game.applyEditorVisuals(true);
+        }
     }
     
     // 스위치에 연결된 블록 위치 업데이트
@@ -406,9 +453,27 @@ class LevelEditor {
             case 'toggle-block': emoji = '🟣'; break;
             case 'goal': emoji = '🏁'; break;
             case 'start': emoji = '🧙‍♂️'; break;
+            case 'moving-h': emoji = '↔️'; break;
+            case 'moving-v': emoji = '↕️'; break;
+            case 'event-block': emoji = '⚙️'; break;
             default: emoji = '❓';
         }
         this.dragGhost.textContent = emoji;
+    }
+
+    getCellCoordsFromPointer(event) {
+        const gameBoard = document.getElementById('game-board');
+        if (!gameBoard) return null;
+        const rect = gameBoard.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return null;
+        const cellWidth = rect.width / this.game.gridSize;
+        const cellHeight = rect.height / this.game.gridSize;
+        const x = Math.floor((event.clientX - rect.left) / cellWidth);
+        const y = Math.floor((event.clientY - rect.top) / cellHeight);
+        if (x < 0 || x >= this.game.gridSize || y < 0 || y >= this.game.gridSize) {
+            return null;
+        }
+        return { x, y };
     }
     
     handleCellClick(event) {
@@ -550,6 +615,21 @@ class LevelEditor {
     placeTile(x, y) {
         const cell = this.game.board[y][x];
         const oldType = cell.type;
+
+        if (this.currentTool === 'moving-h' && oldType === 'moving-h' && cell.movingBlockData) {
+            cell.movingBlockData.direction = cell.movingBlockData.direction === 1 ? -1 : 1;
+            if (this.isActive && this.game.applyEditorVisuals) {
+                this.game.applyEditorVisuals(true);
+            }
+            return;
+        }
+        if (this.currentTool === 'moving-v' && oldType === 'moving-v' && cell.movingBlockData) {
+            cell.movingBlockData.direction = cell.movingBlockData.direction === 1 ? -1 : 1;
+            if (this.isActive && this.game.applyEditorVisuals) {
+                this.game.applyEditorVisuals(true);
+            }
+            return;
+        }
         
         // 스위치를 지우는 경우 선택 해제
         if (oldType === 'switch' && cell.switchData) {
@@ -574,6 +654,7 @@ class LevelEditor {
         cell.type = 'empty';
         cell.switchData = null;
         cell.wallActive = false;
+        cell.movingBlockData = null;
         
         switch(this.currentTool) {
             case 'wall':
@@ -619,10 +700,35 @@ class LevelEditor {
                 cell.element.innerHTML = '🧙‍♂️';
                 this.startPosition = { x, y };
                 break;
+            case 'moving-h':
+                cell.type = 'moving-h';
+                cell.movingBlockData = { orientation: 'horizontal', direction: 1 };
+                break;
+            case 'moving-v':
+                cell.type = 'moving-v';
+                cell.movingBlockData = { orientation: 'vertical', direction: 1 };
+                break;
+            case 'event-block':
+                cell.type = 'event-block';
+                break;
             case 'empty':
                 // 이미 위에서 처리됨
                 break;
         }
+
+        if (this.isActive && this.game.applyEditorVisuals) {
+            this.game.applyEditorVisuals(true);
+        }
+    }
+
+    eraseCellAt(x, y) {
+        if (this.currentTool !== 'empty') return;
+        if (x < 0 || x >= this.game.gridSize || y < 0 || y >= this.game.gridSize) return;
+        if (this.lastErasedCell && this.lastErasedCell.x === x && this.lastErasedCell.y === y) {
+            return;
+        }
+        this.placeTile(x, y);
+        this.lastErasedCell = { x, y };
     }
     
     removeBlockFromAllSwitches(x, y) {
@@ -652,11 +758,15 @@ class LevelEditor {
                 cell.element.innerHTML = '';
                 cell.type = 'empty';
                 cell.switchData = null;
+                cell.movingBlockData = null;
             }
         }
         
         this.deselectSwitch();
         this.startPosition = null;
+        if (this.isActive && this.game.applyEditorVisuals) {
+            this.game.applyEditorVisuals(true);
+        }
     }
     
     testLevel() {
@@ -792,6 +902,8 @@ class LevelEditor {
         const switches = [];
         const walls = [];
         const toggleBlocks = [];
+        const movingBlocks = { horizontal: [], vertical: [] };
+        const eventBlocks = [];
         let goal = null;
         let startPosition = this.startPosition || { x: 1, y: 12 };
         
@@ -809,11 +921,17 @@ class LevelEditor {
                     goal = {x, y};
                 } else if (cell.type === 'start') {
                     startPosition = {x, y};
+                } else if (cell.type === 'moving-h' && cell.movingBlockData) {
+                    movingBlocks.horizontal.push({ x, y, direction: cell.movingBlockData.direction });
+                } else if (cell.type === 'moving-v' && cell.movingBlockData) {
+                    movingBlocks.vertical.push({ x, y, direction: cell.movingBlockData.direction });
+                } else if (cell.type === 'event-block') {
+                    eventBlocks.push({ x, y });
                 }
             }
         }
         
-        return { switches, walls, toggleBlocks, goal, startPosition };
+        return { switches, walls, toggleBlocks, goal, startPosition, movingBlocks, eventBlocks };
     }
 }
 
@@ -827,6 +945,8 @@ class PuzzleGame {
         FRICTION: 0.8,          // 마찰력
         PLAYER_SIZE: 0.8        // 플레이어 크기 (셀 기준)
     };
+    static MOVING_BLOCK_SPEED = 0.03;
+    static MOVING_BLOCK_REVERSAL_THRESHOLD = 0.4;
     
     constructor() {
         this.gridSize = 15;
@@ -840,8 +960,13 @@ class PuzzleGame {
         this.editor = null;
         this.levels = [];
         this.levelsLoaded = false;
+        this.movingBlocks = [];
+        this.eventBlocks = new Set();
+        this.activeCustomLevel = null;
         this.disableAutoLevelLoad = Boolean(window.disableAutoLevelLoad);
         this.disableURLUpdates = this.disableAutoLevelLoad;
+        this.playerOnMovingBlock = null;
+        this.lastMovingBlockCollision = null;
         
         // 물리 상수 (정적 상수에서 참조)
         this.physics = PuzzleGame.PHYSICS;
@@ -883,7 +1008,9 @@ class PuzzleGame {
                 switches: [],
                 walls: Array.from({length: 15}, (_, i) => ({x: i, y: 14})),
                 toggleBlocks: [],
-                goal: { x: 14, y: 13 }
+                goal: { x: 14, y: 13 },
+                movingBlocks: { horizontal: [], vertical: [] },
+                eventBlocks: []
             }];
             this.levelsLoaded = true;
             return false;
@@ -946,6 +1073,7 @@ class PuzzleGame {
             console.error('Invalid level data: switches must be an array');
             return false;
         }
+        this.activeCustomLevel = this.cloneLevelData(levelData);
         
         // 보드 초기화
         for (let y = 0; y < this.gridSize; y++) {
@@ -957,8 +1085,11 @@ class PuzzleGame {
                 cell.switchData = null;
                 cell.wallActive = false;
                 cell.isToggleBlock = false;
+                cell.movingBlockData = null;
             }
         }
+
+        this.clearMovingBlocks();
         
         // 벽 설정
         levelData.walls.forEach(wall => {
@@ -1002,12 +1133,17 @@ class PuzzleGame {
             startCell.element.classList.add('start-point');
             startCell.element.innerHTML = '🧙‍♂️';
         }
+
+        this.setupEventBlocks(levelData.eventBlocks || []);
+        this.setupMovingBlocks(levelData.movingBlocks || { horizontal: [], vertical: [] });
         
         // 플레이어 위치 초기화 (커스텀 시작점 사용)
         this.player = { x: start.x, y: start.y };
         this.velocity = { x: 0, y: 0 };
         this.isJumping = false;
         this.lastSwitchPos = null;
+        this.playerOnMovingBlock = null;
+        this.lastMovingBlockCollision = null;
         this.updatePlayerPosition();
         
         // UI 업데이트 (요소가 있는 경우만)
@@ -1024,11 +1160,445 @@ class PuzzleGame {
         if (victoryMsg) {
             victoryMsg.style.display = 'none';
         }
+
+        this.applyEditorVisuals(this.editor && this.editor.isActive);
+    }
+
+    setupEventBlocks(blocks = []) {
+        this.eventBlocks = new Set();
+        blocks.forEach(block => {
+            const { x, y } = block;
+            if (x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize) return;
+            const cell = this.board[y][x];
+            cell.type = 'event-block';
+            cell.movingBlockData = null;
+            this.eventBlocks.add(this.cellKey(x, y));
+        });
+    }
+
+    clearMovingBlocks() {
+        if (this.movingBlocks && this.movingBlocks.length) {
+            this.movingBlocks.forEach(block => {
+                if (block.element && block.element.parentNode) {
+                    block.element.parentNode.removeChild(block.element);
+                }
+            });
+        }
+        this.movingBlocks = [];
+    }
+
+    setupMovingBlocks(movingBlocks = {}) {
+        this.clearMovingBlocks();
+        this.playerOnMovingBlock = null;
+        this.lastMovingBlockCollision = null;
+        for (let y = 0; y < this.gridSize; y++) {
+            for (let x = 0; x < this.gridSize; x++) {
+                const cell = this.board[y][x];
+                if (!cell) continue;
+                if (cell.type === 'moving-h' || cell.type === 'moving-v') {
+                    cell.type = 'empty';
+                    cell.movingBlockData = null;
+                }
+            }
+        }
+        const boardElement = this.boardElement || document.getElementById('game-board');
+        if (!boardElement) return;
+        const horizontal = Array.isArray(movingBlocks.horizontal) ? movingBlocks.horizontal : [];
+        const vertical = Array.isArray(movingBlocks.vertical) ? movingBlocks.vertical : [];
+        horizontal.forEach(block => this.createMovingBlock('horizontal', block, boardElement));
+        vertical.forEach(block => this.createMovingBlock('vertical', block, boardElement));
+    }
+
+    createMovingBlock(orientation, data, boardElement) {
+        const x = data && typeof data.x === 'number' ? data.x : 0;
+        const y = data && typeof data.y === 'number' ? data.y : 0;
+        if (x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize) return;
+        const direction = data && data.direction === -1 ? -1 : 1;
+        const speed = data && typeof data.speed === 'number' ? data.speed : PuzzleGame.MOVING_BLOCK_SPEED;
+        const element = this.createMovingBlockElement(orientation, boardElement);
+        const block = {
+            type: orientation === 'horizontal' ? 'horizontal' : 'vertical',
+            x,
+            y,
+            dir: direction,
+            speed,
+            element,
+            prevX: x,
+            prevY: y,
+            deltaX: 0,
+            deltaY: 0
+        };
+        if (this.editor && this.editor.isActive) {
+            element.style.display = 'none';
+        }
+        this.positionMovingBlockElement(block);
+        this.movingBlocks.push(block);
+        const cell = this.board[y][x];
+        cell.type = block.type === 'horizontal' ? 'moving-h' : 'moving-v';
+        cell.movingBlockData = {
+            orientation: block.type,
+            direction
+        };
+    }
+
+    createMovingBlockElement(orientation, boardElement) {
+        const el = document.createElement('div');
+        el.className = `moving-block-entity ${orientation === 'horizontal' ? 'horizontal' : 'vertical'}`;
+        boardElement.appendChild(el);
+        return el;
+    }
+
+    positionMovingBlockElement(block) {
+        if (!block.element) return;
+        const cellSize = 100 / this.gridSize;
+        block.element.style.left = `${block.x * cellSize}%`;
+        block.element.style.top = `${block.y * cellSize}%`;
+    }
+
+    updateMovingBlocks() {
+        if (!this.movingBlocks.length) {
+            return;
+        }
+        if ((this.editor && this.editor.isActive) || this.gameWon) {
+            this.movingBlocks.forEach(block => {
+                block.prevX = block.x;
+                block.prevY = block.y;
+                block.deltaX = 0;
+                block.deltaY = 0;
+            });
+            return;
+        }
+        for (const block of this.movingBlocks) {
+            block.prevX = block.x;
+            block.prevY = block.y;
+            let nextX = block.x;
+            let nextY = block.y;
+            if (block.type === 'horizontal') {
+                nextX += block.dir * block.speed;
+                if (this.movingBlockShouldReverse(block, nextX, block.y)) {
+                    block.dir *= -1;
+                    nextX = block.x + block.dir * block.speed;
+                }
+                block.x = this.clampToGrid(nextX);
+            } else {
+                nextY += block.dir * block.speed;
+                if (this.movingBlockShouldReverse(block, block.x, nextY)) {
+                    block.dir *= -1;
+                    nextY = block.y + block.dir * block.speed;
+                }
+                block.y = this.clampToGrid(nextY);
+            }
+            block.deltaX = block.x - block.prevX;
+            block.deltaY = block.y - block.prevY;
+            this.positionMovingBlockElement(block);
+        }
+        this.checkPlayerMovingBlockCollision();
+    }
+
+    movingBlockShouldReverse(block, targetX, targetY) {
+        const left = targetX;
+        const right = targetX + 1;
+        const top = targetY;
+        const bottom = targetY + 1;
+        if (left < 0 || right > this.gridSize || top < 0 || bottom > this.gridSize) {
+            return true;
+        }
+        const minCellX = Math.floor(left);
+        const maxCellX = Math.floor(right - 0.001);
+        const minCellY = Math.floor(top);
+        const maxCellY = Math.floor(bottom - 0.001);
+        for (let cy = minCellY; cy <= maxCellY; cy++) {
+            for (let cx = minCellX; cx <= maxCellX; cx++) {
+                if (this.isWall(cx, cy)) {
+                    return true;
+                }
+            }
+        }
+        if (block.type === 'horizontal') {
+            const eventKey = this.cellKey(Math.floor(targetX + 0.5), Math.floor(targetY + 0.5));
+            if (this.eventBlocks.has(eventKey)) {
+                return true;
+            }
+        }
+        for (const other of this.movingBlocks) {
+            if (other === block) continue;
+            const nextRect = {
+                left,
+                right,
+                top,
+                bottom
+            };
+            const otherRect = {
+                left: other.x,
+                right: other.x + 1,
+                top: other.y,
+                bottom: other.y + 1
+            };
+            if (this.rectanglesOverlap(nextRect, otherRect)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getPlayerBlockDiff(block) {
+        const playerSize = this.physics.PLAYER_SIZE;
+        const offset = (1 - playerSize) / 2;
+        const expectedY = block.y - 1 + offset - 0.001;
+        return {
+            horizontal: Math.abs(this.player.x - block.x),
+            vertical: Math.abs(this.player.y - expectedY)
+        };
+    }
+
+    reverseMovingBlock(block) {
+        block.dir *= -1;
+        block.x = block.prevX;
+        block.y = block.prevY;
+        block.deltaX = 0;
+        block.deltaY = 0;
+        this.positionMovingBlockElement(block);
+    }
+
+    handleMovingBlockCarryCollision(block, axis, delta) {
+        const diffs = this.getPlayerBlockDiff(block);
+        const diff = axis === 'x' ? diffs.horizontal : diffs.vertical;
+        if (diff >= PuzzleGame.MOVING_BLOCK_REVERSAL_THRESHOLD) {
+            this.reverseMovingBlock(block);
+            this.playerOnMovingBlock = null;
+            return 'reversed-detach';
+        }
+        return 'blocked';
+    }
+
+    applyMovingBlockCarry() {
+        if (!this.playerOnMovingBlock) return;
+        const block = this.playerOnMovingBlock;
+        const deltaX = block.deltaX || 0;
+        const deltaY = block.deltaY || 0;
+        if (Math.abs(deltaX) < 0.0001 && Math.abs(deltaY) < 0.0001) {
+            return;
+        }
+        const originalPosition = { x: this.player.x, y: this.player.y };
+        let blockedX = false;
+        let blockedY = false;
+        let detachFromBlock = false;
+        if (deltaX !== 0) {
+            if (!this.checkCollision(this.player.x + deltaX, this.player.y, { ignoreBlock: block })) {
+                this.player.x += deltaX;
+            } else {
+                const resolutionX = this.handleMovingBlockCarryCollision(block, 'x', deltaX);
+                if (resolutionX === 'reversed-detach') {
+                    blockedX = true;
+                    detachFromBlock = true;
+                } else {
+                    blockedX = true;
+                }
+            }
+        }
+        if (deltaY !== 0) {
+            if (!this.checkCollision(this.player.x, this.player.y + deltaY, { ignoreBlock: block })) {
+                this.player.y += deltaY;
+            } else {
+                const resolutionY = this.handleMovingBlockCarryCollision(block, 'y', deltaY);
+                if (resolutionY === 'reversed-detach') {
+                    blockedY = true;
+                    detachFromBlock = true;
+                } else {
+                    blockedY = true;
+                }
+            }
+        }
+        if (blockedX) {
+            this.player.x = originalPosition.x;
+        }
+        if (blockedY) {
+            this.player.y = originalPosition.y;
+        }
+        if (blockedX || blockedY) {
+            if (!detachFromBlock) {
+                this.reverseMovingBlock(block);
+                this.alignPlayerOnMovingBlock(block);
+                this.playerOnMovingBlock = block;
+            } else {
+                this.playerOnMovingBlock = null;
+            }
+        }
+        this.lastMovingBlockCollision = null;
+        this.verifyPlayerOnMovingBlock();
+    }
+
+    alignPlayerOnMovingBlock(block) {
+        const playerSize = this.physics.PLAYER_SIZE;
+        const offset = (1 - playerSize) / 2;
+        const targetBottom = block.y - 0.001;
+        this.player.y = targetBottom - 1 + offset;
+    }
+
+    verifyPlayerOnMovingBlock() {
+        if (!this.playerOnMovingBlock) return;
+        const block = this.playerOnMovingBlock;
+        const playerSize = this.physics.PLAYER_SIZE;
+        const offset = (1 - playerSize) / 2;
+        const playerLeft = this.player.x + offset;
+        const playerRight = this.player.x + 1 - offset;
+        const playerBottom = this.player.y + 1 - offset;
+        const blockLeft = block.x;
+        const blockRight = block.x + 1;
+        const blockTop = block.y;
+        const horizontallyAligned = playerRight > blockLeft + 0.05 && playerLeft < blockRight - 0.05;
+        const verticallyAligned = Math.abs(playerBottom - blockTop) <= 0.07;
+        if (!horizontallyAligned || !verticallyAligned) {
+            this.playerOnMovingBlock = null;
+        }
+    }
+
+    clampToGrid(value) {
+        if (value < 0) return 0;
+        if (value > this.gridSize - 1) return this.gridSize - 1;
+        return value;
+    }
+
+    checkPlayerMovingBlockCollision() {
+        if (!this.movingBlocks.length || (this.editor && this.editor.isActive)) {
+            return;
+        }
+        const playerSize = this.physics.PLAYER_SIZE;
+        const offset = (1 - playerSize) / 2;
+        const playerRect = {
+            left: this.player.x + offset,
+            right: this.player.x + 1 - offset,
+            top: this.player.y + offset,
+            bottom: this.player.y + 1 - offset
+        };
+        for (const block of this.movingBlocks) {
+            const blockRect = {
+                left: block.x,
+                right: block.x + 1,
+                top: block.y,
+                bottom: block.y + 1
+            };
+            if (this.rectanglesOverlap(playerRect, blockRect)) {
+                if (this.playerOnMovingBlock === block) {
+                    continue;
+                }
+                const onTop = playerRect.bottom <= blockRect.top + 0.05;
+                if (onTop) {
+                    continue;
+                }
+                this.reloadCurrentLevel();
+                return;
+            }
+        }
+    }
+
+    collidesWithMovingBlocks(left, right, top, bottom, options = {}) {
+        if (!this.movingBlocks.length || (this.editor && this.editor.isActive)) {
+            return null;
+        }
+        const playerRect = { left, right, top, bottom };
+        for (const block of this.movingBlocks) {
+            if (options.ignoreBlock && block === options.ignoreBlock) {
+                continue;
+            }
+            const blockRect = {
+                left: block.x,
+                right: block.x + 1,
+                top: block.y,
+                bottom: block.y + 1
+            };
+            if (this.rectanglesOverlap(playerRect, blockRect)) {
+                return { block, blockRect, playerRect };
+            }
+        }
+        return null;
+    }
+
+    rectanglesOverlap(rectA, rectB) {
+        return !(rectA.right <= rectB.left ||
+                 rectA.left >= rectB.right ||
+                 rectA.bottom <= rectB.top ||
+                 rectA.top >= rectB.bottom);
+    }
+
+    applyEditorVisuals(isEditorActive) {
+        if (!this.board || !this.board.length) return;
+        const arrowIcons = new Set(['➡️', '⬅️', '⬆️', '⬇️']);
+        for (let y = 0; y < this.gridSize; y++) {
+            for (let x = 0; x < this.gridSize; x++) {
+                const cell = this.board[y][x];
+                const el = cell.element;
+                if (!el) continue;
+                if (cell.type === 'event-block') {
+                    if (isEditorActive) {
+                        el.classList.add('event-block');
+                        if (!el.innerHTML) {
+                            el.innerHTML = '⚙️';
+                        }
+                    } else {
+                        el.classList.remove('event-block');
+                        if (el.innerHTML === '⚙️') {
+                            el.innerHTML = '';
+                        }
+                    }
+                }
+                if (cell.type === 'moving-h' || cell.type === 'moving-v') {
+                    if (isEditorActive && cell.movingBlockData) {
+                        el.classList.add('moving-block-cell');
+                        if (cell.type === 'moving-h') {
+                            el.classList.add('moving-horizontal');
+                            el.classList.remove('moving-vertical');
+                            el.innerHTML = cell.movingBlockData.direction === 1 ? '➡️' : '⬅️';
+                        } else {
+                            el.classList.add('moving-vertical');
+                            el.classList.remove('moving-horizontal');
+                            el.innerHTML = cell.movingBlockData.direction === 1 ? '⬇️' : '⬆️';
+                        }
+                    } else {
+                        el.classList.remove('moving-block-cell', 'moving-horizontal', 'moving-vertical');
+                        if (arrowIcons.has(el.innerHTML)) {
+                            el.innerHTML = '';
+                        }
+                    }
+                } else if (!isEditorActive && arrowIcons.has(el.innerHTML)) {
+                    el.innerHTML = '';
+                }
+                if (!isEditorActive && cell.type !== 'event-block') {
+                    el.classList.remove('event-block');
+                }
+            }
+        }
+        if (this.movingBlocks && this.movingBlocks.length) {
+            this.movingBlocks.forEach(block => {
+                if (block.element) {
+                    block.element.style.display = isEditorActive ? 'none' : 'block';
+                }
+            });
+        }
+    }
+
+    cellKey(x, y) {
+        return `${x},${y}`;
+    }
+
+    cloneLevelData(data) {
+        if (!data) return null;
+        return JSON.parse(JSON.stringify(data));
+    }
+
+    reloadCurrentLevel() {
+        if (this.activeCustomLevel) {
+            const snapshot = this.cloneLevelData(this.activeCustomLevel);
+            this.loadCustomLevel(snapshot);
+        } else {
+            this.loadLevel(this.currentLevel);
+        }
     }
     
     createBoard() {
         const gameBoard = document.getElementById('game-board');
         gameBoard.innerHTML = '';
+        this.boardElement = gameBoard;
         
         for (let y = 0; y < this.gridSize; y++) {
             this.board[y] = [];
@@ -1038,7 +1608,7 @@ class PuzzleGame {
                 cell.dataset.x = x;
                 cell.dataset.y = y;
                 gameBoard.appendChild(cell);
-                this.board[y][x] = { type: 'empty', element: cell };
+                this.board[y][x] = { type: 'empty', element: cell, movingBlockData: null };
             }
         }
         
@@ -1053,6 +1623,7 @@ class PuzzleGame {
             this.showVictory("모든 레벨 완료!");
             return;
         }
+        this.activeCustomLevel = null;
         
         // 보드 초기화
         for (let y = 0; y < this.gridSize; y++) {
@@ -1064,8 +1635,11 @@ class PuzzleGame {
                 cell.switchData = null;
                 cell.wallActive = false;
                 cell.isToggleBlock = false;
+                cell.movingBlockData = null;
             }
         }
+
+        this.clearMovingBlocks();
         
         const level = this.levels[levelNum - 1];
         
@@ -1113,12 +1687,17 @@ class PuzzleGame {
             startCell.element.classList.add('start-point');
             startCell.element.innerHTML = '🧙‍♂️';
         }
+
+        this.setupEventBlocks(level.eventBlocks || []);
+        this.setupMovingBlocks(level.movingBlocks || { horizontal: [], vertical: [] });
         
         // 플레이어 위치 초기화 (레벨의 시작점 사용)
         this.player = { x: start.x, y: start.y };
         this.velocity = { x: 0, y: 0 };
         this.isJumping = false;
         this.lastSwitchPos = null;
+        this.playerOnMovingBlock = null;
+        this.lastMovingBlockCollision = null;
         this.updatePlayerPosition();
         
         // 레벨 이름 표시 (있는 경우)
@@ -1141,6 +1720,8 @@ class PuzzleGame {
         if (!this.editor || !this.editor.isActive) {
             this.updateURL('level/' + levelNum);
         }
+
+        this.applyEditorVisuals(this.editor && this.editor.isActive);
     }
     
     bindEvents() {
@@ -1198,7 +1779,7 @@ class PuzzleGame {
         const resetBtn = document.getElementById('reset-btn');
         if (resetBtn) {
             resetBtn.addEventListener('click', () => {
-                this.loadLevel(this.currentLevel);
+                this.reloadCurrentLevel();
             });
         }
         
@@ -1220,7 +1801,11 @@ class PuzzleGame {
                 }
                 
                 document.getElementById('victory-message').style.display = 'none';
-                this.currentLevel++;
+                if (this.currentLevel >= this.levels.length) {
+                    this.currentLevel = 1;
+                } else {
+                    this.currentLevel++;
+                }
                 this.loadLevel(this.currentLevel);
             });
         }
@@ -1229,6 +1814,7 @@ class PuzzleGame {
     jump() {
         if (this.isOnGround() && !this.isJumping) {
             this.isJumping = true;
+            this.playerOnMovingBlock = null;
             this.velocity.y = this.physics.JUMP_VELOCITY;
             
             if (this.playerSprite) {
@@ -1270,6 +1856,7 @@ class PuzzleGame {
         }
         
         this.updatePlayerPosition();
+        this.verifyPlayerOnMovingBlock();
     }
     
     startContinuousMovement() {
@@ -1303,7 +1890,8 @@ class PuzzleGame {
     }
     
     // 플레이어 바운딩 박스가 벽과 충돌하는지 확인
-    checkCollision(x, y) {
+    checkCollision(x, y, options = {}) {
+        this.lastMovingBlockCollision = null;
         const playerSize = this.physics.PLAYER_SIZE;
         const offset = (1 - playerSize) / 2;
         
@@ -1334,6 +1922,11 @@ class PuzzleGame {
                 }
             }
         }
+        const movingCollision = this.collidesWithMovingBlocks(left, right, top, bottom, options);
+        if (movingCollision) {
+            this.lastMovingBlockCollision = movingCollision;
+            return true;
+        }
         return false;
     }
     
@@ -1343,6 +1936,9 @@ class PuzzleGame {
     }
     
     isOnGround() {
+        if (this.playerOnMovingBlock) {
+            return true;
+        }
         // 플레이어 바로 아래에 벽이 있는지 체크
         const playerSize = this.physics.PLAYER_SIZE;
         const offset = (1 - playerSize) / 2;
@@ -1448,7 +2044,7 @@ class PuzzleGame {
         } else if (this.currentLevel < this.levels.length) {
             document.getElementById('continue-btn').textContent = '다음 레벨';
         } else {
-            document.getElementById('continue-btn').textContent = '게임 완료';
+            document.getElementById('continue-btn').textContent = '처음부터';
         }
     }
     
@@ -1458,6 +2054,8 @@ class PuzzleGame {
                 requestAnimationFrame(loop);
                 return;
             }
+            this.updateMovingBlocks();
+            this.applyMovingBlockCarry();
             
             // 입력 처리 - 좌우 이동
             if (this.keysPressed['KeyA'] || this.keysPressed['ArrowLeft']) {
@@ -1488,17 +2086,32 @@ class PuzzleGame {
             if (!this.checkCollision(newX, this.player.y)) {
                 this.player.x = newX;
             } else {
-                // 벽에 부딧힘 - 위치 조정
-                if (this.velocity.x > 0) {
-                    // 오른쪽 벽 - 플레이어 오른쪽 경계가 벽 왼쪽에 맞닿음
-                    const rightEdge = this.player.x + 1 - playerOffset;
-                    const wallLeft = Math.floor(rightEdge + this.velocity.x);
-                    this.player.x = wallLeft - 1 + playerOffset - 0.001;
-                } else if (this.velocity.x < 0) {
-                    // 왼쪽 벽 - 플레이어 왼쪽 경계가 벽 오른쪽에 맞닿음
-                    const leftEdge = this.player.x + playerOffset;
-                    const wallRight = Math.ceil(leftEdge + this.velocity.x);
-                    this.player.x = wallRight - playerOffset + 0.001;
+                const movingCollision = this.lastMovingBlockCollision;
+                if (movingCollision) {
+                    this.playerOnMovingBlock = null;
+                    const block = movingCollision.block;
+                    if (this.velocity.x > 0) {
+                        const newPlayerRight = block.x - 0.001;
+                        const newPlayerLeft = newPlayerRight - playerSize;
+                        this.player.x = newPlayerLeft - playerOffset;
+                    } else if (this.velocity.x < 0) {
+                        const blockRight = block.x + 1;
+                        const newPlayerLeft = blockRight + 0.001;
+                        this.player.x = newPlayerLeft - playerOffset;
+                    }
+                } else {
+                    // 벽에 부딧힘 - 위치 조정
+                    if (this.velocity.x > 0) {
+                        // 오른쪽 벽 - 플레이어 오른쪽 경계가 벽 왼쪽에 맞닿음
+                        const rightEdge = this.player.x + 1 - playerOffset;
+                        const wallLeft = Math.floor(rightEdge + this.velocity.x);
+                        this.player.x = wallLeft - 1 + playerOffset - 0.001;
+                    } else if (this.velocity.x < 0) {
+                        // 왼쪽 벽 - 플레이어 왼쪽 경계가 벽 오른쪽에 맞닿음
+                        const leftEdge = this.player.x + playerOffset;
+                        const wallRight = Math.ceil(leftEdge + this.velocity.x);
+                        this.player.x = wallRight - playerOffset + 0.001;
+                    }
                 }
                 this.velocity.x = 0;
             }
@@ -1507,9 +2120,29 @@ class PuzzleGame {
             let newY = this.player.y + this.velocity.y;
             if (!this.checkCollision(this.player.x, newY)) {
                 this.player.y = newY;
-            } else {
-                // 땅/천장에 부딧힘
                 if (this.velocity.y > 0) {
+                    this.playerOnMovingBlock = null;
+                }
+            } else {
+                const movingCollision = this.lastMovingBlockCollision;
+                // 땅/천장에 부딧힘
+                if (movingCollision) {
+                    const block = movingCollision.block;
+                    if (this.velocity.y > 0) {
+                        this.alignPlayerOnMovingBlock(block);
+                        this.playerOnMovingBlock = block;
+                        this.isJumping = false;
+                        if (this.playerSprite) {
+                            this.playerSprite.classList.remove('falling');
+                            this.playerSprite.classList.remove('jumping');
+                        }
+                    } else if (this.velocity.y < 0) {
+                        const blockBottom = block.y + 1;
+                        const targetTop = blockBottom + 0.001;
+                        this.player.y = targetTop - playerOffset;
+                        this.playerOnMovingBlock = null;
+                    }
+                } else if (this.velocity.y > 0) {
                     // 바닥 - 플레이어 아래 경계가 벽 위에 맞닿음
                     const bottomEdge = this.player.y + 1 - playerOffset;
                     const wallTop = Math.floor(bottomEdge + this.velocity.y);
@@ -1531,10 +2164,15 @@ class PuzzleGame {
             // 경계 체크
             if (this.player.x < 0) this.player.x = 0;
             if (this.player.x > this.gridSize - 1) this.player.x = this.gridSize - 1;
-            if (this.player.y < 0) this.player.y = 0;
+            if (this.player.y < -1 + playerOffset) {
+                this.player.y = -1 + playerOffset;
+            }
+            if (this.player.y < 0 && !this.playerOnMovingBlock) {
+                this.player.y = 0;
+            }
             if (this.player.y > this.gridSize - 1) {
                 // 화면 밖으로 떨어짐 - 리셋
-                this.loadLevel(this.currentLevel);
+                this.reloadCurrentLevel();
                 return;
             }
             
@@ -1553,6 +2191,7 @@ class PuzzleGame {
             
             // 위치 업데이트
             this.updatePlayerPosition();
+            this.verifyPlayerOnMovingBlock();
             this.checkSwitch();
             this.checkGoal();
             
@@ -1637,8 +2276,11 @@ class PuzzleGame {
     }
 }
 
-// 게임 시작
-document.addEventListener('DOMContentLoaded', () => {
+if (typeof window !== 'undefined') {
+    window.PuzzleGame = PuzzleGame;
+}
+
+function initializePuzzleGame() {
     const game = new PuzzleGame();
     window.game = game; // 전역 접근 가능하도록
     window.gameIsReady = false;
@@ -1655,4 +2297,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // 게임 준비 이벤트 발생
         window.dispatchEvent(new Event('gameReady'));
     });
-});
+}
+
+if (typeof window !== 'undefined' && !window.disablePuzzleGameAutoInit) {
+    document.addEventListener('DOMContentLoaded', initializePuzzleGame);
+}
+
+if (typeof module !== 'undefined') {
+    module.exports = { PuzzleGame };
+}

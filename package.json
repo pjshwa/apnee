@@ -1,0 +1,25 @@
+{
+  "name": "apnee",
+  "version": "1.0.0",
+  "description": "- https://pjshwa.me",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjshwa/apnee.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/pjshwa/apnee/issues"
+  },
+  "homepage": "https://github.com/pjshwa/apnee#readme",
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0"
+  }
+}
