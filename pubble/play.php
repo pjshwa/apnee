@@ -110,6 +110,9 @@
         </div>
     </div>
 
+    <script>
+        window.disableAutoLevelLoad = true;
+    </script>
     <script src="puzzle_game.js"></script>
     <script>
         // URL에서 레벨 ID 가져오기
@@ -151,35 +154,43 @@
                         
                         // 게임 시작
                         window.sharedLevelData = level.data;
-                        
-                        // 리셋 버튼 오버라이드 (공유 레벨 다시 로드)
-                        window.addEventListener('gameReady', () => {
+
+                        const ensureCustomLevelLoaded = () => {
+                            if (window.game && window.gameIsReady) {
+                                window.game.loadCustomLevel(window.sharedLevelData);
+                            }
+                        };
+
+                        if (window.game && window.gameIsReady) {
+                            ensureCustomLevelLoaded();
+                        } else {
+                            window.addEventListener('gameReady', ensureCustomLevelLoaded, { once: true });
+                        }
+
+                        const wireSharedControls = () => {
                             const resetBtn = document.getElementById('reset-btn');
                             if (resetBtn && window.game) {
-                                // 기존 이벤트 제거 후 새 이벤트 추가
                                 const newResetBtn = resetBtn.cloneNode(true);
                                 resetBtn.parentNode.replaceChild(newResetBtn, resetBtn);
-                                
                                 newResetBtn.addEventListener('click', () => {
                                     window.game.loadCustomLevel(window.sharedLevelData);
                                 });
                             }
-                            
-                            // 계속하기 버튼도 오버라이드 (갤러리로 이동)
+
                             const continueBtn = document.getElementById('continue-btn');
                             if (continueBtn) {
                                 const newContinueBtn = continueBtn.cloneNode(true);
                                 continueBtn.parentNode.replaceChild(newContinueBtn, continueBtn);
-                                
                                 newContinueBtn.addEventListener('click', () => {
                                     window.location.href = 'gallery.html';
                                 });
                             }
-                        });
-                        
-                        // 게임 초기화 (puzzle_game.js의 DOMContentLoaded 이벤트가 실행됨)
-                        if (window.game) {
-                            window.game.loadCustomLevel(level.data);
+                        };
+
+                        if (window.game && window.gameIsReady) {
+                            wireSharedControls();
+                        } else {
+                            window.addEventListener('gameReady', wireSharedControls, { once: true });
                         }
                     } else {
                         document.getElementById('level-info-container').innerHTML = `

@@ -22,7 +22,7 @@ class LevelEditor {
         this.boundHandleDragMove = this.handleDragMove.bind(this);
         this.boundHandleDragEnd = this.handleDragEnd.bind(this);
         
-        this.init();
+        this.ready = this.init();
     }
     
     init() {
@@ -840,11 +840,13 @@ class PuzzleGame {
         this.editor = null;
         this.levels = [];
         this.levelsLoaded = false;
+        this.disableAutoLevelLoad = Boolean(window.disableAutoLevelLoad);
+        this.disableURLUpdates = this.disableAutoLevelLoad;
         
         // 물리 상수 (정적 상수에서 참조)
         this.physics = PuzzleGame.PHYSICS;
         
-        this.init();
+        this.ready = this.init();
     }
     
     async loadLevelsFromJSON() {
@@ -924,6 +926,8 @@ class PuzzleGame {
                 break;
             case 'custom':
                 this.loadCustomLevel(route.levelData);
+                break;
+            case 'none':
                 break;
         }
     }
@@ -1560,12 +1564,18 @@ class PuzzleGame {
     
     // URL 라우팅
     updateURL(path) {
+        if (this.disableURLUpdates) return;
         window.history.pushState(null, '', '#' + path);
     }
     
     parseURL() {
         const hash = window.location.hash.slice(1); // # 제거
-        if (!hash) return { type: 'level', level: 1 };
+        if (!hash) {
+            if (this.disableAutoLevelLoad) {
+                return { type: 'none' };
+            }
+            return { type: 'level', level: 1 };
+        }
         
         if (hash === 'editor') {
             return { type: 'editor' };
@@ -1615,6 +1625,8 @@ class PuzzleGame {
                 }
                 this.loadCustomLevel(route.levelData);
                 break;
+            case 'none':
+                break;
         }
     }
     
@@ -1629,12 +1641,18 @@ class PuzzleGame {
 document.addEventListener('DOMContentLoaded', () => {
     const game = new PuzzleGame();
     window.game = game; // 전역 접근 가능하도록
-    
-    // 공유 레벨 데이터가 있으면 로드
-    if (window.sharedLevelData) {
-        game.loadCustomLevel(window.sharedLevelData);
-    }
-    
-    // 게임 준비 이벤트 발생
-    window.dispatchEvent(new Event('gameReady'));
+    window.gameIsReady = false;
+
+    const readyPromise = game.ready instanceof Promise ? game.ready : Promise.resolve();
+
+    readyPromise.then(() => {
+        window.gameIsReady = true;
+
+        if (window.sharedLevelData) {
+            game.loadCustomLevel(window.sharedLevelData);
+        }
+
+        // 게임 준비 이벤트 발생
+        window.dispatchEvent(new Event('gameReady'));
+    });
 });
