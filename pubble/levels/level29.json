@@ -1,0 +1,17 @@
+{
+  "name": "Rush Hour",
+  "switches": [{"x": 3, "y": 13, "blocks": [{"x": 12, "y": 9}]}],
+  "walls": [
+    {"x": 0, "y": 14}, {"x": 1, "y": 14}, {"x": 2, "y": 14}, {"x": 3, "y": 14}, {"x": 4, "y": 14},
+    {"x": 13, "y": 8}, {"x": 14, "y": 8}
+  ],
+  "toggleBlocks": [{"x": 12, "y": 9}],
+  "goal": {"x": 13, "y": 7},
+  "startPosition": {"x": 1, "y": 13},
+  "movingBlocks": {
+    "horizontal": [{"x": 5, "y": 13, "direction": 1}, {"x": 7, "y": 11, "direction": -1}, {"x": 9, "y": 9, "direction": 1}],
+    "vertical": []
+  },
+  "eventBlocks": [],
+  "imageBlocks": []
+}

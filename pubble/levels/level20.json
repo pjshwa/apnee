@@ -1,0 +1,15 @@
+{
+  "name": "Timed Switch",
+  "switches": [{"x": 4, "y": 13, "blocks": [{"x": 10, "y": 13}]}],
+  "walls": [
+    {"x": 0, "y": 14}, {"x": 1, "y": 14}, {"x": 2, "y": 14}, {"x": 3, "y": 14}, {"x": 4, "y": 14},
+    {"x": 5, "y": 14}, {"x": 6, "y": 14},
+    {"x": 12, "y": 14}, {"x": 13, "y": 14}, {"x": 14, "y": 14}
+  ],
+  "toggleBlocks": [{"x": 10, "y": 13}],
+  "goal": {"x": 13, "y": 13},
+  "startPosition": {"x": 1, "y": 13},
+  "movingBlocks": {"horizontal": [{"x": 7, "y": 13, "direction": 1}], "vertical": []},
+  "eventBlocks": [],
+  "imageBlocks": []
+}

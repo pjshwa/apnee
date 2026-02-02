@@ -305,6 +305,15 @@ button:disabled {
     opacity: 0.3;
 }
 
+.cell.image-block {
+    background-color: #111827;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.3);
+}
+
 .cell.goal {
     background: linear-gradient(135deg, #fbbf24, var(--warning));
     animation: goalPulse 2s ease-in-out infinite;
@@ -326,6 +335,48 @@ button:disabled {
     background: linear-gradient(135deg, var(--success), #059669);
     border: 2px dashed rgba(255, 255, 255, 0.3);
     box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+}
+
+.cell.event-block {
+    background: rgba(99, 102, 241, 0.15);
+    border: 2px dashed rgba(255, 255, 255, 0.35);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.cell.moving-block-cell {
+    background: rgba(248, 250, 252, 0.05);
+    border: 2px dashed rgba(148, 163, 184, 0.6);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.cell.moving-block-cell.horizontal {
+    border-color: rgba(99, 102, 241, 0.6);
+}
+
+.cell.moving-block-cell.vertical {
+    border-color: rgba(16, 185, 129, 0.6);
+}
+
+.moving-block-entity {
+    position: absolute;
+    width: calc(100% / 15);
+    height: calc(100% / 15);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    z-index: 60;
+    pointer-events: none;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.35);
+}
+
+.moving-block-entity.horizontal {
+    background: linear-gradient(135deg, #6366f1, #4338ca);
+}
+
+.moving-block-entity.vertical {
+    background: linear-gradient(135deg, #10b981, #047857);
 }
 
 /* Controls Section */
@@ -478,6 +529,30 @@ button:disabled {
     color: var(--text-muted);
     cursor: not-allowed;
     transform: none;
+}
+
+.editor-label {
+    display: block;
+    margin-top: var(--space-sm);
+    margin-bottom: var(--space-xs);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.editor-input {
+    width: 100%;
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.8rem;
+}
+
+.editor-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px var(--accent-glow);
 }
 
 #level-json {

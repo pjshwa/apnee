@@ -1,0 +1,24 @@
+{
+  "name": "Ultimate Challenge",
+  "switches": [
+    {"x": 3, "y": 13, "blocks": [{"x": 6, "y": 11}]},
+    {"x": 7, "y": 10, "blocks": [{"x": 10, "y": 8}]},
+    {"x": 11, "y": 7, "blocks": [{"x": 13, "y": 5}]}
+  ],
+  "walls": [
+    {"x": 0, "y": 14}, {"x": 1, "y": 14}, {"x": 2, "y": 14}, {"x": 3, "y": 14}, {"x": 4, "y": 14},
+    {"x": 5, "y": 12},
+    {"x": 8, "y": 9}, {"x": 9, "y": 9},
+    {"x": 11, "y": 6}, {"x": 12, "y": 6},
+    {"x": 14, "y": 4}
+  ],
+  "toggleBlocks": [{"x": 6, "y": 11}, {"x": 10, "y": 8}, {"x": 13, "y": 5}],
+  "goal": {"x": 14, "y": 3},
+  "startPosition": {"x": 1, "y": 13},
+  "movingBlocks": {
+    "horizontal": [{"x": 5, "y": 13, "direction": 1}],
+    "vertical": [{"x": 7, "y": 11, "direction": -1}, {"x": 12, "y": 7, "direction": -1}]
+  },
+  "eventBlocks": [],
+  "imageBlocks": []
+}
