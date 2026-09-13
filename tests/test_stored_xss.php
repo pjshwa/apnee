@@ -16,9 +16,11 @@ function check($condition, $message) {
 }
 function renderSource($file, $vars = []) {
     extract($vars);
-    $source = preg_replace('/require\([^;]*\);/', '', file_get_contents($file));
+    $source = preg_replace('/require(?:_once)?\s*(?:\([^;]*\)|[^;]+);/', '', file_get_contents($file));
     ob_start(); eval('?>'.$source); return ob_get_clean();
 }
+
+function connectDatabase() { return new mysqli(); }
 
 class mysqli {
     public $connect_error = null;

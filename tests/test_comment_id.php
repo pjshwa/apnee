@@ -15,21 +15,13 @@ function check($condition, $message) {
     $checks++;
 }
 
-function loadClass($file, $name, $end) {
-    $source = file_get_contents($file);
-    $source = substr($source, strpos($source, 'class '.$name.' {'));
-    $source = substr($source, 0, strpos($source, $end));
-    eval($source);
-}
-loadClass($root.'/eggs/db.php', 'DB', '// Create a DB object');
+require_once $root.'/eggs/EggRepository.php';
 $conn = new class {
     public $insert_id=101;
     public function prepare($sql) {return new class {public function bind_param(...$args) {} public function execute(){return true;} public function close(){}};}
     public function query($sql) {throw new RuntimeException('Global ID query would return another request ID');}
 };
-$reflection=new ReflectionClass('DB');
-$db=$reflection->newInstanceWithoutConstructor();
-$reflection->getProperty('mysqli')->setValue($db,$conn);
+$db = new EggRepository($conn);
 check($db->newComment(1,'author','comment',null)===101,'Wrong inserted ID');
 $conn->insert_id=200;
 check($db->newComment(1,'author','reply',101)===200,'Wrong nested comment ID');
