@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../lib/view_helpers.php';
+require_once __DIR__ . '/comment_view.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $article_id = $_POST["article_id"];
@@ -25,41 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
   else {
     require('db.php');
-    $date = formatSeoulTime('now');
+    $createdAt = gmdate('Y-m-d H:i:s');
     $nid = $db->newComment($article_id, $author, $comment, $comment_id);
-
-    echo '<li id="comment_'.$nid.'" ';
-    if ($comment_id == null) {
-      echo 'onclick="toggleNestedCommentFormVisible('.$nid.')" ';
-    }
-    echo 'class="imojify"><strong>';
-    echo escapeHtml($author);
-    echo ':</strong> ';
-    echo escapeHtml($comment);
-    echo ' ('.$date.')';
-
-    echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
-    
-    if ($comment_id == null) {
-      echo '<ul class="subcomments"></ul>';
-    }
-
-    echo '</li>';
-
-    if ($comment_id == null) {
-
-      // Comment form
-      echo '<div id="nested_comment_form_for_comment_'.$nid.'" class="nested_comment_form_container js-nested-comment-form-container" style="display: none;">';
-      echo '<form class="nested_comment_form">';
-      echo '<input type="hidden" id="article_id" name="article_id" value="'.$article_id.'"/>';
-      echo '<input type="hidden" id="comment_id" name="comment_id" value="'.$nid.'"/>';
-      echo '<h5>▲ 대댓글 달기</h5>';
-      echo '<p>이름 <input type="text" class="nested_comment_author" name="comment_author" maxlength="30" required/></p>';
-      echo '<p>내용 <input type="text" class="nested_comment_message" name="comment" maxlength="1000" required/></p>';
-      echo '<p><input type="submit" class="btn btn-link" value="등록"/></p>';
-      echo '</form>';
-      echo '</div>';
-    }
+    echo renderEggComment([
+      'commid' => $nid,
+      'commauthor' => $author,
+      'message' => $comment,
+      'commdate' => $createdAt,
+      'commnew' => true,
+      'subcomments' => []
+    ], $article_id, $comment_id != null);
   }
 }
 ?>

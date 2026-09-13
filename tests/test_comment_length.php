@@ -8,7 +8,7 @@ if (PHP_SAPI !== 'cli') {
 }
 ob_start();
 $root = dirname(__DIR__);
-require_once $root . '/lib/view_helpers.php';
+require_once $root . '/eggs/comment_view.php';
 $checks = 0;
 function check($condition, $message) {
     global $checks;

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../lib/view_helpers.php';
+require_once __DIR__ . '/comment_view.php';
 require('db.php');
 
 $now = new DateTime('now');
@@ -89,35 +89,7 @@ else {
           echo 'onclick="toggleCommentVisible('.$article['id'].')">댓글들 (<strong>'.$comments_count.'</strong>)</h4><div id="comments_for_article_'.$article['id'].'" style="display: none; padding: 0 20px;"><ul class="comments">';
 
           foreach ($article['comments'] as $comment) {
-
-            $commdatestr = formatSeoulTime($comment['commdate']);
-
-            echo '<li id="comment_'.$comment['commid'].'" onclick="toggleNestedCommentFormVisible('.$comment['commid'].')" class="imojify"><strong>'.escapeHtml($comment['commauthor']).':</strong> '.escapeHtml($comment['message']).' ('.$commdatestr.')';
-            if ($comment['commnew']) echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
-
-            echo '<ul class="subcomments">';
-            if (isset($comment['subcomments'])) {
-              foreach ($comment['subcomments'] as $subcomment) {
-
-                echo '<li class="imojify"><strong>'.escapeHtml($subcomment['commauthor']).':</strong> '.escapeHtml($subcomment['message']).' ('.formatSeoulTime($subcomment['commdate']).')';
-                if ($subcomment['commnew']) echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
-                echo '</li>';
-              }
-            }
-            echo '</ul>';
-            echo '</li>';
-
-            // Comment form
-            echo '<div id="nested_comment_form_for_comment_'.$comment['commid'].'" class="nested_comment_form_container js-nested-comment-form-container" style="display: none;">';
-            echo '<form class="nested_comment_form">';
-            echo '<input type="hidden" id="article_id" name="article_id" value="'.$article['id'].'"/>';
-            echo '<input type="hidden" id="comment_id" name="comment_id" value="'.$comment['commid'].'"/>';
-            echo '<h5>▲ 대댓글 달기</h5>';
-            echo '<p>이름 <input type="text" class="nested_comment_author" name="comment_author" maxlength="30" required/></p>';
-            echo '<p>내용 <input type="text" class="nested_comment_message" name="comment" maxlength="1000" required/></p>';
-            echo '<p><input type="submit" class="btn btn-link" value="등록"/></p>';
-            echo '</form>';
-            echo '</div>';
+            echo renderEggComment($comment, $article['id']);
           }
 
           echo '</ul><hr/>';
