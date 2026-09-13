@@ -1,6 +1,10 @@
 name: Deploy production
 on: workflow_dispatch
 
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
 jobs:
   build:
     name: Build
@@ -13,36 +17,48 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.PRIVATE_KEY }}
         script: |
+          bash -se <<'DEPLOY'
+          set -euo pipefail
+
           root_directory="/home/bitnami/htdocs-prod"
           repo_directory="$root_directory/repo"
           release_directory="$root_directory/releases"
-          current_directory="$release_directory/$(date '+%Y%m%d%H%M%S')"
+          release_name="$(date '+%Y%m%d%H%M%S%N')"
+          current_directory="$release_directory/$release_name"
 
           # Clone bare repository
-          [ -d $repo_directory ] || git clone --mirror --depth 1 https://github.com/pjshwa/apnee.git $repo_directory
+          [ -d "$repo_directory" ] || git clone --mirror --depth 1 https://github.com/pjshwa/apnee.git "$repo_directory"
 
           # Make new release directory, and shared links
-          mkdir -p $current_directory
-          mkdir -p $root_directory/shared/static
+          mkdir -p "$current_directory"
+          mkdir -p "$root_directory/shared/static"
 
           # Clone materials into new release directory from git branch
-          cd $repo_directory
+          cd "$repo_directory"
           git fetch --depth 1 origin main
-          git archive main | /usr/bin/env tar -x -f - -C $current_directory
+          git archive main | /usr/bin/env tar -x -f - -C "$current_directory"
 
           # Symlink shared materials
-          cd $current_directory
-          ln -sfn $root_directory/shared/static
+          cd "$current_directory"
+          ln -sfn "$root_directory/shared/static" static
 
           # Fill credentials
-          echo "<?php \$credentials = array('host' => 'localhost', 'user' => '${{ secrets.DBUSER }}', 'pass' => '${{ secrets.DBPASS }}', 'database' => 'pjshwa'); ?>" | tee -a $current_directory/credentials.php
+          echo "<?php \$credentials = array('host' => 'localhost', 'user' => '${{ secrets.DBUSER }}', 'pass' => '${{ secrets.DBPASS }}', 'database' => 'pjshwa'); ?>" > "$current_directory/credentials.php"
+
+          # Validate the release before touching shared assets or the live link.
+          test -s "$current_directory/index.php"
+          test -s "$current_directory/db.php"
+          test -s "$current_directory/credentials.php"
+          /opt/bitnami/php/bin/php -l "$current_directory/credentials.php" >/dev/null
 
           # Sync assets
           AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} aws s3 sync s3://pjshwa-homepage-assets/static ./static --delete
 
-          # Symlink current directory
-          cd $root_directory
-          ln -sfn $current_directory current
+          # Atomically publish only a complete release.
+          ln -s "$current_directory" "$root_directory/current-$release_name"
+          mv -Tf "$root_directory/current-$release_name" "$root_directory/current"
+
+          DEPLOY
 
     - name: Flush the PHP opcache
       uses: appleboy/ssh-action@master
