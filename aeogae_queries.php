@@ -22,7 +22,7 @@ require("consts/consts.php");
       while ($row = $r->fetch_assoc()) {
         $date = new DateTime($row["reg_date"], new DateTimeZone('UTC'));
         $date->setTimezone($TIMEZONE);
-        echo "<li>".$row["a_query"]." (".$date->format('Y-m-d H:i:s').")</li>";
+        echo "<li>".htmlspecialchars($row["a_query"], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')." (".$date->format('Y-m-d H:i:s').")</li>";
       }
     } else {
         echo "검색 결과가 없다";

@@ -171,7 +171,7 @@ else {
         echo '<li>';
         echo '<a href="'.$item['src'].'" style="background-image: url('."'".$item['img_src']."'".')"></a>';
         echo '<div>';
-        echo '<p>"'.$item['content'].'"</p>';
+        echo '<p>"'.htmlspecialchars($item['content'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').'"</p>';
         echo '<h2>'.$item['description'].'</h2>';
         echo '</div></li>';
     }
