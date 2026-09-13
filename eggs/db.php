@@ -118,8 +118,8 @@ class DB {
         if(!$stmt->execute()) {
             throw new Exception('DB Error: '.$this->mysqli->error);
         }
+        $nid = $this->mysqli->insert_id;
         $stmt->close();
-        $nid = $this->mysqli->query("SELECT MAX(id) AS nid FROM egg_comments")->fetch_object()->nid;
         return $nid;
     }
 };
