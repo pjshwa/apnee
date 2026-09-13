@@ -1,18 +1,14 @@
 
 <?php
 require("header.php");
-require("credentials.php");
+require_once __DIR__ . '/lib/database.php';
 ?><div class="container" style="margin-top:20px;"><?php
 
 $greenish = "['rgb(21,201,161)', 'rgb(21,201,161)', 'rgb(1,92,76)', 'rgb(17,117,99)', 'rgb(14,142,113)', 'rgb(23,175,148)', 'rgb(21,201,161)', 'rgb(21,201,161)']";
 
 $subwayid = array("1001"=> "1호선", "1002"=> "2호선", "1003"=> "3호선", "1004"=> "4호선", "1005"=> "5호선", "1006"=> "6호선", "1007"=> "7호선", "1008"=> "8호선", "1009"=> "9호선", "1063"=> "경의중앙선", "1065"=> "공항철도", "1067"=> "경춘선", "1071"=> "수인선", "1075"=> "분당선", "1077"=> "신분당선");
 
-$conn = new mysqli($credentials["host"], $credentials["user"], $credentials["pass"], $credentials["database"]);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-$conn->set_charset("utf8mb4"); // 인코딩 박살 방지
+$conn = connectDatabase();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
