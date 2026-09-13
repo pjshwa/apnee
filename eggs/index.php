@@ -100,7 +100,9 @@ else {
             echo '<ul class="subcomments">';
             if (isset($comment['subcomments'])) {
               foreach ($comment['subcomments'] as $subcomment) {
-                echo '<li class="imojify"><strong>'.htmlspecialchars($subcomment['commauthor']).':</strong> '.htmlspecialchars($subcomment['message']).' ('.date('Y-m-d H:i', strtotime($subcomment['commdate'])).')';
+                $subcommdate = new DateTime($subcomment['commdate'], new DateTimeZone('UTC'));
+                $subcommdate->setTimezone($TIMEZONE);
+                echo '<li class="imojify"><strong>'.htmlspecialchars($subcomment['commauthor']).':</strong> '.htmlspecialchars($subcomment['message']).' ('.$subcommdate->format('Y-m-d H:i').')';
                 if ($subcomment['commnew']) echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
                 echo '</li>';
               }
