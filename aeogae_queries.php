@@ -1,7 +1,7 @@
 <?php
+require_once __DIR__ . '/lib/view_helpers.php';
 require("header.php");
 require_once __DIR__ . '/lib/database.php';
-require("consts/consts.php");
 ?>
 <div class="container" style="margin-top:20px;">
   <h1>지금까지의 검색어</h1>
@@ -15,9 +15,7 @@ require("consts/consts.php");
     echo "<ul>";
     if ($r->num_rows > 0) {
       while ($row = $r->fetch_assoc()) {
-        $date = new DateTime($row["reg_date"], new DateTimeZone('UTC'));
-        $date->setTimezone($TIMEZONE);
-        echo "<li>".htmlspecialchars($row["a_query"], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')." (".$date->format('Y-m-d H:i:s').")</li>";
+        echo "<li>".escapeHtml($row["a_query"])." (".formatSeoulTime($row['reg_date'], 'Y-m-d H:i:s').")</li>";
       }
     } else {
         echo "검색 결과가 없다";

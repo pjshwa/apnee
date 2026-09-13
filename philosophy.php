@@ -1,5 +1,6 @@
 
 <?php
+require_once __DIR__ . '/lib/view_helpers.php';
 require('db.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $db->insertPhiChat($_POST['content']);
@@ -171,7 +172,7 @@ else {
         echo '<li>';
         echo '<a href="'.$item['src'].'" style="background-image: url('."'".$item['img_src']."'".')"></a>';
         echo '<div>';
-        echo '<p>"'.htmlspecialchars($item['content'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').'"</p>';
+        echo '<p>"'.escapeHtml($item['content']).'"</p>';
         echo '<h2>'.$item['description'].'</h2>';
         echo '</div></li>';
     }

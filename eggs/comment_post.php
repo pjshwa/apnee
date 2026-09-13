@@ -1,5 +1,5 @@
 <?php
-require('../consts/consts.php');
+require_once __DIR__ . '/../lib/view_helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $article_id = $_POST["article_id"];
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
   else {
     require('db.php');
-    $date = new DateTime('now', $TIMEZONE);
+    $date = formatSeoulTime('now');
     $nid = $db->newComment($article_id, $author, $comment, $comment_id);
 
     echo '<li id="comment_'.$nid.'" ';
@@ -33,10 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       echo 'onclick="toggleNestedCommentFormVisible('.$nid.')" ';
     }
     echo 'class="imojify"><strong>';
-    echo htmlspecialchars($author);
+    echo escapeHtml($author);
     echo ':</strong> ';
-    echo htmlspecialchars($comment);
-    echo ' ('.$date->format('Y-m-d H:i').')';
+    echo escapeHtml($comment);
+    echo ' ('.$date.')';
 
     echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
     

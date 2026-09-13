@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/lib/view_helpers.php';
 require('db.php');
 $items = $db->getPika();
 ?>
@@ -86,7 +87,7 @@ $items = $db->getPika();
     	<?php
         foreach($items as $item){
             echo "<tr>";
-            echo "<td>".htmlspecialchars($item['nickname'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')."</td>";
+            echo "<td>".escapeHtml($item['nickname'])."</td>";
             echo "<td>";
             if($item['success'] == '1') echo "<span style='color:green;'>O</span></td><td>남은 시간: <span style='color:blue;'>".$item['remain_time']."</span>초";
             else echo "<span style='color:red;'>X</span></td><td>클릭 횟수: ".$item['hits_score']."회";

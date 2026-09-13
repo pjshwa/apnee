@@ -1,3 +1,4 @@
 <?php
-$TIMEZONE = new DateTimeZone('Asia/Seoul');
+const DISPLAY_TIMEZONE = 'Asia/Seoul';
+$TIMEZONE = new DateTimeZone(DISPLAY_TIMEZONE);
 ?>

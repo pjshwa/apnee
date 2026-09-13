@@ -8,6 +8,7 @@ if (PHP_SAPI !== 'cli') {
 }
 ob_start();
 $root = dirname(__DIR__);
+require_once $root . '/lib/view_helpers.php';
 $checks = 0;
 function check($condition, $message) {
     global $checks;
@@ -16,7 +17,7 @@ function check($condition, $message) {
 }
 function renderSource($file, $vars = []) {
     extract($vars);
-    $source = preg_replace('/require\([^;]*\);/', '', file_get_contents($file));
+    $source = preg_replace('/\brequire(?:_once)?\b\s*(?:\([^;]*\)|[^;]+);/', '', file_get_contents($file));
     ob_start(); eval('?>'.$source); return ob_get_clean();
 }
 

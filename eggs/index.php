@@ -1,6 +1,6 @@
 <?php
+require_once __DIR__ . '/../lib/view_helpers.php';
 require('db.php');
-require('../consts/consts.php');
 
 $now = new DateTime('now');
 $now_month = $now->format('m');
@@ -54,9 +54,8 @@ else {
         }
         else {
         foreach ($articles as $article) {
-          $date = new DateTime($article['date'], new DateTimeZone('UTC'));
-          $date->setTimezone($TIMEZONE);
-          $datestr = $date->format('Y년 n월 j일 H시 i분');
+
+          $datestr = formatSeoulTime($article['date'], 'Y년 n월 j일 H시 i분');
 
           echo '<article id="article_'.$article['id'].'">';
           echo '<h2>'.$article['title'].'</h2>';
@@ -90,19 +89,17 @@ else {
           echo 'onclick="toggleCommentVisible('.$article['id'].')">댓글들 (<strong>'.$comments_count.'</strong>)</h4><div id="comments_for_article_'.$article['id'].'" style="display: none; padding: 0 20px;"><ul class="comments">';
 
           foreach ($article['comments'] as $comment) {
-            $commdate = new DateTime($comment['commdate'], new DateTimeZone('UTC'));
-            $commdate->setTimezone($TIMEZONE);
-            $commdatestr = $commdate->format('Y-m-d H:i');
 
-            echo '<li id="comment_'.$comment['commid'].'" onclick="toggleNestedCommentFormVisible('.$comment['commid'].')" class="imojify"><strong>'.htmlspecialchars($comment['commauthor']).':</strong> '.htmlspecialchars($comment['message']).' ('.$commdatestr.')';
+            $commdatestr = formatSeoulTime($comment['commdate']);
+
+            echo '<li id="comment_'.$comment['commid'].'" onclick="toggleNestedCommentFormVisible('.$comment['commid'].')" class="imojify"><strong>'.escapeHtml($comment['commauthor']).':</strong> '.escapeHtml($comment['message']).' ('.$commdatestr.')';
             if ($comment['commnew']) echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
 
             echo '<ul class="subcomments">';
             if (isset($comment['subcomments'])) {
               foreach ($comment['subcomments'] as $subcomment) {
-                $subcommdate = new DateTime($subcomment['commdate'], new DateTimeZone('UTC'));
-                $subcommdate->setTimezone($TIMEZONE);
-                echo '<li class="imojify"><strong>'.htmlspecialchars($subcomment['commauthor']).':</strong> '.htmlspecialchars($subcomment['message']).' ('.$subcommdate->format('Y-m-d H:i').')';
+
+                echo '<li class="imojify"><strong>'.escapeHtml($subcomment['commauthor']).':</strong> '.escapeHtml($subcomment['message']).' ('.formatSeoulTime($subcomment['commdate']).')';
                 if ($subcomment['commnew']) echo '<img class="comm_new_gif" src="../static/images/new.gif"/>';
                 echo '</li>';
               }

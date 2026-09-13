@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/lib/view_helpers.php';
 require('db.php');
 
 
@@ -264,8 +265,8 @@ input:hover {
 	foreach($items as $item){
 		echo "<li>";
 		echo "<a>";
-		echo "<h2>".htmlspecialchars($item['title'])."</h2>
-        <p>".htmlspecialchars($item['content'])."</p></a>
+		echo "<h2>".escapeHtml($item['title'])."</h2>
+        <p>".escapeHtml($item['content'])."</p></a>
         </li>";
 	}
 ?>
