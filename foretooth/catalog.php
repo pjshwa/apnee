@@ -6,11 +6,9 @@ class Page {
     
     /* Get data sent from GET method */
     public function getPageParam($var) {
-        if(isSet($_GET[$var])) {
-            return $_GET[$var];
-        } else {
-            return '1';
-        }
+        return filter_var($_GET[$var] ?? null, FILTER_VALIDATE_INT, [
+            'options' => ['min_range' => 1]
+        ]) ?: 1;
     }
 
 
