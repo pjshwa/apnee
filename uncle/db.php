@@ -7,7 +7,7 @@ class DB {
     /* Constructor: setup connection */
     public function __construct($host, $user, $pass, $database) {
 	    $this->mysqli = new mysqli($host, $user, $pass, $database);
-        $this->mysqli->set_charset("utf8");
+        $this->mysqli->set_charset("utf8mb4");
         if($this->mysqli->connect_errno) {
             throw new Exception('Connect Error: '.$this->mysqli->connect_errno);
         }

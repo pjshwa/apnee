@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-    $conn->set_charset("utf8"); // 인코딩 박살 방지
+    $conn->set_charset("utf8mb4"); // 인코딩 박살 방지
 
     $score = (int)$_POST["score"];
     if ($score > 50 || $score < 0) {
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-    $conn->set_charset("utf8"); // 인코딩 박살 방지
+    $conn->set_charset("utf8mb4"); // 인코딩 박살 방지
     $sql = "select score, reg_date from cowgame_score where score = (select max(score) from cowgame_score) limit 1";
     $r = $conn->query($sql);
     if ($r->num_rows > 0) {

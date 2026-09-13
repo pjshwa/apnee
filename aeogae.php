@@ -12,7 +12,7 @@ $conn = new mysqli($credentials["host"], $credentials["user"], $credentials["pas
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-$conn->set_charset("utf8"); // 인코딩 박살 방지
+$conn->set_charset("utf8mb4"); // 인코딩 박살 방지
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
