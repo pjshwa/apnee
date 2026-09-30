@@ -43,7 +43,7 @@ jobs:
           ln -sfn "$root_directory/shared/static" static
 
           # Fill credentials
-          echo "<?php \$credentials = array('host' => 'localhost', 'user' => '${{ secrets.DBUSER }}', 'pass' => '${{ secrets.DBPASS }}', 'database' => 'pjshwa'); ?>" > "$current_directory/credentials.php"
+          echo "<?php \$credentials = array('host' => 'localhost', 'user' => '${{ secrets.DBUSER }}', 'pass' => '${{ secrets.DBPASS }}', 'database' => 'pjshwa', 'seoul_subway_api_key' => '${{ secrets.SEOUL_SUBWAY_API_KEY }}'); ?>" > "$current_directory/credentials.php"
 
           # Validate the release before touching shared assets or the live link.
           test -s "$current_directory/index.php"
