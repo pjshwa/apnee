@@ -44,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 		<?php
 }
 elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
+	require __DIR__ . '/credentials.php';
+	$apiKey = rawurlencode($credentials['seoul_subway_api_key']);
 	$station = $_POST["station_name"];
 	$stmt = $conn->prepare("insert into queries (a_query, reg_date) values (?, CURRENT_TIMESTAMP)");
 	$stmt->bind_param('s', $station);
@@ -54,7 +56,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
 	$contents = [];
 	$ch = curl_init();
 	do{
-		$url = "http://swopenapi.seoul.go.kr/api/subway/sample/xml/realtimeStationArrival/".(5*$idx+1)."/".(5*($idx+1))."/".rawurlencode($station);
+		$url = "http://swopenapi.seoul.go.kr/api/subway/".$apiKey."/xml/realtimeStationArrival/".(5*$idx+1)."/".(5*($idx+1))."/".rawurlencode($station);
 		
 		curl_setopt ($ch, CURLOPT_URL, $url);
 		curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -81,7 +83,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
 		$return_string .= '</p></h1>';
 		foreach($contents as $rs){
 			$result = json_decode(json_encode($rs,JSON_UNESCAPED_UNICODE));
-			if($result->row){
+			if(isset($result->row)){
 				if(is_array($result->row)){
 					foreach($result->row as $obj){
 				   		$return_string .= ('<p><i>'.$subwayid[$obj->subwayId].'</i> '.$obj->trainLineNm.': '.$obj->arvlMsg2.'</p>');
